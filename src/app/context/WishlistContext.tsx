@@ -1,8 +1,18 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { useAuth } from "@clerk/nextjs";
 
 type WishlistItem = {
+  size: number;
+  color: string;
+  price: number;
   id: number;
   title: string;
   image: string;
@@ -14,30 +24,33 @@ type WishlistContextType = {
   addToWishlist: (item: WishlistItem) => void;
   removeFromWishlist: (id: number) => void;
   isInWishlist: (id: number) => boolean;
-  isLoaded: boolean; // Add loading state
+  isLoaded: boolean;
 };
 
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
-  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { isSignedIn } = useAuth();
 
-  // Load wishlist from localStorage on mount
-  useEffect(() => {
+  // 🔹 Lazy init to prevent hydration mismatch
+  const [wishlist, setWishlist] = useState<WishlistItem[]>(() => {
+    if (typeof window === "undefined") return [];
     try {
       const storedWishlist = localStorage.getItem("wishlist");
-      if (storedWishlist) {
-        setWishlist(JSON.parse(storedWishlist));
-      }
-    } catch (error) {
-      console.error("Error loading wishlist from localStorage:", error);
-    } finally {
-      setIsLoaded(true);
+      return storedWishlist ? JSON.parse(storedWishlist) : [];
+    } catch {
+      return [];
     }
+  });
+
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // 🔹 Mark loaded after first client render
+  useEffect(() => {
+    setIsLoaded(true);
   }, []);
 
-  // Save wishlist to localStorage whenever it changes (but only after initial load)
+  // 🔹 Persist wishlist changes
   useEffect(() => {
     if (isLoaded) {
       try {
@@ -48,12 +61,18 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [wishlist, isLoaded]);
 
+  // 🔹 Clear wishlist automatically on sign-out
+  useEffect(() => {
+    if (isSignedIn === false) {
+      setWishlist([]);
+      localStorage.removeItem("wishlist");
+    }
+  }, [isSignedIn]);
+
   const addToWishlist = (item: WishlistItem) => {
     setWishlist((prev) => {
-      if (!prev.find((i) => i.id === item.id)) {
-        return [...prev, item];
-      }
-      return prev;
+      if (prev.some((i) => i.id === item.id)) return prev;
+      return [...prev, item];
     });
   };
 
@@ -83,6 +102,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 
 export const useWishlist = () => {
   const context = useContext(WishlistContext);
-  if (!context) throw new Error("useWishlist must be used within WishlistProvider");
+  if (!context)
+    throw new Error("useWishlist must be used within WishlistProvider");
   return context;
 };

@@ -8,6 +8,7 @@ import { FiHeart, FiShoppingBag, FiUser, FiMenu, FiX } from "react-icons/fi";
 import { useCart } from "@/app/context/CartContext";
 import { useWishlist } from "@/app/context/WishlistContext";
 import products, { Product } from "@/app/data/products";
+import Tooltip from "./Tooltip";
 
 const mainLinks = [
   { name: "WOMEN", href: "#" },
@@ -241,40 +242,46 @@ const Navbar = () => {
 
               {/* Icons */}
               <div className="relative group">
-                <Link
-                  href="/account"
-                  className="text-[#2C1810] hover:text-[#D2691E]"
-                >
-                  <FiUser className="text-lg" />
-                </Link>
+                <Tooltip content="Profile">
+                  <Link
+                    href="/account"
+                    className="text-[#2C1810] hover:text-[#D2691E]"
+                  >
+                    <FiUser className="text-lg" />
+                  </Link>
+                </Tooltip>
               </div>
 
               <div className="relative group">
-                <Link
-                  href="/wishlist"
-                  className="text-[#2C1810] hover:text-[#D2691E]"
-                >
-                  <FiHeart className="text-lg" />
-                  {wishlistCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-[#D2691E] text-white text-xs font-bold rounded-full px-1.5 py-0.5">
-                      {wishlistCount}
-                    </span>
-                  )}
-                </Link>
+                <Tooltip content="Wishlist">
+                  <Link
+                    href="/wishlist"
+                    className="text-[#2C1810] hover:text-[#D2691E]"
+                  >
+                    <FiHeart className="text-lg" />
+                    {wishlistCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-[#D2691E] text-white text-xs font-bold rounded-full px-1.5 py-0.5">
+                        {wishlistCount}
+                      </span>
+                    )}
+                  </Link>
+                </Tooltip>
               </div>
 
               <div className="relative group">
-                <Link
-                  href="/store"
-                  className="relative text-[#2C1810] hover:text-[#D2691E]"
-                >
-                  <FiShoppingBag className="text-lg" />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-[#D2691E] text-white text-xs font-bold rounded-full px-1.5 py-0.5">
-                      {cartCount}
-                    </span>
-                  )}
-                </Link>
+                <Tooltip content="Cart">
+                  <Link
+                    href="/store"
+                    className="relative text-[#2C1810] hover:text-[#D2691E]"
+                  >
+                    <FiShoppingBag className="text-lg" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-[#D2691E] text-white text-xs font-bold rounded-full px-1.5 py-0.5">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Link>
+                </Tooltip>
               </div>
             </div>
           </div>

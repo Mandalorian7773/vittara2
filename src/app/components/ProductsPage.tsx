@@ -8,7 +8,8 @@ import products from "../data/productsDetails";
 import Link from "next/link";
 import { useWishlist } from "@/app/context/WishlistContext";
 import ProductFilter from "./ProductFilter";
-import { SignedIn, SignedOut } from "@clerk/nextjs"; // ✅ Added Clerk imports
+import { SignedIn, SignedOut, useUser } from "@clerk/nextjs"; // ✅ Added Clerk imports
+import { useRouter } from "next/navigation";
 
 // Product and Filter types
 interface Product {
@@ -39,6 +40,14 @@ interface Review {
 }
 
 const FloatingElements = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
       {[...Array(15)].map((_, i) => (
@@ -173,6 +182,9 @@ const ProductRow = ({
     isLoaded: wishlistLoaded,
   } = useWishlist();
 
+  const { isSignedIn } = useUser();
+  const router = useRouter();
+
   const inWishlist = wishlistLoaded ? isInWishlist(product.id) : false;
 
   useEffect(() => {
@@ -235,57 +247,55 @@ const ProductRow = ({
 
             {/* Action Buttons */}
             <div className="mt-6 space-y-3">
-              {/* If signed in → real button, else disabled */}
-              <SignedIn>
-                <button
-                  onClick={() =>
-                    addToCart({
+              {/* Add to Cart Button - Redirects if not signed in */}
+              <button
+                onClick={() => {
+                  if (!isSignedIn) {
+                    router.push("/sign-in");
+                    return;
+                  }
+                  addToCart({
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    image: product.images[0],
+                    color: "",
+                    size: 0
+                  });
+                }}
+                className="w-full py-3 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+              >
+                {isSignedIn
+                  ? `Add to Cart - ₹${product.price.toLocaleString("en-IN")}`
+                  : "Sign in to Add to Cart"}
+              </button>
+
+              <button
+                onClick={() => {
+                  if (!isSignedIn) {
+                    router.push("/sign-in");
+                    return;
+                  }
+                  inWishlist
+                    ? removeFromWishlist(product.id)
+                    : addToWishlist({
                       id: product.id,
                       title: product.title,
-                      price: product.price,
                       image: product.images[0],
-                    })
-                  }
-                  className="w-full py-3 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
-                >
-                  Add to Cart - ₹{product.price.toLocaleString("en-IN")}
-                </button>
-              </SignedIn>
-              <SignedOut>
-                <button
-                  disabled
-                  className="w-full py-3 bg-gray-400 text-white font-semibold rounded-xl cursor-not-allowed"
-                >
-                  Sign in to Add to Cart
-                </button>
-              </SignedOut>
-
-              <SignedIn>
-                <button
-                  onClick={() =>
-                    inWishlist
-                      ? removeFromWishlist(product.id)
-                      : addToWishlist({
-                          id: product.id,
-                          title: product.title,
-                          image: product.images[0],
-                        })
-                  }
-                  className="w-full py-3 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <FaHeart className="text-white" />
-                  {inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
-                </button>
-              </SignedIn>
-              <SignedOut>
-                <button
-                  disabled
-                  className="w-full py-3 bg-gray-400 text-white font-semibold rounded-xl cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  <FaHeart className="text-white" />
-                  Sign in to use Wishlist
-                </button>
-              </SignedOut>
+                      price: 0,
+                      size: 0,
+                      color: ""
+                    });
+                }}
+                className="w-full py-3 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
+              >
+                <FaHeart className="text-white" />
+                {isSignedIn
+                  ? inWishlist
+                    ? "Remove from Wishlist"
+                    : "Add to Wishlist"
+                  : "Sign in to use Wishlist"}
+              </button>
             </div>
           </div>
 

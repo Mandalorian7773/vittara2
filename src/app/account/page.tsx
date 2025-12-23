@@ -57,7 +57,7 @@ const ProfileIllustration = () => (
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 2, delay: 1.5 }}
       />
-      
+
       {/* Inner circle with gradient */}
       <motion.circle
         cx="100"
@@ -68,7 +68,7 @@ const ProfileIllustration = () => (
         animate={{ scale: 1 }}
         transition={{ duration: 1, delay: 1 }}
       />
-      
+
       {/* Animated stars around the circle */}
       {[...Array(8)].map((_, i) => {
         const angle = i * 45 * (Math.PI / 180);
@@ -97,7 +97,9 @@ const ProfileIllustration = () => (
               }}
             />
             <motion.path
-              d={`M ${x-3} ${y} L ${x+3} ${y} M ${x} ${y-3} L ${x} ${y+3}`}
+              d={`M ${x - 3} ${y} L ${x + 3} ${y} M ${x} ${y - 3} L ${x} ${
+                y + 3
+              }`}
               stroke="white"
               strokeWidth="1"
               initial={{ opacity: 0 }}
@@ -112,7 +114,7 @@ const ProfileIllustration = () => (
           </motion.g>
         );
       })}
-      
+
       {/* Gradient definitions */}
       <defs>
         <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -185,7 +187,7 @@ const AdminDashboard = () => {
           }}
           transition={{ duration: 4, repeat: Infinity }}
         />
-        
+
         <div className="flex items-center gap-3 mb-4 relative z-10">
           <motion.div
             animate={{ rotate: [0, 10, -10, 0] }}
@@ -228,8 +230,8 @@ const AdminDashboard = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: item.delay, duration: 0.6 }}
-            whileHover={{ 
-              scale: 1.02, 
+            whileHover={{
+              scale: 1.02,
               y: -5,
               boxShadow: "0 20px 40px -10px rgba(139, 0, 0, 0.2)",
             }}
@@ -239,7 +241,7 @@ const AdminDashboard = () => {
               className="absolute inset-0 bg-gradient-to-r from-[#DC143C]/10 to-[#FF6347]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               layoutId={`background-${index}`}
             />
-            
+
             <div className="flex items-center gap-3 mb-3 relative z-10">
               <motion.div
                 whileHover={{ scale: 1.2, rotate: 10 }}
@@ -290,7 +292,7 @@ const UserDashboard = () => {
           }}
           transition={{ duration: 4, repeat: Infinity }}
         />
-        
+
         <div className="flex items-center gap-3 mb-4 relative z-10">
           <motion.div
             animate={{ scale: [1, 1.1, 1] }}
@@ -321,10 +323,10 @@ const WelcomeMessage = ({ isAdmin }: { isAdmin: boolean }) => {
       className="text-center mb-12 relative mt-16"
     >
       <FloatingParticles />
-      
+
       {/* Profile Illustration Integration */}
       <ProfileIllustration />
-      
+
       <motion.div className="flex items-center justify-center gap-3 mb-4">
         {isAdmin ? (
           <motion.div
@@ -435,7 +437,7 @@ const AdminVerification = ({
           animate={{ scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <motion.div 
+          <motion.div
             className="w-20 h-20 bg-gradient-to-br from-[#8B0000] to-[#DC143C] rounded-full flex items-center justify-center"
             whileHover={{ scale: 1.1, rotate: 10 }}
           >
@@ -531,7 +533,7 @@ const LoginTypeSelection = () => {
   return (
     <div className="relative">
       <FloatingParticles />
-      
+
       {!selectedType ? (
         // Login Type Selection
         <motion.div
@@ -555,7 +557,7 @@ const LoginTypeSelection = () => {
               animate={{ scale: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <motion.div 
+              <motion.div
                 className="w-24 h-24 bg-gradient-to-br from-[#2C1810] to-[#D2691E] rounded-full flex items-center justify-center"
                 whileHover={{ scale: 1.1, rotate: 15 }}
               >
@@ -583,7 +585,7 @@ const LoginTypeSelection = () => {
             </motion.p>
 
             {/* Login Type Buttons */}
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -895,7 +897,7 @@ export default function AccountPage() {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* Enhanced Gradient Background */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 bg-gradient-to-br from-[#F9F6F1] via-[#FDF8F3] to-[#F5F0E8] mt-20 z-0"
         animate={{
           background: [
@@ -909,7 +911,7 @@ export default function AccountPage() {
       />
 
       {/* Animated geometric shapes */}
-      <motion.div 
+      <motion.div
         className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-[#D2691E]/20 to-[#F4A460]/20 rounded-full blur-xl"
         animate={{
           y: [0, -20, 0],
@@ -918,7 +920,7 @@ export default function AccountPage() {
         }}
         transition={{ duration: 6, repeat: Infinity }}
       />
-      <motion.div 
+      <motion.div
         className="absolute bottom-32 right-16 w-32 h-32 bg-gradient-to-tr from-[#2C1810]/10 to-[#D2691E]/10 rounded-full blur-2xl"
         animate={{
           y: [0, 30, 0],
@@ -930,9 +932,7 @@ export default function AccountPage() {
 
       {/* Navbar - Fixed positioning with lower z-index than mobile menu */}
       <div className="relative z-40">
-        <div className="sticky top-0 w-full bg-[#EDE2D4]/95 backdrop-blur-md shadow-md">
-          <Navbar />
-        </div>
+        <Navbar />
       </div>
 
       {/* Main content with lower z-index */}
@@ -997,13 +997,13 @@ export default function AccountPage() {
                   </div>
 
                   {/* User Profile Section */}
-                  <motion.div 
+                  <motion.div
                     className="border-t border-[#E5D3B3]/50 pt-8"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 3, duration: 0.8 }}
                   >
-                    <motion.h3 
+                    <motion.h3
                       className="text-2xl font-bold text-[#2C1810] mb-6 text-center"
                       whileHover={{ scale: 1.05 }}
                     >
@@ -1028,10 +1028,12 @@ export default function AccountPage() {
                             formButtonPrimary: userIsAdmin
                               ? "bg-[#8B0000] hover:bg-[#DC143C] transition-all duration-300 shadow-lg hover:shadow-xl"
                               : "bg-[#2C1810] hover:bg-[#D2691E] transition-all duration-300 shadow-lg hover:shadow-xl",
-                            headerTitle: "text-3xl font-bold text-[#2C1810] mb-2",
+                            headerTitle:
+                              "text-3xl font-bold text-[#2C1810] mb-2",
                             headerSubtitle: "text-[#2C1810]/70 text-lg",
                             profileSection: "mb-8",
-                            profileSectionContent: "bg-gray-50/50 rounded-xl p-6",
+                            profileSectionContent:
+                              "bg-gray-50/50 rounded-xl p-6",
                           },
                           variables: {
                             colorPrimary: userIsAdmin ? "#8B0000" : "#2C1810",
@@ -1049,7 +1051,7 @@ export default function AccountPage() {
                   </motion.div>
 
                   {/* Sign Out Button */}
-                  <motion.div 
+                  <motion.div
                     className="mt-8 flex justify-center"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}

@@ -1,8 +1,17 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import { useAuth } from "@clerk/nextjs";
 
 export type CartItem = {
+  color: string;
+  size: number;
   id: number;
   title: string;
   price: number;
@@ -13,6 +22,7 @@ export type CartItem = {
 type CartContextType = {
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
+  decrementQuantity: (id: number) => void;
   removeFromCart: (id: number) => void;
   clearCart: () => void;
   cartCount: number;
@@ -21,7 +31,42 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const { isSignedIn } = useAuth();
+
+  // 🔹 Hydrate cart from localStorage (lazy init to avoid hydration mismatch)
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const storedCart = localStorage.getItem("cart");
+      return storedCart ? JSON.parse(storedCart) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // decrement the product quantity
+  const decrementQuantity = (id: number) => {
+    setCart((prev) =>
+      prev
+        .map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
+  // 🔹 Persist cart changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // 🔹 Clear cart automatically on sign-out
+  useEffect(() => {
+    if (isSignedIn === false) {
+      setCart([]);
+      localStorage.removeItem("cart");
+    }
+  }, [isSignedIn]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCart((prev) => {
@@ -39,13 +84,23 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, clearCart, cartCount }}
+      value={{
+        cart,
+        addToCart,
+        decrementQuantity,
+        removeFromCart,
+        clearCart,
+        cartCount,
+      }}
     >
       {children}
     </CartContext.Provider>
