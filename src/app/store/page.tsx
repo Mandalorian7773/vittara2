@@ -24,6 +24,7 @@ import Link from "next/link";
 // Declare global Razorpay type
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Razorpay: any;
   }
 }
@@ -382,6 +383,7 @@ export default function StorePage() {
         description: "Transaction for your order",
         image: "/images/logo2.png",
         order_id: orderData.id,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async function (response: any) {
           // Validate payment at server - using valid payment for now
           /*

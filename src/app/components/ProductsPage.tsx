@@ -276,9 +276,10 @@ const ProductRow = ({
                     router.push("/sign-in");
                     return;
                   }
-                  inWishlist
-                    ? removeFromWishlist(product.id)
-                    : addToWishlist({
+                  if (inWishlist) {
+                    removeFromWishlist(product.id);
+                  } else {
+                    addToWishlist({
                       id: product.id,
                       title: product.title,
                       image: product.images[0],
@@ -286,6 +287,7 @@ const ProductRow = ({
                       size: 0,
                       color: ""
                     });
+                  }
                 }}
                 className="w-full py-3 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
               >
