@@ -18,6 +18,7 @@ import {
   CheckCircle,
   AlertCircle,
   Info,
+  Share2,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -211,7 +212,7 @@ export default function StorePage() {
         "confirm",
         "Remove Item?",
         `Are you sure you want to remove "${item.title}" from your cart?`,
-        () => removeFromCart(item.id)
+        () => removeFromCart(item.id, item.size, item.color)
       );
       return;
     }
@@ -229,14 +230,14 @@ export default function StorePage() {
     if (change > 0) {
       addToCart(item);
     } else {
-      decrementQuantity(item.id);
+      decrementQuantity(item.id, item.size, item.color);
     }
   };
 
   // Save for Later - Add to Wishlist
   const handleSaveForLater = (item: CartItem) => {
     addToWishlist(item);
-    removeFromCart(item.id);
+    removeFromCart(item.id, item.size, item.color);
     showModal(
       "success",
       "Saved to Wishlist!",
@@ -310,7 +311,7 @@ export default function StorePage() {
       "confirm",
       "Remove Item?",
       `Are you sure you want to remove "${item.title}" from your cart?`,
-      () => removeFromCart(item.id)
+      () => removeFromCart(item.id, item.size, item.color)
     );
   };
 
@@ -446,6 +447,44 @@ export default function StorePage() {
     }
   };
 
+  const handleShare = async (item: CartItem) => {
+    const shareData = {
+      title: item.title,
+      text: `Check out ${item.title} on Fittara!`,
+      url: window.location.origin + "/products", // Ideally link to specific product
+    };
+
+    const copyToClipboard = async () => {
+      try {
+        await navigator.clipboard.writeText(
+          `${shareData.text} ${shareData.url}`
+        );
+        showModal(
+          "success",
+          "Link Copied",
+          "Product link copied to clipboard!"
+        );
+      } catch (err) {
+        console.error("Failed to copy:", err);
+      }
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // If user cancelled, do nothing. For other errors, fallback.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((err as any).name !== "AbortError") {
+          console.error("Error sharing, falling back to clipboard:", err);
+          await copyToClipboard();
+        }
+      }
+    } else {
+      await copyToClipboard();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F0E8]">
       <Navbar />
@@ -570,14 +609,14 @@ export default function StorePage() {
                 <button 
                     type="button"
                     onClick={() => setShowAddressForm(false)}
-                    className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-100 transition"
+                    className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-100 transition cursor-pointer"
                 >
                     Cancel
                 </button>
                 <button 
                     form="address-form"
                     type="submit" 
-                    className="px-8 py-3 bg-[#D2691E] text-white rounded-lg font-semibold hover:bg-[#B8541A] transition shadow-lg hover:shadow-xl active:scale-95 flex items-center gap-2"
+                    className="px-8 py-3 bg-[#D2691E] text-white rounded-lg font-semibold hover:bg-[#B8541A] transition shadow-lg hover:shadow-xl active:scale-95 flex items-center gap-2 cursor-pointer"
                 >
                     Confirm & Pay
                     <ArrowRight className="w-5 h-5" />
@@ -750,6 +789,7 @@ export default function StorePage() {
                         </div>
 
                         {/* Save for Later - Adds to Wishlist */}
+                        {/* Save for Later & Share */}
                         <div className="flex gap-4 mt-4 pt-4 border-t border-gray-100">
                           <button
                             onClick={() => handleSaveForLater(item)}
@@ -757,6 +797,14 @@ export default function StorePage() {
                           >
                             <Heart className="w-4 h-4 group-hover:fill-[#D2691E]" />
                             Save for Later
+                          </button>
+                          <div className="w-px h-4 bg-gray-300 self-center"></div>
+                          <button
+                            onClick={() => handleShare(item)}
+                            className="text-sm text-[#2C1810] hover:text-[#D2691E] font-medium flex items-center gap-2 transition group"
+                          >
+                            <Share2 className="w-4 h-4" />
+                            Share
                           </button>
                         </div>
                       </div>
@@ -905,7 +953,7 @@ export default function StorePage() {
                 {/* Checkout Button */}
                 <button
                   onClick={handleCheckoutClick}
-                  className="w-full bg-gradient-to-r from-[#D2691E] to-[#B8541A] hover:from-[#B8541A] hover:to-[#A04815] text-white py-4 px-6 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group mb-4 active:scale-[0.98]"
+                  className="w-full bg-gradient-to-r from-[#D2691E] to-[#B8541A] hover:from-[#B8541A] hover:to-[#A04815] text-white py-4 px-6 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group mb-4 active:scale-[0.98] cursor-pointer"
                 >
                   <CreditCard className="w-5 h-5" />
                   Proceed to Checkout

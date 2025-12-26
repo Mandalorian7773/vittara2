@@ -11,7 +11,7 @@ import { useAuth } from "@clerk/nextjs";
 
 export type CartItem = {
   color: string;
-  size: number;
+  size: string | number;
   id: number;
   title: string;
   price: number;
@@ -22,8 +22,8 @@ export type CartItem = {
 type CartContextType = {
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
-  decrementQuantity: (id: number) => void;
-  removeFromCart: (id: number) => void;
+  decrementQuantity: (id: number, size: string | number, color: string) => void;
+  removeFromCart: (id: number, size: string | number, color: string) => void;
   clearCart: () => void;
   cartCount: number;
 };
@@ -45,11 +45,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   });
 
   // decrement the product quantity
-  const decrementQuantity = (id: number) => {
+  const decrementQuantity = (
+    id: number,
+    size: string | number,
+    color: string
+  ) => {
     setCart((prev) =>
       prev
         .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+          item.id === id && item.size === size && item.color === color
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
         )
         .filter((item) => item.quantity > 0)
     );
@@ -70,18 +76,31 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCart((prev) => {
-      const existing = prev.find((p) => p.id === item.id);
+      const existing = prev.find(
+        (p) => p.id === item.id && p.size === item.size && p.color === item.color
+      );
       if (existing) {
         return prev.map((p) =>
-          p.id === item.id ? { ...p, quantity: p.quantity + 1 } : p
+          p.id === item.id && p.size === item.size && p.color === item.color
+            ? { ...p, quantity: p.quantity + 1 }
+            : p
         );
       }
       return [...prev, { ...item, quantity: 1 }];
     });
   };
 
-  const removeFromCart = (id: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  const removeFromCart = (
+    id: number,
+    size: string | number,
+    color: string
+  ) => {
+    setCart((prev) =>
+      prev.filter(
+        (item) =>
+          !(item.id === id && item.size === size && item.color === color)
+      )
+    );
   };
 
   const clearCart = () => {

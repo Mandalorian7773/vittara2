@@ -10,7 +10,7 @@ import {
 import { useAuth } from "@clerk/nextjs";
 
 type WishlistItem = {
-  size: number;
+  size: string | number;
   color: string;
   price: number;
   id: number;
@@ -71,7 +71,14 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 
   const addToWishlist = (item: WishlistItem) => {
     setWishlist((prev) => {
-      if (prev.some((i) => i.id === item.id)) return prev;
+      if (
+        prev.some(
+          (i) =>
+            i.id === item.id && i.size === item.size && i.color === item.color
+        )
+      ) {
+        return prev;
+      }
       return [...prev, item];
     });
   };
