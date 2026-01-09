@@ -16,7 +16,7 @@ const supportLinks = ["Track Order", "Contact Us", "My Account"];
 
 export default function Footer() {
   return (
-    <footer className="bg-[#421C05] text-white relative overflow-hidden">
+    <footer className="bg-black text-white relative overflow-hidden border-t border-gray-800">
       {/* Background SVG */}
       <div className="absolute inset-0 opacity-10 pointer-events-none select-none">
         <Image
@@ -38,12 +38,12 @@ export default function Footer() {
             <input
               type="email"
               placeholder="Email Address"
-              className="px-4 py-2 w-full md:w-72 rounded-l-md text-white bg-[#000000] placeholder:text-gray-300 focus:outline-none"
+              className="px-4 py-2 w-full md:w-72 rounded-l-md text-white bg-gray-900 border border-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-white transition-colors"
               required
             />
             <button
               type="submit"
-              className="bg-[#E5973D] px-6 py-2 rounded-r-md hover:bg-[#c0761d] transition"
+              className="bg-white text-black px-6 py-2 rounded-r-md hover:bg-gray-200 transition font-medium"
             >
               →
             </button>
@@ -55,11 +55,11 @@ export default function Footer() {
       <div className="max-w-5xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 z-10 relative text-sm">
         {/* Categories */}
         <div>
-          <h3 className="font-semibold mb-4">PRODUCT CATEGORIES</h3>
+          <h3 className="font-semibold mb-4 text-gray-400">PRODUCT CATEGORIES</h3>
           <ul className="space-y-2">
             {pantShirtCategories.map((item) => (
               <li key={item}>
-                <Link href="#" className="hover:text-[#E5973D] transition">
+                <Link href="#" className="hover:text-gray-300 transition text-white">
                   {item}
                 </Link>
               </li>
@@ -69,11 +69,11 @@ export default function Footer() {
 
         {/* Support */}
         <div>
-          <h3 className="font-semibold mb-4">SUPPORT</h3>
+          <h3 className="font-semibold mb-4 text-gray-400">SUPPORT</h3>
           <ul className="space-y-2">
             {supportLinks.map((item) => (
               <li key={item}>
-                <Link href="#" className="hover:text-[#E5973D] transition">
+                <Link href="#" className="hover:text-gray-300 transition text-white">
                   {item}
                 </Link>
               </li>
@@ -83,12 +83,12 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <h3 className="font-semibold mb-4">CONTACT</h3>
-          <ul className="space-y-2">
+          <h3 className="font-semibold mb-4 text-gray-400">CONTACT</h3>
+          <ul className="space-y-2 text-white">
             <li>
               <a
                 href="mailto:fittaraofficial@gmail.com"
-                className="hover:text-[#E5973D] transition"
+                className="hover:text-gray-300 transition"
               >
                 fittaraofficial@gmail.com
               </a>
@@ -100,19 +100,19 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="bg-[#000000] py-6 border-t border-[#543322] text-sm relative z-10">
+      <div className="bg-black py-6 border-t border-gray-800 text-sm relative z-10">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Social Icons */}
           <div className="flex items-center gap-4">
             <span className="font-semibold text-white">KEEP IN TOUCH</span>
-            <div className="flex space-x-4 text-[#E5973D] text-lg">
-              <Link href="https://www.facebook.com/share/1BZn1bHdS9/">
+            <div className="flex space-x-4 text-white text-lg">
+              <Link href="https://www.facebook.com/share/1BZn1bHdS9/" className="hover:text-gray-400 transition">
                 <FaFacebookF />
               </Link>
-              <Link href="https://www.instagram.com/fittara.shop?utm_source=qr&igsh=MWtuMjFiaXhuZGJiNg%3D%3D">
+              <Link href="https://www.instagram.com/fittara.shop?utm_source=qr&igsh=MWtuMjFiaXhuZGJiNg%3D%3D" className="hover:text-gray-400 transition">
                 <FaInstagram />
               </Link>
-              <Link href="https://youtube.com/@fittaraofficial?si=vVwYX7w_gjhXUyje">
+              <Link href="https://youtube.com/@fittaraofficial?si=vVwYX7w_gjhXUyje" className="hover:text-gray-400 transition">
                 <FaYoutube />
               </Link>
             </div>
@@ -120,7 +120,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="text-center text-gray-400 mt-4 text-xs">
+        <div className="text-center text-gray-500 mt-4 text-xs">
           © 2025 Fittara Fashions Ltd. All rights reserved.
         </div>
       </div>
