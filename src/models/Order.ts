@@ -33,7 +33,10 @@ const OrderSchema = new mongoose.Schema({
     title: String,
     quantity: Number,
     price: Number,
-    id: String
+    id: String,
+    size: String,
+    fabric: String,
+    color: String
   }],
   createdAt: {
     type: Date,

@@ -30,128 +30,11 @@ declare global {
   }
 }
 
-// Modal Component
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  type: "success" | "error" | "warning" | "info" | "confirm";
-  title: string;
-  message: string;
-  onConfirm?: () => void;
-  confirmText?: string;
-  cancelText?: string;
-}
-
-const Modal = ({
-  isOpen,
-  onClose,
-  type,
-  title,
-  message,
-  onConfirm,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
-}: ModalProps) => {
-  if (!isOpen) return null;
-
-  const icons = {
-    success: <CheckCircle className="w-16 h-16 text-green-500" />,
-    error: <AlertCircle className="w-16 h-16 text-red-500" />,
-    warning: <AlertCircle className="w-16 h-16 text-amber-500" />,
-    info: <Info className="w-16 h-16 text-blue-500" />,
-    confirm: <AlertCircle className="w-16 h-16 text-[#D2691E]" />,
-  };
-
-  const colors = {
-    success: "bg-green-500",
-    error: "bg-red-500",
-    warning: "bg-amber-500",
-    info: "bg-blue-500",
-    confirm: "bg-[#D2691E]",
-  };
-
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
-      ></div>
-
-      {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden animate-scale-in">
-        {/* Header Strip */}
-        <div className={`h-2 ${colors[type]}`}></div>
-
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition"
-        >
-          <X className="w-5 h-5 text-gray-500" />
-        </button>
-
-        {/* Content */}
-        <div className="p-8 text-center">
-          <div className="mb-6 flex justify-center">{icons[type]}</div>
-
-          <h3 className="text-2xl font-bold text-[#2C1810] mb-3">{title}</h3>
-
-          <p className="text-gray-600 mb-8 leading-relaxed">{message}</p>
-
-          {/* Buttons */}
-          <div className="flex gap-3 justify-center">
-            {type === "confirm" ? (
-              <>
-                <button
-                  onClick={onClose}
-                  className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition"
-                >
-                  {cancelText}
-                </button>
-                <button
-                  onClick={() => {
-                    onConfirm?.();
-                    onClose();
-                  }}
-                  className="px-6 py-3 bg-[#D2691E] text-white rounded-lg font-semibold hover:bg-[#B8541A] transition"
-                >
-                  {confirmText}
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={onClose}
-                className={`px-8 py-3 ${colors[type]} text-white rounded-lg font-semibold hover:opacity-90 transition`}
-              >
-                Got it
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes scale-in {
-          from {
-            opacity: 0;
-            transform: scale(0.9);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-        .animate-scale-in {
-          animation: scale-in 0.2s ease-out;
-        }
-      `}</style>
-    </div>
-  );
-};
+import Modal from "@/app/components/Modal";
+import toast from "react-hot-toast";
 
 export default function StorePage() {
-  const { cart, decrementQuantity, removeFromCart, clearCart, addToCart } =
+  const { cart, decrementQuantity, removeFromCart, clearCart, addToCart, updateCartItem } =
     useCart();
   const { addToWishlist } = useWishlist();
 
@@ -212,7 +95,7 @@ export default function StorePage() {
         "confirm",
         "Remove Item?",
         `Are you sure you want to remove "${item.title}" from your cart?`,
-        () => removeFromCart(item.id, item.size, item.color)
+        () => removeFromCart(item.id, item.size, item.color, item.fabric)
       );
       return;
     }
@@ -230,19 +113,15 @@ export default function StorePage() {
     if (change > 0) {
       addToCart(item);
     } else {
-      decrementQuantity(item.id, item.size, item.color);
+      decrementQuantity(item.id, item.size, item.color, item.fabric);
     }
   };
 
   // Save for Later - Add to Wishlist
   const handleSaveForLater = (item: CartItem) => {
     addToWishlist(item);
-    removeFromCart(item.id, item.size, item.color);
-    showModal(
-      "success",
-      "Saved to Wishlist!",
-      `"${item.title}" has been moved to your wishlist. You can find it anytime in your wishlist page.`
-    );
+    removeFromCart(item.id, item.size, item.color, item.fabric);
+    toast.success("Saved to Wishlist!");
   };
 
   // Clear cart with confirmation
@@ -256,11 +135,7 @@ export default function StorePage() {
         setAppliedPromo("");
         setDiscount(0);
         setPromoCode("");
-        showModal(
-          "success",
-          "Cart Cleared",
-          "All items have been removed from your cart."
-        );
+        toast.success("Cart Cleared");
       }
     );
   };
@@ -271,25 +146,13 @@ export default function StorePage() {
     if (code === "WELCOME10") {
       setDiscount(subtotal * 0.1);
       setAppliedPromo(code);
-      showModal(
-        "success",
-        "Promo Applied!",
-        "You saved 10% on your order with code WELCOME10"
-      );
+      toast.success("Promo WELCOME10 Applied!");
     } else if (code === "FESTIVE20") {
       setDiscount(subtotal * 0.2);
       setAppliedPromo(code);
-      showModal(
-        "success",
-        "Promo Applied!",
-        "You saved 20% on your order with code FESTIVE20"
-      );
+      toast.success("Promo FESTIVE20 Applied!");
     } else {
-      showModal(
-        "error",
-        "Invalid Code",
-        "The promo code you entered is not valid. Try WELCOME10 or FESTIVE20"
-      );
+      toast.error("Invalid Promo Code");
     }
   };
 
@@ -298,11 +161,7 @@ export default function StorePage() {
     setPromoCode("");
     setAppliedPromo("");
     setDiscount(0);
-    showModal(
-      "info",
-      "Promo Removed",
-      "The promo code has been removed from your order."
-    );
+    toast.success("Promo Code Removed");
   };
 
   // Remove item with confirmation
@@ -311,7 +170,10 @@ export default function StorePage() {
       "confirm",
       "Remove Item?",
       `Are you sure you want to remove "${item.title}" from your cart?`,
-      () => removeFromCart(item.id, item.size, item.color)
+      () => {
+        removeFromCart(item.id, item.size, item.color, item.fabric);
+        toast.success("Item removed from cart");
+      }
     );
   };
 
@@ -330,6 +192,13 @@ export default function StorePage() {
   };
 
   const processPayment = async () => {
+    // Validate Cart Items
+    const incompleteItems = cart.filter(item => !item.size || !item.color || !item.fabric);
+    if (incompleteItems.length > 0) {
+      showModal("error", "Incomplete Options", "Please select Size, Fabric, and Color for all items in your cart before checking out.");
+      return;
+    }
+
     // Validate address
     if (!address.name || !address.street || !address.city || !address.state || !address.zip || !address.phone) {
        showModal("error", "Missing Details", "Please fill in all address fields.");
@@ -709,26 +578,66 @@ export default function StorePage() {
                             <h3 className="font-bold text-[#2C1810] text-lg lg:text-xl mb-2 line-clamp-2">
                               {item.title}
                             </h3>
-                            {(item.size || item.color) && (
-                              <div className="flex flex-wrap gap-3 text-sm text-gray-600 mb-2">
-                                {item.size && (
-                                  <span>
-                                    Size:{" "}
-                                    <span className="font-semibold text-[#2C1810]">
-                                      {item.size}
-                                    </span>
-                                  </span>
-                                )}
-                                {item.color && (
-                                  <span>
-                                    Color:{" "}
-                                    <span className="font-semibold text-[#2C1810]">
-                                      {item.color}
-                                    </span>
-                                  </span>
-                                )}
+                            <div className="flex flex-col gap-2 mb-2">
+                              {/* Size Selector */}
+                              <div className="flex items-center gap-2">
+                                <span className={`text-sm ${!item.size ? "text-red-500 font-bold" : "text-gray-600"}`}>Size:</span>
+                                <select
+                                  value={item.size}
+                                  onChange={(e) => updateCartItem(item, e.target.value, item.color, item.fabric || "")}
+                                  className={`text-sm border rounded px-2 py-1 ${!item.size ? "border-red-500 bg-red-50" : "border-gray-300"}`}
+                                >
+                                  <option value="">Select Size</option>
+                                  {["XS", "S", "M", "L", "XL", "XXL"].map(s => (
+                                    <option key={s} value={s}>{s}</option>
+                                  ))}
+                                </select>
                               </div>
-                            )}
+
+                              {/* Fabric Selector */}
+                              <div className="flex items-center gap-2">
+                                <span className={`text-sm ${!item.fabric ? "text-red-500 font-bold" : "text-gray-600"}`}>Fabric:</span>
+                                <select
+                                  value={item.fabric || ""}
+                                  onChange={(e) => updateCartItem(item, item.size as string, item.color, e.target.value)}
+                                  className={`text-sm border rounded px-2 py-1 ${!item.fabric ? "border-red-500 bg-red-50" : "border-gray-300"}`}
+                                >
+                                  <option value="">Select Fabric</option>
+                                  {["Cotton", "Linen", "Silk", "Wool", "Blend"].map(f => (
+                                    <option key={f} value={f}>{f}</option>
+                                  ))}
+                                </select>
+                              </div>
+
+                              {/* Color Selector */}
+                              <div className="flex items-center gap-2">
+                                <span className={`text-sm ${!item.color ? "text-red-500 font-bold" : "text-gray-600"}`}>Color:</span>
+                                <div className="flex gap-1 flex-wrap">
+                                  {["Ivory", "Navy", "Olive", "Crimson", "Grey", "Black"].map(c => (
+                                    <button
+                                      key={c}
+                                      onClick={() => updateCartItem(item, item.size as string, c, item.fabric || "")}
+                                      className={`w-6 h-6 rounded-full border-2 transition-all ${
+                                        item.color === c ? "border-[#D2691E] scale-110 ring-1 ring-[#D2691E]" : "border-gray-200"
+                                      }`}
+                                      style={{ 
+                                        backgroundColor: {
+                                          "Ivory": "#FFFFF0",
+                                          "Navy": "#000080",
+                                          "Olive": "#808000",
+                                          "Crimson": "#DC143C",
+                                          "Grey": "#808080",
+                                          "Black": "#000000"
+                                        }[c] 
+                                      }}
+                                      title={c}
+                                    />
+                                  ))}
+                                </div>
+                                {!item.color && <span className="text-xs text-red-500 font-medium">Required</span>}
+                              </div>
+                            </div>
+
                           </div>
                           <button
                             onClick={() => handleRemoveItem(item)}

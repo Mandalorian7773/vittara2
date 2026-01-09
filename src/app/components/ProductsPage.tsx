@@ -10,6 +10,7 @@ import { useWishlist } from "@/app/context/WishlistContext";
 import ProductFilter from "./ProductFilter";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs"; // ✅ Added Clerk imports
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 // Product and Filter types
 interface Product {
@@ -185,6 +186,10 @@ const ProductRow = ({
   const { isSignedIn } = useUser();
   const router = useRouter();
 
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedFabric, setSelectedFabric] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+
   const inWishlist = wishlistLoaded ? isInWishlist(product.id) : false;
 
   useEffect(() => {
@@ -254,16 +259,19 @@ const ProductRow = ({
                     router.push("/sign-in");
                     return;
                   }
+                  // Allow adding to cart without options selected
                   addToCart({
                     id: product.id,
                     title: product.title,
                     price: product.price,
                     image: product.images[0],
-                    color: "",
-                    size: 0
+                    color: selectedColor || "",
+                    size: selectedSize || "",
+                    fabric: selectedFabric || ""
                   });
+                  toast.success("Added to Cart!");
                 }}
-                className="w-full py-3 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+                className={`w-full py-3 text-white font-semibold rounded-xl transform transition-all duration-300 shadow-lg cursor-pointer bg-gradient-to-r from-[#8B4513] to-[#D2691E] hover:from-[#D2691E] hover:to-[#8B4513] hover:scale-105 hover:shadow-xl`}
               >
                 {isSignedIn
                   ? `Add to Cart - ₹${product.price.toLocaleString("en-IN")}`
@@ -278,15 +286,18 @@ const ProductRow = ({
                   }
                   if (inWishlist) {
                     removeFromWishlist(product.id);
+                    toast.success("Removed from Wishlist");
                   } else {
                     addToWishlist({
                       id: product.id,
                       title: product.title,
                       image: product.images[0],
-                      price: 0,
-                      size: 0,
-                      color: ""
+                      price: product.price,
+                      size: selectedSize || product.size,
+                      color: selectedColor || product.color,
+                      // fabric: selectedFabric // Wishlist context might need update if we want to store fabric there too, omitting for now to avoid breaking type
                     });
+                    toast.success("Added to Wishlist");
                   }
                 }}
                 className="w-full py-3 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
@@ -349,29 +360,93 @@ const ProductRow = ({
                 )}
               </div>
 
-              <div className="grid grid-cols-3 gap-2 mb-6">
-                <div className="bg-[#E9DCCF] rounded-lg p-2 text-center">
-                  <div className="text-xs text-[#8B4513] font-medium">Size</div>
-                  <div className="text-sm font-bold text-[#2C1810]">
-                    {product.size}
+              <div className="space-y-4 mb-6">
+                {/* Size Selector */}
+                <div>
+                  <div className="flex justify-between items-center mb-2 px-1">
+                    <span className="text-sm font-medium text-[#8B4513]">Select Size</span>
+                    <span className="text-xs text-[#D2691E] cursor-pointer hover:underline">Size Guide</span>
+                  </div>
+                  <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
+                    {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(prev => prev === size ? "" : size)}
+                        className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-200 border snap-center ${
+                          selectedSize === size
+                            ? "bg-[#D2691E] text-white border-[#D2691E] shadow-md scale-105"
+                            : "bg-white text-[#2C1810] border-[#E9DCCF] hover:border-[#D2691E]"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
                   </div>
                 </div>
-                <div className="bg-[#E9DCCF] rounded-lg p-2 text-center">
-                  <div className="text-xs text-[#8B4513] font-medium">
-                    Fabric
-                  </div>
-                  <div className="text-sm font-bold text-[#2C1810] capitalize">
-                    {product.fabric}
+
+                {/* Fabric Selector */}
+                <div>
+                  <span className="text-sm font-medium text-[#8B4513] block mb-2 px-1">Select Fabric</span>
+                  <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
+                    {["Cotton", "Linen", "Silk", "Wool", "Blend"].map((fabric) => (
+                      <button
+                        key={fabric}
+                        onClick={() => setSelectedFabric(prev => prev === fabric ? "" : fabric)}
+                        className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${
+                          selectedFabric === fabric
+                            ? "bg-[#D2691E] text-white border-[#D2691E] shadow-md"
+                            : "bg-white text-[#2C1810] border-[#E9DCCF] hover:border-[#D2691E]"
+                        }`}
+                      >
+                        {fabric}
+                      </button>
+                    ))}
                   </div>
                 </div>
-                <div className="bg-[#E9DCCF] rounded-lg p-2 text-center">
-                  <div className="text-xs text-[#8B4513] font-medium">
-                    Color
-                  </div>
-                  <div className="text-sm font-bold text-[#2C1810] capitalize">
-                    {product.color}
+
+                {/* Color Selector */}
+                <div>
+                  <span className="text-sm font-medium text-[#8B4513] block mb-2 px-1">Select Color</span>
+                  <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
+                    {[
+                      { name: "Ivory", hex: "#FFFFF0" },
+                      { name: "Navy", hex: "#000080" },
+                      { name: "Olive", hex: "#808000" },
+                      { name: "Crimson", hex: "#DC143C" },
+                      { name: "Grey", hex: "#808080" },
+                      { name: "Black", hex: "#000000" },
+                    ].map((color) => (
+                      <button
+                        key={color.name}
+                        onClick={() => setSelectedColor(prev => prev === color.name ? "" : color.name)}
+                        className={`flex-shrink-0 w-10 h-10 rounded-full border-2 transition-all duration-200 relative snap-center ${
+                          selectedColor === color.name
+                            ? "border-[#D2691E] scale-110 ring-2 ring-[#D2691E]/30 shadow-md"
+                            : "border-gray-200 hover:scale-110"
+                        }`}
+                        style={{ backgroundColor: color.hex }}
+                        title={color.name}
+                      >
+                        {selectedColor === color.name && (
+                          <span className="absolute inset-0 flex items-center justify-center">
+                            <div className={`w-3 h-3 rounded-full ${["Ivory", "White"].includes(color.name) ? "bg-black" : "bg-white"}`} />
+                          </span>
+                        )}
+                      </button>
+                    ))}
                   </div>
                 </div>
+
+                {/* Scrollbar Hide Styles */}
+                <style jsx>{`
+                  .scrollbar-hide::-webkit-scrollbar {
+                      display: none;
+                  }
+                  .scrollbar-hide {
+                      -ms-overflow-style: none;
+                      scrollbar-width: none;
+                  }
+                `}</style>
               </div>
 
               <p className="text-[#8B4513] leading-relaxed text-sm">

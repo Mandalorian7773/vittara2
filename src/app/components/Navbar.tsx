@@ -50,12 +50,12 @@ const Navbar = () => {
 
   const searchTexts = useMemo(
     () => [
-      "Sherwani",
-      "Bridal Lehenga",
-      "Kurta",
-      "Saree",
-      "Short Kurta",
-      "Lehenga",
+      "Formal Pants",
+      "Casual Pants",
+      "Tailored Trousers",
+      "Classic Shirts",
+      "Slim Fit Shirts",
+      "Casual Shirts",
     ],
     []
   );

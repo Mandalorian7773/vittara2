@@ -13,6 +13,7 @@ export type CartItem = {
   category?: string;
   color: string;
   size: string | number;
+  fabric?: string;
   id: number;
   title: string;
   price: number;
@@ -23,8 +24,9 @@ export type CartItem = {
 type CartContextType = {
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
-  decrementQuantity: (id: number, size: string | number, color: string) => void;
-  removeFromCart: (id: number, size: string | number, color: string) => void;
+  updateCartItem: (oldItem: CartItem, newSize: string, newColor: string, newFabric: string) => void;
+  decrementQuantity: (id: number, size: string | number, color: string, fabric?: string) => void;
+  removeFromCart: (id: number, size: string | number, color: string, fabric?: string) => void;
   clearCart: () => void;
   cartCount: number;
 };
@@ -49,12 +51,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const decrementQuantity = (
     id: number,
     size: string | number,
-    color: string
+    color: string,
+    fabric?: string
   ) => {
     setCart((prev) =>
       prev
         .map((item) =>
-          item.id === id && item.size === size && item.color === color
+          item.id === id && item.size === size && item.color === color && item.fabric === fabric
             ? { ...item, quantity: item.quantity - 1 }
             : item
         )
@@ -77,12 +80,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCart((prev) => {
+      // Logic: If we are adding an item that ALREADY exists exactly (same id, size, color, fabric), increment it.
+      // If we are adding an item with DIFFERENT options, it's a new line item.
+      // If we are adding an "incomplete" item (options empty), and there's already an incomplete one?
+      // Yes, group them.
       const existing = prev.find(
-        (p) => p.id === item.id && p.size === item.size && p.color === item.color
+        (p) => p.id === item.id && p.size === item.size && p.color === item.color && p.fabric === item.fabric
       );
       if (existing) {
         return prev.map((p) =>
-          p.id === item.id && p.size === item.size && p.color === item.color
+          p.id === item.id && p.size === item.size && p.color === item.color && p.fabric === item.fabric
             ? { ...p, quantity: p.quantity + 1 }
             : p
         );
@@ -91,15 +98,70 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const updateCartItem = (
+    oldItem: CartItem,
+    newSize: string,
+    newColor: string,
+    newFabric: string
+  ) => {
+    setCart((prev) => {
+      // 1. Remove the old item (effectively decrementing or removing to re-add)
+      // Actually, we want to CHANGE the properties.
+      // But if the NEW properties match ANOTHER existing item, we should merge them.
+
+      // First, filter out the item we are modifying
+      const otherItems = prev.filter(
+        (p) =>
+          !(
+            p.id === oldItem.id &&
+            p.size === oldItem.size &&
+            p.color === oldItem.color &&
+            p.fabric === oldItem.fabric
+          )
+      );
+
+      // Check if an item with NEW properties already exists
+      const existingTargetIndex = otherItems.findIndex(
+        (p) =>
+          p.id === oldItem.id &&
+          p.size === newSize &&
+          p.color === newColor &&
+          p.fabric === newFabric
+      );
+
+      if (existingTargetIndex !== -1) {
+        // Merge: Add old quantity to existing target
+        const newCart = [...otherItems];
+        newCart[existingTargetIndex] = {
+          ...newCart[existingTargetIndex],
+          quantity: newCart[existingTargetIndex].quantity + oldItem.quantity,
+        };
+        return newCart;
+      } else {
+        // Create new item with updated props, keeping quantity
+        return [
+          ...otherItems,
+          {
+            ...oldItem,
+            size: newSize,
+            color: newColor,
+            fabric: newFabric,
+          },
+        ];
+      }
+    });
+  };
+
   const removeFromCart = (
     id: number,
     size: string | number,
-    color: string
+    color: string,
+    fabric?: string
   ) => {
     setCart((prev) =>
       prev.filter(
         (item) =>
-          !(item.id === id && item.size === size && item.color === color)
+          !(item.id === id && item.size === size && item.color === color && item.fabric === fabric)
       )
     );
   };
@@ -118,6 +180,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         addToCart,
         decrementQuantity,
         removeFromCart,
+        updateCartItem, // Exposed
         clearCart,
         cartCount,
       }}

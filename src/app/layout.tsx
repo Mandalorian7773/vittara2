@@ -5,6 +5,7 @@ import "./globals.css";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import Footer from "./components/Footer";
+import ToastProvider from "./components/ToastProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
               <Footer />
             </WishlistProvider>
           </CartProvider>
+          <ToastProvider />
         </body>
       </html>
     </ClerkProvider>

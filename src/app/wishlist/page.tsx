@@ -1,15 +1,34 @@
 "use client";
 
+import Link from "next/link";
 import { useWishlist } from "@/app/context/WishlistContext";
 import { useCart } from "@/app/context/CartContext";
+import { FaTrash, FaShoppingCart, FaHeart } from "react-icons/fa";
+import toast from "react-hot-toast";
 import Image from "next/image";
-import { FaHeart, FaShoppingCart } from "react-icons/fa";
-import Link from "next/link";
 import Navbar from "../components/Navbar";
 
 export default function WishlistPage() {
   const { wishlist, removeFromWishlist, wishlistCount } = useWishlist();
   const { addToCart } = useCart();
+
+  const handleRemoveFromWishlist = (id: number) => {
+    removeFromWishlist(id);
+    toast.success("Removed from Wishlist");
+  };
+
+  const handleMoveToCart = (item: any) => {
+    addToCart({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        image: item.image,
+        color: item.color,
+        size: item.size
+    });
+    removeFromWishlist(item.id);
+    toast.success("Moved to Cart");
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#F5F1EA] via-[#E9DCCF] to-[#DDD0BF]">
@@ -57,16 +76,7 @@ export default function WishlistPage() {
 
                   <div className="space-y-3">
                     <button
-                      onClick={() =>
-                        addToCart({
-                          id: product.id,
-                          title: product.title,
-                          price: product.price,
-                          image: product.image,
-                          color: product.color,
-                          size: product.size
-                        })
-                      }
+                      onClick={() => handleMoveToCart(product)}
                       className="w-full py-3 flex items-center justify-center gap-2 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transition-all duration-300 shadow-md cursor-pointer"
                     >
                       <FaShoppingCart className="text-white" />
@@ -74,7 +84,7 @@ export default function WishlistPage() {
                     </button>
 
                     <button
-                      onClick={() => removeFromWishlist(product.id)}
+                      onClick={() => handleRemoveFromWishlist(product.id)}
                       className="w-full py-3 flex items-center justify-center gap-2 bg-gradient-to-r from-[#D2691E] to-[#CD853F] text-white font-semibold rounded-xl hover:from-[#CD853F] hover:to-[#D2691E] transition-all duration-300 shadow-md cursor-pointer"
                     >
                       <FaHeart className="text-white" />
