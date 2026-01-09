@@ -162,7 +162,7 @@ const Navbar = () => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <header className="fixed top-0 w-full z-[100] transition-all duration-300">
+    <header className="fixed top-0 left-0 w-full z-[999]">
       {/* Announcement Bar */}
       <div
         className={`overflow-hidden bg-white text-black text-sm font-medium hidden lg:flex items-center justify-center transition-all duration-300 ${

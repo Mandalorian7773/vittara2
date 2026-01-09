@@ -18,16 +18,26 @@ const SignInPage = () => {
       <div className="relative z-10 w-full max-w-md px-4 flex flex-col items-center">
         
         {/* Logo */}
-        <div className="mb-8 relative w-48 h-16 transform transition-transform hover:scale-105 duration-500">
-           <Link href="/">
-              <Image 
-                src="/images/logo2.png"
-                alt="Manyavar Mohey Logo"
-                fill
-                className="object-contain"
-                priority
-              />
-           </Link>
+        <div className="mb-8 text-center animate-fade-in flex flex-col items-center">
+            <Link href="/" className="inline-flex items-center gap-3 group">
+              <div className="relative w-16 h-16 transition-transform duration-500 group-hover:scale-110">
+                <Image
+                  src="/images/fittara-symbol-white.png"
+                  alt="Fittara Symbol"
+                  fill
+                  className="object-contain invert"
+                  priority
+                />
+              </div>
+              <div className="text-left">
+                <h1 className="text-4xl font-serif text-black tracking-wide leading-none">
+                  FITTARA
+                </h1>
+                <p className="text-[0.6rem] text-black/80 tracking-[0.2em] mt-1 font-medium">
+                  YOUR VISION. YOUR FIT. YOUR FITTARA
+                </p>
+              </div>
+            </Link>
         </div>
 
         {/* Card */}
