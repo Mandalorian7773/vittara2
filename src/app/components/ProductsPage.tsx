@@ -136,14 +136,14 @@ const StarRating = ({
               <FaStar
                 className={`text-lg ${
                   star <= (hoveredRating || selectedRating)
-                    ? "text-[#D2691E]"
+                    ? "text-[#000000]"
                     : "text-gray-300"
-                } hover:text-[#D2691E] transition-colors duration-200 cursor-pointer`}
+                } hover:text-[#000000] transition-colors duration-200 cursor-pointer`}
               />
             </button>
           ))}
           {selectedRating > 0 && (
-            <span className="text-sm text-[#8B4513] ml-2 font-medium">
+            <span className="text-sm text-[#4B5563] ml-2 font-medium">
               ({selectedRating}/5)
             </span>
           )}
@@ -156,7 +156,7 @@ const StarRating = ({
           {[1, 2, 3, 4, 5].map((star) => (
             <FaStar key={star} className="text-lg text-gray-300" />
           ))}
-          <span className="text-xs text-[#8B4513]/70 ml-2">
+          <span className="text-xs text-[#4B5563]/70 ml-2">
             Sign in to rate
           </span>
         </div>
@@ -225,16 +225,16 @@ const ProductRow = ({
         isLoaded ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
       }`}
     >
-      <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border-2 border-[#E9DCCF] hover:border-[#D2691E]/30 overflow-hidden transition-all duration-500 hover:shadow-2xl">
+      <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border-2 border-[#F3F4F6] hover:border-[#000000]/30 overflow-hidden transition-all duration-500 hover:shadow-2xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
           {/* Image Gallery Section */}
-          <div className="relative bg-gradient-to-br from-[#F5F1EA] to-[#E9DCCF] p-6">
+          <div className="relative bg-gradient-to-br from-[#FFFFFF] to-[#F3F4F6] p-6">
             <div className="grid grid-cols-2 grid-rows-2 gap-3 h-80">
               {product.images.slice(0, 4).map((image: string, idx: number) => (
                 <div
                   key={idx}
                   className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ${
-                    currentImageIndex === idx ? "ring-4 ring-[#D2691E]" : ""
+                    currentImageIndex === idx ? "ring-4 ring-[#000000]" : ""
                   }`}
                   onClick={() => setCurrentImageIndex(idx)}
                 >
@@ -271,7 +271,7 @@ const ProductRow = ({
                   });
                   toast.success("Added to Cart!");
                 }}
-                className={`w-full py-3 text-white font-semibold rounded-xl transform transition-all duration-300 shadow-lg cursor-pointer bg-gradient-to-r from-[#8B4513] to-[#D2691E] hover:from-[#D2691E] hover:to-[#8B4513] hover:scale-105 hover:shadow-xl`}
+                className={`w-full py-3 text-white font-semibold rounded-xl transform transition-all duration-300 shadow-lg cursor-pointer bg-gradient-to-r from-[#4B5563] to-[#000000] hover:from-[#000000] hover:to-[#4B5563] hover:scale-105 hover:shadow-xl`}
               >
                 {isSignedIn
                   ? `Add to Cart - ₹${product.price.toLocaleString("en-IN")}`
@@ -300,7 +300,7 @@ const ProductRow = ({
                     toast.success("Added to Wishlist");
                   }
                 }}
-                className="w-full py-3 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-xl hover:from-[#000000] hover:to-[#4B5563] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
               >
                 <FaHeart className="text-white" />
                 {isSignedIn
@@ -308,6 +308,15 @@ const ProductRow = ({
                     ? "Remove from Wishlist"
                     : "Add to Wishlist"
                   : "Sign in to use Wishlist"}
+              </button>
+
+              <button
+                onClick={() => {
+                  window.open("https://docs.google.com/forms/d/e/1FAIpQLSdXkEPO-4NSrIbXnjF_p2iKBHBYua4EIzYAW-EK3xb1x8lOUg/viewform", "_blank");
+                }}
+                className="w-full py-3 bg-white text-[#000000] border-2 border-[#000000] font-semibold rounded-xl hover:bg-[#000000] hover:text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
+              >
+                Need Customization
               </button>
             </div>
           </div>
@@ -329,43 +338,26 @@ const ProductRow = ({
           )}
 
           {/* Description Section */}
-          <div className="p-8 flex flex-col justify-between bg-gradient-to-br from-white to-[#F5F1EA]/30">
+          <div className="p-8 flex flex-col justify-between bg-gradient-to-br from-white to-[#FFFFFF]/30">
             <div>
-              <h3 className="text-2xl font-bold text-[#2C1810] mb-4 leading-tight">
+              <h3 className="text-2xl font-bold text-[#000000] mb-4 leading-tight">
                 {product.title}
               </h3>
 
               <div className="flex items-center gap-4 mb-4">
-                <span className="text-3xl font-bold text-[#D2691E]">
+                <span className="text-3xl font-bold text-[#000000]">
                   ₹{product.price.toLocaleString("en-IN")}
                 </span>
               </div>
 
-              {/* Interactive Star Rating */}
-              <div className="mb-4">
-                <p className="text-sm text-[#8B4513] mb-2 font-medium">
-                  Rate this product:
-                </p>
-                <StarRating
-                  productId={product.id}
-                  productTitle={product.title}
-                  productImage={product.images[0]}
-                  currentRating={userRating}
-                  onRate={handleRating}
-                />
-                {userRating > 0 && (
-                  <p className="text-xs text-[#8B4513]/70 mt-1">
-                    Thank you for your rating!
-                  </p>
-                )}
-              </div>
+              {/* Star Rating Removed */}
 
               <div className="space-y-4 mb-6">
                 {/* Size Selector */}
                 <div>
                   <div className="flex justify-between items-center mb-2 px-1">
-                    <span className="text-sm font-medium text-[#8B4513]">Select Size</span>
-                    <span className="text-xs text-[#D2691E] cursor-pointer hover:underline">Size Guide</span>
+                    <span className="text-sm font-medium text-[#4B5563]">Select Size</span>
+                    <span className="text-xs text-[#000000] cursor-pointer hover:underline">Size Guide</span>
                   </div>
                   <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
                     {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
@@ -374,8 +366,8 @@ const ProductRow = ({
                         onClick={() => setSelectedSize(prev => prev === size ? "" : size)}
                         className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-200 border snap-center ${
                           selectedSize === size
-                            ? "bg-[#D2691E] text-white border-[#D2691E] shadow-md scale-105"
-                            : "bg-white text-[#2C1810] border-[#E9DCCF] hover:border-[#D2691E]"
+                            ? "bg-[#000000] text-white border-[#000000] shadow-md scale-105"
+                            : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
                         }`}
                       >
                         {size}
@@ -386,7 +378,7 @@ const ProductRow = ({
 
                 {/* Fabric Selector */}
                 <div>
-                  <span className="text-sm font-medium text-[#8B4513] block mb-2 px-1">Select Fabric</span>
+                  <span className="text-sm font-medium text-[#4B5563] block mb-2 px-1">Select Fabric</span>
                   <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
                     {["Cotton", "Linen", "Silk", "Wool", "Blend"].map((fabric) => (
                       <button
@@ -394,8 +386,8 @@ const ProductRow = ({
                         onClick={() => setSelectedFabric(prev => prev === fabric ? "" : fabric)}
                         className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${
                           selectedFabric === fabric
-                            ? "bg-[#D2691E] text-white border-[#D2691E] shadow-md"
-                            : "bg-white text-[#2C1810] border-[#E9DCCF] hover:border-[#D2691E]"
+                            ? "bg-[#000000] text-white border-[#000000] shadow-md"
+                            : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
                         }`}
                       >
                         {fabric}
@@ -406,7 +398,7 @@ const ProductRow = ({
 
                 {/* Color Selector */}
                 <div>
-                  <span className="text-sm font-medium text-[#8B4513] block mb-2 px-1">Select Color</span>
+                  <span className="text-sm font-medium text-[#4B5563] block mb-2 px-1">Select Color</span>
                   <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
                     {[
                       { name: "Ivory", hex: "#FFFFF0" },
@@ -421,7 +413,7 @@ const ProductRow = ({
                         onClick={() => setSelectedColor(prev => prev === color.name ? "" : color.name)}
                         className={`flex-shrink-0 w-10 h-10 rounded-full border-2 transition-all duration-200 relative snap-center ${
                           selectedColor === color.name
-                            ? "border-[#D2691E] scale-110 ring-2 ring-[#D2691E]/30 shadow-md"
+                            ? "border-[#000000] scale-110 ring-2 ring-[#000000]/30 shadow-md"
                             : "border-gray-200 hover:scale-110"
                         }`}
                         style={{ backgroundColor: color.hex }}
@@ -449,13 +441,13 @@ const ProductRow = ({
                 `}</style>
               </div>
 
-              <p className="text-[#8B4513] leading-relaxed text-sm">
+              <p className="text-[#4B5563] leading-relaxed text-sm">
                 {product.description}
               </p>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-[#E9DCCF]">
-              <div className="flex items-center justify-between text-xs text-[#8B4513]">
+            <div className="mt-6 pt-4 border-t border-[#F3F4F6]">
+              <div className="flex items-center justify-between text-xs text-[#4B5563]">
                 <span>Handcrafted with Care</span>
                 <span>Premium Quality</span>
               </div>
@@ -499,19 +491,19 @@ export default function ProductsPage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-br from-[#F5F1EA] via-[#E9DCCF] to-[#DDD0BF] pt-20 overflow-x-hidden">
+    <main className="relative min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] pt-20 overflow-x-hidden">
       <FloatingElements />
 
       {/* Hero Section */}
       <div className="relative z-10 text-center py-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold text-[#2C1810] mb-4 tracking-wide">
+          <h1 className="text-4xl md:text-6xl font-bold text-[#000000] mb-4 tracking-wide">
             Exquisite
-            <span className="block text-[#D2691E] italic font-serif">
+            <span className="block text-[#000000] italic font-serif">
                Premium Collection
             </span>
           </h1>
-          <p className="text-xl text-[#8B4513] mb-8 font-light">
+          <p className="text-xl text-[#4B5563] mb-8 font-light">
             Tailored perfection, designed for the modern connoisseur
           </p>
 
@@ -519,7 +511,7 @@ export default function ProductsPage() {
             {[...Array(5)].map((_, i) => (
               <FaStar
                 key={i}
-                className="text-[#D2691E] text-2xl animate-pulse"
+                className="text-[#000000] text-2xl animate-pulse"
                 style={{ animationDelay: `${i * 0.1}s` }}
               />
             ))}
@@ -545,12 +537,12 @@ export default function ProductsPage() {
 
             {/* No Products Found */}
             {filteredProducts.length === 0 && (
-              <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#E9DCCF]">
-                <FaFilter className="text-4xl text-[#D2691E] mx-auto mb-4" />
-                <p className="text-xl text-[#8B4513] font-medium mb-2">
+              <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#F3F4F6]">
+                <FaFilter className="text-4xl text-[#000000] mx-auto mb-4" />
+                <p className="text-xl text-[#4B5563] font-medium mb-2">
                   No products found matching your filters.
                 </p>
-                <p className="text-sm text-[#8B4513]/70">
+                <p className="text-sm text-[#4B5563]/70">
                   Try adjusting your filters or clear all filters to see all
                   products.
                 </p>
@@ -558,7 +550,7 @@ export default function ProductsPage() {
                   onClick={() =>
                     setFilters({ size: "", price: "", fabric: "", color: "" })
                   }
-                  className="mt-4 px-6 py-2 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-lg hover:from-[#D2691E] hover:to-[#8B4513] transition-all duration-300"
+                  className="mt-4 px-6 py-2 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-lg hover:from-[#000000] hover:to-[#4B5563] transition-all duration-300"
                 >
                   Clear All Filters
                 </button>
@@ -566,14 +558,14 @@ export default function ProductsPage() {
             )}
 
             {/* Wishlist Summary */}
-            <div className="mt-12 text-center bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-[#E9DCCF] relative z-10">
+            <div className="mt-12 text-center bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-[#F3F4F6] relative z-10">
               <div className="mb-4">
                 {!wishlistLoaded ? (
                   <div className="animate-pulse">
                     <div className="h-6 bg-gray-300 rounded mx-auto w-48 mb-4"></div>
                   </div>
                 ) : (
-                  <p className="text-[#8B4513] text-lg font-medium">
+                  <p className="text-[#4B5563] text-lg font-medium">
                     {wishlistCount === 0
                       ? "Your wishlist is empty"
                       : `You have ${wishlistCount} item${
@@ -586,7 +578,7 @@ export default function ProductsPage() {
               {wishlistLoaded && wishlistCount > 0 && (
                 <Link
                   href="/wishlist"
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-xl hover:from-[#000000] hover:to-[#4B5563] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   <FaHeart className="text-white" />
                   View Wishlist ({wishlistCount})

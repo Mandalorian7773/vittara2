@@ -33,7 +33,7 @@ const Modal = ({
     error: <AlertCircle className="w-16 h-16 text-red-500" />,
     warning: <AlertCircle className="w-16 h-16 text-amber-500" />,
     info: <Info className="w-16 h-16 text-blue-500" />,
-    confirm: <AlertCircle className="w-16 h-16 text-[#D2691E]" />,
+    confirm: <AlertCircle className="w-16 h-16 text-[#000000]" />,
   };
 
   const colors = {
@@ -41,7 +41,7 @@ const Modal = ({
     error: "bg-red-500",
     warning: "bg-amber-500",
     info: "bg-blue-500",
-    confirm: "bg-[#D2691E]",
+    confirm: "bg-[#000000]",
   };
 
   return (
@@ -69,7 +69,7 @@ const Modal = ({
         <div className="p-8 text-center">
           <div className="mb-6 flex justify-center">{icons[type]}</div>
 
-          <h3 className="text-2xl font-bold text-[#2C1810] mb-3">{title}</h3>
+          <h3 className="text-2xl font-bold text-[#000000] mb-3">{title}</h3>
 
           <p className="text-gray-600 mb-8 leading-relaxed">{message}</p>
 
@@ -88,7 +88,7 @@ const Modal = ({
                     onConfirm?.();
                     onClose();
                   }}
-                  className="px-6 py-3 bg-[#D2691E] text-white rounded-lg font-semibold hover:bg-[#B8541A] transition"
+                  className="px-6 py-3 bg-[#000000] text-white rounded-lg font-semibold hover:bg-[#333333] transition"
                 >
                   {confirmText}
                 </button>

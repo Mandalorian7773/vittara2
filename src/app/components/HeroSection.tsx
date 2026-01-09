@@ -39,7 +39,7 @@ const FloatingElements = () => {
             width="16"
             height="16"
             viewBox="0 0 16 16"
-            className="text-[#D2691E]/20 fill-current"
+            className="text-[#000000]/20 fill-current"
           >
             <path d="M8 2c-2 0-3 1-3 3 0 1 1 2 1 3s1 2 2 2 2-1 2-2-1-2-1-3c0-2-1-3-2-3z" />
           </svg>
@@ -57,19 +57,19 @@ export const HeroSection = () => {
   }, []);
 
   return (
-    <main className="relative pt-40 md:pt-48 pb-20 bg-gradient-to-br from-[#F5F1EA] via-[#E9DCCF] to-[#DDD0BF] overflow-hidden">
+    <main className="relative pt-40 md:pt-48 pb-20 bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] overflow-hidden">
       <FloatingElements />
 
       <div className="relative z-10 container mx-auto px-4">
         {/* Hero Title */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold text-[#2C1810] mb-3">
+          <h1 className="text-3xl md:text-5xl font-bold text-[#000000] mb-3">
             Discover Our
-            <span className="block text-[#D2691E] font-serif italic">
+            <span className="block text-[#000000] font-serif italic">
               Premium Collection
             </span>
           </h1>
-          <p className="text-lg text-[#8B4513] max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-[#4B5563] max-w-2xl mx-auto leading-relaxed">
             Explore our exquisite range of handcrafted pants and shirts, each piece
             tailored for comfort, style, and elegance.
           </p>
@@ -90,7 +90,7 @@ export const HeroSection = () => {
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
                 <div className="relative group">
-                  <div className="relative overflow-hidden rounded-full border-2 border-[#E9DCCF] group-hover:border-[#D2691E] transition-all duration-300 shadow-lg group-hover:shadow-xl">
+                  <div className="relative overflow-hidden rounded-full border-2 border-[#F3F4F6] group-hover:border-[#000000] transition-all duration-300 shadow-lg group-hover:shadow-xl">
                     <Image
                       src={category.image}
                       alt={category.name}
@@ -100,7 +100,7 @@ export const HeroSection = () => {
                     />
                   </div>
                 </div>
-                <p className="mt-3 text-sm font-semibold text-[#2C1810] group-hover:text-[#D2691E] transition-colors">
+                <p className="mt-3 text-sm font-semibold text-[#000000] group-hover:text-[#000000] transition-colors">
                   {category.name}
                 </p>
               </div>
@@ -119,7 +119,7 @@ export const HeroSection = () => {
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                <div className="relative overflow-hidden rounded-full border-2 border-[#E9DCCF] group-hover:border-[#D2691E] transition-all duration-300 shadow-lg group-hover:shadow-2xl">
+                <div className="relative overflow-hidden rounded-full border-2 border-[#F3F4F6] group-hover:border-[#000000] transition-all duration-300 shadow-lg group-hover:shadow-2xl">
                   <Image
                     src={category.image}
                     alt={category.name}
@@ -128,7 +128,7 @@ export const HeroSection = () => {
                     className="rounded-full object-cover w-36 h-36 group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
-                <p className="mt-4 text-sm font-semibold text-[#2C1810] group-hover:text-[#D2691E] transition-colors duration-300 text-center">
+                <p className="mt-4 text-sm font-semibold text-[#000000] group-hover:text-[#000000] transition-colors duration-300 text-center">
                   {category.name}
                 </p>
               </div>

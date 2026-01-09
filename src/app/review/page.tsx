@@ -36,7 +36,7 @@ const FloatingElements = () => {
             animationDuration: `${3 + Math.random() * 4}s`,
           }}
         >
-          <FaStar className="text-[#D2691E] text-xl" />
+          <FaStar className="text-[#000000] text-xl" />
         </div>
       ))}
     </div>
@@ -50,11 +50,11 @@ const StarDisplay = ({ rating }: { rating: number }) => {
         <FaStar
           key={star}
           className={`text-xl ${
-            star <= rating ? "text-[#D2691E]" : "text-gray-300"
+            star <= rating ? "text-[#000000]" : "text-gray-300"
           }`}
         />
       ))}
-      <span className="text-lg text-[#8B4513] ml-3 font-bold">{rating}/5</span>
+      <span className="text-lg text-[#4B5563] ml-3 font-bold">{rating}/5</span>
     </div>
   );
 };
@@ -129,19 +129,19 @@ const ReviewCard = ({
           : "translate-y-8 opacity-0 scale-95"
       }`}
     >
-      <div className="group bg-white/95 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl border border-[#E9DCCF]/50 overflow-hidden transition-all duration-500 hover:border-[#D2691E]/30">
+      <div className="group bg-white/95 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl border border-[#F3F4F6]/50 overflow-hidden transition-all duration-500 hover:border-[#000000]/30">
         <div className="p-6">
           {/* Header with Delete Button */}
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-gradient-to-br from-[#D2691E]/10 to-[#8B4513]/10 rounded-2xl">
-                <FaShoppingBag className="text-[#D2691E] text-2xl" />
+              <div className="p-3 bg-gradient-to-br from-[#000000]/10 to-[#4B5563]/10 rounded-2xl">
+                <FaShoppingBag className="text-[#000000] text-2xl" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[#2C1810] mb-1 group-hover:text-[#D2691E] transition-colors duration-300">
+                <h3 className="text-xl font-bold text-[#000000] mb-1 group-hover:text-[#000000] transition-colors duration-300">
                   Product Review
                 </h3>
-                <div className="flex items-center gap-2 text-sm text-[#8B4513]/70">
+                <div className="flex items-center gap-2 text-sm text-[#4B5563]/70">
                   <FaCalendar className="text-xs" />
                   <span>
                     {formatDate(review.timestamp)} at{" "}
@@ -163,7 +163,7 @@ const ReviewCard = ({
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Product Image */}
             <div className="lg:col-span-1">
-              <div className="relative bg-gradient-to-br from-[#F5F1EA] to-[#E9DCCF] rounded-2xl p-4 h-80">
+              <div className="relative bg-gradient-to-br from-[#FFFFFF] to-[#F3F4F6] rounded-2xl p-4 h-80">
                 <div className="relative w-full h-full bg-white rounded-xl shadow-inner overflow-hidden">
                   <Image
                     src={review.productImage}
@@ -179,19 +179,19 @@ const ReviewCard = ({
             {/* Review Details */}
             <div className="lg:col-span-2 space-y-6">
               {/* Product Title */}
-              <div className="bg-gradient-to-r from-[#F5F1EA] to-[#E9DCCF]/50 rounded-2xl p-4">
-                <h4 className="text-lg font-bold text-[#2C1810] mb-2">
+              <div className="bg-gradient-to-r from-[#FFFFFF] to-[#F3F4F6]/50 rounded-2xl p-4">
+                <h4 className="text-lg font-bold text-[#000000] mb-2">
                   {review.productTitle}
                 </h4>
-                <div className="flex items-center gap-2 text-sm text-[#8B4513]/70">
+                <div className="flex items-center gap-2 text-sm text-[#4B5563]/70">
                   <span>Product ID: #{review.productId}</span>
                 </div>
               </div>
 
               {/* Rating Section */}
-              <div className="bg-gradient-to-br from-white to-[#F5F1EA]/30 rounded-2xl p-6 border-2 border-[#E9DCCF]/30">
+              <div className="bg-gradient-to-br from-white to-[#FFFFFF]/30 rounded-2xl p-6 border-2 border-[#F3F4F6]/30">
                 <div className="text-center mb-4">
-                  <h5 className="text-lg font-semibold text-[#2C1810] mb-3">
+                  <h5 className="text-lg font-semibold text-[#000000] mb-3">
                     Your Rating
                   </h5>
                   <StarDisplay rating={review.rating} />
@@ -209,31 +209,31 @@ const ReviewCard = ({
 
                 {/* Rating Breakdown */}
                 <div className="mt-6 grid grid-cols-3 gap-4">
-                  <div className="text-center p-3 bg-[#E9DCCF]/30 rounded-xl">
-                    <div className="text-2xl font-bold text-[#D2691E] mb-1">
+                  <div className="text-center p-3 bg-[#F3F4F6]/30 rounded-xl">
+                    <div className="text-2xl font-bold text-[#000000] mb-1">
                       {review.rating}
                     </div>
-                    <div className="text-xs text-[#8B4513] font-medium">
+                    <div className="text-xs text-[#4B5563] font-medium">
                       Stars Given
                     </div>
                   </div>
-                  <div className="text-center p-3 bg-[#E9DCCF]/30 rounded-xl">
-                    <div className="text-2xl font-bold text-[#D2691E] mb-1">
+                  <div className="text-center p-3 bg-[#F3F4F6]/30 rounded-xl">
+                    <div className="text-2xl font-bold text-[#000000] mb-1">
                       {review.rating >= 4
                         ? "😍"
                         : review.rating >= 3
                         ? "😊"
                         : "😐"}
                     </div>
-                    <div className="text-xs text-[#8B4513] font-medium">
+                    <div className="text-xs text-[#4B5563] font-medium">
                       Your Mood
                     </div>
                   </div>
-                  <div className="text-center p-3 bg-[#E9DCCF]/30 rounded-xl">
-                    <div className="text-2xl font-bold text-[#D2691E] mb-1">
+                  <div className="text-center p-3 bg-[#F3F4F6]/30 rounded-xl">
+                    <div className="text-2xl font-bold text-[#000000] mb-1">
                       {Math.round((review.rating / 5) * 100)}%
                     </div>
-                    <div className="text-xs text-[#8B4513] font-medium">
+                    <div className="text-xs text-[#4B5563] font-medium">
                       Satisfaction
                     </div>
                   </div>
@@ -241,13 +241,13 @@ const ReviewCard = ({
               </div>
 
               {/* Thank You Message */}
-              <div className="bg-gradient-to-r from-[#8B4513]/5 to-[#D2691E]/5 rounded-2xl p-4 border border-[#D2691E]/20">
+              <div className="bg-gradient-to-r from-[#4B5563]/5 to-[#000000]/5 rounded-2xl p-4 border border-[#000000]/20">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-[#D2691E]/10 rounded-full">
-                    <FaHeart className="text-[#D2691E]" />
+                  <div className="p-2 bg-[#000000]/10 rounded-full">
+                    <FaHeart className="text-[#000000]" />
                   </div>
                   <div>
-                    <p className="text-[#8B4513] font-medium text-sm">
+                    <p className="text-[#4B5563] font-medium text-sm">
                       Thank you for your honest feedback! Your review helps
                       other customers and improves our service quality.
                     </p>
@@ -321,10 +321,10 @@ export default function ReviewsPage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F5F1EA] via-[#E9DCCF] to-[#DDD0BF] flex items-center justify-center pt-24">
+      <div className="min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] flex items-center justify-center pt-24">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-20 w-20 border-4 border-[#D2691E]/30 border-t-[#D2691E] mx-auto mb-4"></div>
-          <p className="text-[#8B4513] text-lg font-medium">
+          <div className="animate-spin rounded-full h-20 w-20 border-4 border-[#000000]/30 border-t-[#000000] mx-auto mb-4"></div>
+          <p className="text-[#4B5563] text-lg font-medium">
             Loading your reviews...
           </p>
         </div>
@@ -333,7 +333,7 @@ export default function ReviewsPage() {
   }
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-br from-[#F5F1EA] via-[#E9DCCF] to-[#DDD0BF] pt-24">
+    <main className="relative min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] pt-24">
       <Navbar />
       <FloatingElements />
 
@@ -344,64 +344,64 @@ export default function ReviewsPage() {
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-6 mb-8 mt-8 cursor-pointer"></div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-[#2C1810] mb-4 tracking-wide">
+            <h1 className="text-5xl md:text-7xl font-bold text-[#000000] mb-4 tracking-wide">
               Your
-              <span className="block text-[#D2691E] italic font-serif">
+              <span className="block text-[#000000] italic font-serif">
                 Reviews
               </span>
             </h1>
-            <p className="text-xl text-[#8B4513] font-light max-w-2xl mx-auto">
+            <p className="text-xl text-[#4B5563] font-light max-w-2xl mx-auto">
               Your valuable feedback on our traditional collection
             </p>
           </div>
 
           {/* Enhanced Statistics Dashboard */}
           {reviews.length > 0 && (
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-[#E9DCCF]/50 overflow-hidden mb-12">
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-[#F3F4F6]/50 overflow-hidden mb-12">
               {/* Main Stats */}
-              <div className="p-8 bg-gradient-to-r from-[#F5F1EA] to-white">
+              <div className="p-8 bg-gradient-to-r from-[#FFFFFF] to-white">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   <div className="text-center group cursor-pointer">
-                    <div className="p-4 bg-gradient-to-br from-[#D2691E]/10 to-[#8B4513]/10 rounded-2xl mb-3 group-hover:scale-105 transition-transform duration-300">
-                      <FaStar className="text-3xl text-[#D2691E] mx-auto" />
+                    <div className="p-4 bg-gradient-to-br from-[#000000]/10 to-[#4B5563]/10 rounded-2xl mb-3 group-hover:scale-105 transition-transform duration-300">
+                      <FaStar className="text-3xl text-[#000000] mx-auto" />
                     </div>
-                    <div className="text-3xl font-bold text-[#D2691E] mb-1">
+                    <div className="text-3xl font-bold text-[#000000] mb-1">
                       {reviews.length}
                     </div>
-                    <div className="text-sm text-[#8B4513] font-medium">
+                    <div className="text-sm text-[#4B5563] font-medium">
                       Total Reviews
                     </div>
                   </div>
 
                   <div className="text-center group cursor-pointer">
-                    <div className="p-4 bg-gradient-to-br from-[#D2691E]/10 to-[#8B4513]/10 rounded-2xl mb-3 group-hover:scale-105 transition-transform duration-300">
-                      <div className="text-3xl text-[#D2691E] mx-auto font-bold">
+                    <div className="p-4 bg-gradient-to-br from-[#000000]/10 to-[#4B5563]/10 rounded-2xl mb-3 group-hover:scale-105 transition-transform duration-300">
+                      <div className="text-3xl text-[#000000] mx-auto font-bold">
                         {averageRating}
                       </div>
                     </div>
-                    <div className="text-3xl font-bold text-[#D2691E] mb-1">
+                    <div className="text-3xl font-bold text-[#000000] mb-1">
                       ★
                     </div>
-                    <div className="text-sm text-[#8B4513] font-medium">
+                    <div className="text-sm text-[#4B5563] font-medium">
                       Average Rating
                     </div>
                   </div>
 
                   <div className="text-center group cursor-pointer">
-                    <div className="p-4 bg-gradient-to-br from-[#D2691E]/10 to-[#8B4513]/10 rounded-2xl mb-3 group-hover:scale-105 transition-transform duration-300">
-                      <FaHeart className="text-3xl text-[#D2691E] mx-auto" />
+                    <div className="p-4 bg-gradient-to-br from-[#000000]/10 to-[#4B5563]/10 rounded-2xl mb-3 group-hover:scale-105 transition-transform duration-300">
+                      <FaHeart className="text-3xl text-[#000000] mx-auto" />
                     </div>
-                    <div className="text-3xl font-bold text-[#D2691E] mb-1">
+                    <div className="text-3xl font-bold text-[#000000] mb-1">
                       {ratingDistribution[5]}
                     </div>
-                    <div className="text-sm text-[#8B4513] font-medium">
+                    <div className="text-sm text-[#4B5563] font-medium">
                       5-Star Reviews
                     </div>
                   </div>
 
                   <div className="text-center group cursor-pointer">
-                    <div className="p-4 bg-gradient-to-br from-[#D2691E]/10 to-[#8B4513]/10 rounded-2xl mb-3 group-hover:scale-105 transition-transform duration-300">
-                      <div className="text-3xl text-[#D2691E] mx-auto">
+                    <div className="p-4 bg-gradient-to-br from-[#000000]/10 to-[#4B5563]/10 rounded-2xl mb-3 group-hover:scale-105 transition-transform duration-300">
+                      <div className="text-3xl text-[#000000] mx-auto">
                         {reviews.length > 0
                           ? Math.round(
                               (ratingDistribution[5] / reviews.length) * 100
@@ -410,10 +410,10 @@ export default function ReviewsPage() {
                         %
                       </div>
                     </div>
-                    <div className="text-3xl font-bold text-[#D2691E] mb-1">
+                    <div className="text-3xl font-bold text-[#000000] mb-1">
                       😍
                     </div>
-                    <div className="text-sm text-[#8B4513] font-medium">
+                    <div className="text-sm text-[#4B5563] font-medium">
                       Satisfaction Rate
                     </div>
                   </div>
@@ -422,21 +422,21 @@ export default function ReviewsPage() {
 
               {/* Rating Distribution */}
               <div className="px-8 pb-8">
-                <h3 className="text-xl font-bold text-[#2C1810] mb-6 text-center">
+                <h3 className="text-xl font-bold text-[#000000] mb-6 text-center">
                   Rating Distribution
                 </h3>
                 <div className="space-y-3">
                   {[5, 4, 3, 2, 1].map((rating) => (
                     <div key={rating} className="flex items-center gap-4">
                       <div className="flex items-center gap-2 w-20">
-                        <span className="text-sm font-bold text-[#8B4513]">
+                        <span className="text-sm font-bold text-[#4B5563]">
                           {rating}
                         </span>
-                        <FaStar className="text-[#D2691E] text-sm" />
+                        <FaStar className="text-[#000000] text-sm" />
                       </div>
-                      <div className="flex-1 bg-[#E9DCCF]/50 rounded-full h-4 overflow-hidden">
+                      <div className="flex-1 bg-[#F3F4F6]/50 rounded-full h-4 overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-[#8B4513] to-[#D2691E] transition-all duration-1000 ease-out rounded-full"
+                          className="h-full bg-gradient-to-r from-[#4B5563] to-[#000000] transition-all duration-1000 ease-out rounded-full"
                           style={{
                             width: `${
                               reviews.length > 0
@@ -450,7 +450,7 @@ export default function ReviewsPage() {
                           }}
                         />
                       </div>
-                      <span className="text-sm font-bold text-[#8B4513] w-8 text-right">
+                      <span className="text-sm font-bold text-[#4B5563] w-8 text-right">
                         {
                           ratingDistribution[
                             rating as keyof typeof ratingDistribution
@@ -470,21 +470,21 @@ export default function ReviewsPage() {
       <div className="relative z-10 px-4 pb-16 max-w-6xl mx-auto">
         {reviews.length === 0 ? (
           // Enhanced Empty State
-          <div className="text-center py-20 bg-white/80 backdrop-blur-sm rounded-3xl border border-[#E9DCCF]/50 shadow-xl">
+          <div className="text-center py-20 bg-white/80 backdrop-blur-sm rounded-3xl border border-[#F3F4F6]/50 shadow-xl">
             <div className="mb-8">
-              <div className="p-6 bg-gradient-to-br from-[#D2691E]/10 to-[#8B4513]/10 rounded-full w-24 h-24 mx-auto mb-6">
-                <FaStar className="text-5xl text-[#D2691E] mx-auto mt-2" />
+              <div className="p-6 bg-gradient-to-br from-[#000000]/10 to-[#4B5563]/10 rounded-full w-24 h-24 mx-auto mb-6">
+                <FaStar className="text-5xl text-[#000000] mx-auto mt-2" />
               </div>
-              <h2 className="text-3xl font-bold text-[#2C1810] mb-4">
+              <h2 className="text-3xl font-bold text-[#000000] mb-4">
                 No Reviews Yet
               </h2>
-              <p className="text-lg text-[#8B4513] mb-8 max-w-md mx-auto leading-relaxed">
+              <p className="text-lg text-[#4B5563] mb-8 max-w-md mx-auto leading-relaxed">
                 Start rating products to see your thoughtful reviews here. Your
                 feedback is valuable to us and other customers!
               </p>
               <Link
                 href="/products"
-                className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-2xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-2xl hover:from-[#000000] hover:to-[#4B5563] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 <FaStar className="text-white text-lg" />
                 Start Rating Products
@@ -494,19 +494,19 @@ export default function ReviewsPage() {
         ) : (
           <>
             {/* Enhanced Sort and Controls */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-[#E9DCCF]/50 shadow-lg mb-8">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-[#F3F4F6]/50 shadow-lg mb-8">
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <FaFilter className="text-[#D2691E]" />
-                    <label className="text-sm font-bold text-[#8B4513]">
+                    <FaFilter className="text-[#000000]" />
+                    <label className="text-sm font-bold text-[#4B5563]">
                       Sort by:
                     </label>
                   </div>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                    className="px-4 py-2 bg-[#F5F1EA] border-2 border-[#E9DCCF] rounded-xl text-[#2C1810] font-medium focus:outline-none focus:ring-2 focus:ring-[#D2691E] focus:border-[#D2691E] transition-all duration-300 cursor-pointer"
+                    className="px-4 py-2 bg-[#FFFFFF] border-2 border-[#F3F4F6] rounded-xl text-[#000000] font-medium focus:outline-none focus:ring-2 focus:ring-[#000000] focus:border-[#000000] transition-all duration-300 cursor-pointer"
                   >
                     <option value="newest">Newest First</option>
                     <option value="oldest">Oldest First</option>
@@ -538,20 +538,20 @@ export default function ReviewsPage() {
             </div>
 
             {/* Enhanced Back to Products Section */}
-            <div className="mt-16 text-center bg-gradient-to-r from-white/80 to-[#F5F1EA]/80 backdrop-blur-sm rounded-3xl p-12 border border-[#E9DCCF]/50 shadow-xl">
-              <div className="p-4 bg-gradient-to-br from-[#D2691E]/10 to-[#8B4513]/10 rounded-full w-16 h-16 mx-auto mb-6">
-                <FaEye className="text-2xl text-[#D2691E] mx-auto mt-2" />
+            <div className="mt-16 text-center bg-gradient-to-r from-white/80 to-[#FFFFFF]/80 backdrop-blur-sm rounded-3xl p-12 border border-[#F3F4F6]/50 shadow-xl">
+              <div className="p-4 bg-gradient-to-br from-[#000000]/10 to-[#4B5563]/10 rounded-full w-16 h-16 mx-auto mb-6">
+                <FaEye className="text-2xl text-[#000000] mx-auto mt-2" />
               </div>
-              <h3 className="text-2xl font-bold text-[#2C1810] mb-4">
+              <h3 className="text-2xl font-bold text-[#000000] mb-4">
                 Want to Review More Products?
               </h3>
-              <p className="text-lg text-[#8B4513] mb-8 max-w-md mx-auto">
+              <p className="text-lg text-[#4B5563] mb-8 max-w-md mx-auto">
                 Explore our beautiful collection and share your thoughts with
                 other customers.
               </p>
               <Link
                 href="/products"
-                className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-bold rounded-2xl hover:from-[#D2691E] hover:to-[#8B4513] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-lg"
+                className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-bold rounded-2xl hover:from-[#000000] hover:to-[#4B5563] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-lg"
               >
                 <FaStar className="text-white text-xl" />
                 Browse More Products

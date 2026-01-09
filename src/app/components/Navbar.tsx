@@ -37,6 +37,11 @@ const Navbar = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
@@ -160,8 +165,8 @@ const Navbar = () => {
     <header className="fixed top-0 w-full z-[100] transition-all duration-300">
       {/* Announcement Bar */}
       <div
-        className={`overflow-hidden bg-[rgb(75,32,8)] text-white text-sm font-medium flex items-center justify-center transition-all duration-300 ${
-          scrolled ? "opacity-0 h-0" : "opacity-100 h-8"
+        className={`overflow-hidden bg-white text-black text-sm font-medium hidden lg:flex items-center justify-center transition-all duration-300 ${
+          scrolled ? "opacity-0 h-0 border-none" : "opacity-100 h-8 border-b border-gray-200"
         }`}
       >
         <div
@@ -180,17 +185,17 @@ const Navbar = () => {
       </div>
 
       {/* Main Navbar */}
-      <div className="bg-[#E9DCCF] shadow-sm border-b border-[#d2c4b5] transition-all duration-300">
+      <div className="bg-black shadow-sm border-b border-gray-800 transition-all duration-300">
         <div className="container mx-auto px-4 sm:px-6">
           <div
             className={`flex items-center justify-between transition-all duration-300 ${
-              scrolled ? "h-12 lg:h-14" : "h-16 lg:h-18"
+              scrolled ? "h-14 lg:h-20" : "h-16 lg:h-32"
             }`}
           >
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="hamburger-btn lg:hidden text-[#2C1810] hover:text-[#D2691E] transition-colors duration-200 p-1 cursor-pointer"
+              className="hamburger-btn lg:hidden text-white hover:text-gray-300 transition-colors duration-200 p-1 cursor-pointer"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? (
@@ -202,17 +207,25 @@ const Navbar = () => {
 
             {/* Logo */}
             <div className="flex-1 flex justify-center lg:justify-start">
-              <Link href="/" aria-label="Home">
+              <Link href="/" aria-label="Home" className="flex items-center gap-3 group">
                 <Image
-                  src="/images/logo2.png"
-                  alt="Manyavar Mohey Logo"
-                  width={200}
-                  height={50}
-                  className={`transition-all duration-300 ${
-                    scrolled ? "h-8 w-auto lg:h-10" : "h-12 w-auto lg:h-16"
+                  src="/images/fittara-symbol-white.png"
+                  alt="Fittara Symbol"
+                  width={150}
+                  height={150}
+                  className={`transition-all duration-300 object-contain ${
+                    scrolled ? "h-12 w-auto lg:h-14" : "h-14 w-auto lg:h-24"
                   }`}
                   priority
                 />
+                <div className={`flex flex-col justify-center transition-all duration-300 text-white ${scrolled ? "scale-90 origin-left" : "scale-100"}`}>
+                   <span className="font-serif leading-none tracking-wide" style={{ fontSize: scrolled ? '1.5rem' : '2.5rem' }}>
+                    FITTARA
+                  </span>
+                  <span className="text-[0.5rem] lg:text-[0.6rem] tracking-[0.2em] font-medium opacity-80 mt-1 whitespace-nowrap">
+                    YOUR VISION. YOUR FIT. YOUR FITTARA
+                  </span>
+                </div>
               </Link>
             </div>
 
@@ -224,18 +237,18 @@ const Navbar = () => {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="relative text-sm font-bold text-[#2C1810] hover:text-[#D2691E] transition-colors duration-200 tracking-wide px-2 py-1 group"
+                    className="relative text-sm font-bold text-white hover:text-gray-300 transition-colors duration-200 tracking-wide px-2 py-1 group"
                   >
                     {link.name}
-                    <span className="absolute left-0 -bottom-0.5 w-0 h-[2px] bg-[#D2691E] transition-all duration-300 group-hover:w-full"></span>
+                    <span className="absolute left-0 -bottom-0.5 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
                   </Link>
                 ))}
-                <div className="w-px h-6 bg-[#2C1810] opacity-20 mx-2"></div>
+                <div className="w-px h-6 bg-white opacity-20 mx-2"></div>
                 {extraLinks.map((link) => (
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="text-sm text-[#2C1810] hover:text-[#D2691E] transition-colors duration-200 tracking-tighter px-2 py-1"
+                    className="text-sm text-gray-300 hover:text-white transition-colors duration-200 tracking-tighter px-2 py-1"
                   >
                     {link.name}
                   </Link>
@@ -247,7 +260,7 @@ const Navbar = () => {
                 <Tooltip content="Profile">
                   <Link
                     href="/account"
-                    className="text-[#2C1810] hover:text-[#D2691E] flex items-center justify-center"
+                    className="text-white hover:text-gray-300 flex items-center justify-center"
                   >
                     {isSignedIn && user?.imageUrl ? (
                       <Image
@@ -255,7 +268,7 @@ const Navbar = () => {
                         alt="Profile"
                         width={24}
                         height={24}
-                        className="rounded-full object-cover border border-[#d2c4b5]"
+                        className="rounded-full object-cover border border-gray-600"
                       />
                     ) : (
                       <FiUser className="text-lg" />
@@ -268,11 +281,11 @@ const Navbar = () => {
                 <Tooltip content="Wishlist">
                   <Link
                     href="/wishlist"
-                    className="text-[#2C1810] hover:text-[#D2691E]"
+                    className="text-white hover:text-gray-300"
                   >
                     <FiHeart className="text-lg" />
-                    {wishlistCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-[#D2691E] text-white text-xs font-bold rounded-full px-1.5 py-0.5">
+                    {mounted && wishlistCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-white text-black text-xs font-bold rounded-full px-1.5 py-0.5">
                         {wishlistCount}
                       </span>
                     )}
@@ -284,11 +297,11 @@ const Navbar = () => {
                 <Tooltip content="Cart">
                   <Link
                     href="/store"
-                    className="relative text-[#2C1810] hover:text-[#D2691E]"
+                    className="relative text-white hover:text-gray-300"
                   >
                     <FiShoppingBag className="text-lg" />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-[#D2691E] text-white text-xs font-bold rounded-full px-1.5 py-0.5">
+                    {mounted && cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-white text-black text-xs font-bold rounded-full px-1.5 py-0.5">
                         {cartCount}
                       </span>
                     )}
@@ -308,7 +321,7 @@ const Navbar = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={`Search for ${searchText}`}
                   aria-label="Search products"
-                  className="py-2 pl-4 pr-10 border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#D2691E] w-full bg-white placeholder-gray-500 rounded-md"
+                  className="py-2 pl-4 pr-10 border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000] w-full bg-white placeholder-gray-500 rounded-md"
                 />
                 <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm" />
                 {filteredProducts.length > 0 && (
@@ -349,7 +362,7 @@ const Navbar = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={`Search for ${searchText}`}
                   aria-label="Search products mobile"
-                  className="py-2 pl-4 pr-10 border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#D2691E] w-full bg-white placeholder-gray-500 rounded-md"
+                  className="py-2 pl-4 pr-10 border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000] w-full bg-white placeholder-gray-500 rounded-md"
                 />
                 <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm" />
                 {filteredProducts.length > 0 && (
@@ -391,23 +404,33 @@ const Navbar = () => {
 
         {/* Mobile Sidebar */}
         <div
-          className={`mobile-menu fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-[#E9DCCF] shadow-2xl transform transition-transform duration-300 ease-in-out z-[200] lg:hidden ${
+          className={`mobile-menu fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-black shadow-2xl transform transition-transform duration-300 ease-in-out z-[200] lg:hidden ${
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <div className="flex flex-col h-full">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-[#d2c4b5] bg-gradient-to-r from-[#E9DCCF] to-[#F0E5D8] shadow-sm">
-              <Image
-                src="/images/logo2.png"
-                alt="Logo"
-                width={150}
-                height={40}
-                className="h-10 w-auto"
-              />
+            <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-black shadow-sm">
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/images/fittara-symbol-white.png"
+                  alt="Fittara Symbol"
+                  width={80}
+                  height={80}
+                  className="h-10 w-auto"
+                />
+                <div className="flex flex-col text-white">
+                  <span className="font-serif text-xl leading-none tracking-wide">
+                    FITTARA
+                  </span>
+                  <span className="text-[0.4rem] tracking-[0.15em] font-medium opacity-80 whitespace-nowrap">
+                    YOUR VISION. YOUR FIT. YOUR FITTARA
+                  </span>
+                </div>
+              </div>
               <button
                 onClick={closeMobileMenu}
-                className="text-[#2C1810] hover:text-[#D2691E] transition-colors duration-200 p-2 rounded-full hover:bg-white/20"
+                className="text-white hover:text-gray-300 transition-colors duration-200 p-2 rounded-full hover:bg-white/10"
                 aria-label="Close menu"
               >
                 <FiX className="text-xl" />
@@ -415,7 +438,7 @@ const Navbar = () => {
             </div>
 
             {/* Search inside menu (unchanged) */}
-            <div className="p-4 border-b border-[#d2c4b5] bg-gradient-to-r from-[#F0E5D8] to-[#E9DCCF]">
+            <div className="p-4 border-b border-gray-800 bg-black">
               <div className="relative" ref={searchRef}>
                 <input
                   type="text"
@@ -423,7 +446,7 @@ const Navbar = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={`Search for ${searchText}`}
                   aria-label="Search products mobile"
-                  className="py-3 pl-4 pr-10 border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#D2691E] focus:border-[#D2691E] w-full bg-white rounded-lg shadow-sm"
+                  className="py-3 pl-4 pr-10 border border-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:border-white w-full bg-gray-900 text-white placeholder-gray-500 rounded-lg shadow-sm"
                 />
                 <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm" />
                 {filteredProducts.length > 0 && (
@@ -455,38 +478,38 @@ const Navbar = () => {
             </div>
 
             {/* Links */}
-            <div className="flex-1 overflow-y-auto bg-gradient-to-b from-[#F0E5D8] to-[#E9DCCF]">
+            <div className="flex-1 overflow-y-auto bg-black">
               <nav className="p-4 space-y-1">
                 {mainLinks.map((link) => (
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="block px-4 py-4 text-base font-bold text-[#2C1810] hover:text-[#D2691E] hover:bg-white/40 rounded-lg transition-all duration-200 border-b border-[#d2c4b5]/30"
+                    className="block px-4 py-4 text-base font-bold text-white hover:text-gray-300 hover:bg-white/10 rounded-lg transition-all duration-200 border-b border-gray-800"
                     onClick={closeMobileMenu}
                   >
                     {link.name}
                   </Link>
                 ))}
 
-                <div className="border-t border-[#d2c4b5] my-4 mx-2"></div>
+                <div className="border-t border-gray-800 my-4 mx-2"></div>
 
                 {extraLinks.map((link) => (
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="block px-4 py-3 text-sm font-medium text-[#2C1810] hover:text-[#D2691E] hover:bg-white/30 rounded-lg transition-all duration-200"
+                    className="block px-4 py-3 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
                     onClick={closeMobileMenu}
                   >
                     {link.name}
                   </Link>
                 ))}
 
-                <div className="border-t border-[#d2c4b5] my-4 mx-2"></div>
+                <div className="border-t border-gray-800 my-4 mx-2"></div>
 
                 {/* Account Links */}
                 <Link
                   href="/account"
-                  className="flex items-center px-4 py-4 text-sm font-medium text-[#2C1810] hover:text-[#D2691E] hover:bg-white/40 rounded-lg transition-all duration-200"
+                  className="flex items-center px-4 py-4 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
                   onClick={closeMobileMenu}
                 >
                   {isSignedIn && user?.imageUrl ? (
@@ -495,7 +518,7 @@ const Navbar = () => {
                       alt="Profile"
                       width={24}
                       height={24}
-                      className="rounded-full object-cover border border-[#d2c4b5] mr-3"
+                      className="rounded-full object-cover border border-gray-600 mr-3"
                     />
                   ) : (
                     <FiUser className="text-lg mr-3" />
@@ -504,30 +527,30 @@ const Navbar = () => {
                 </Link>
                 <Link
                   href="/wishlist"
-                  className="flex items-center justify-between px-4 py-4 text-sm font-medium text-[#2C1810] hover:text-[#D2691E] hover:bg-white/40 rounded-lg transition-all duration-200"
+                  className="flex items-center justify-between px-4 py-4 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
                   onClick={closeMobileMenu}
                 >
                   <div className="flex items-center">
                     <FiHeart className="text-lg mr-3" />
                     <span>My Wishlist</span>
                   </div>
-                  {wishlistCount > 0 && (
-                    <span className="bg-[#D2691E] text-white text-xs font-bold rounded-full px-2.5 py-1 shadow-sm">
+                  {mounted && wishlistCount > 0 && (
+                    <span className="bg-white text-black text-xs font-bold rounded-full px-2.5 py-1 shadow-sm">
                       {wishlistCount}
                     </span>
                   )}
                 </Link>
                 <Link
                   href="/store"
-                  className="flex items-center justify-between px-4 py-4 text-sm font-medium text-[#2C1810] hover:text-[#D2691E] hover:bg-white/40 rounded-lg transition-all duration-200"
+                  className="flex items-center justify-between px-4 py-4 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
                   onClick={closeMobileMenu}
                 >
                   <div className="flex items-center">
                     <FiShoppingBag className="text-lg mr-3" />
                     <span>My Cart</span>
                   </div>
-                  {cartCount > 0 && (
-                    <span className="bg-[#D2691E] text-white text-xs font-bold rounded-full px-2.5 py-1 shadow-sm">
+                  {mounted && cartCount > 0 && (
+                    <span className="bg-white text-black text-xs font-bold rounded-full px-2.5 py-1 shadow-sm">
                       {cartCount}
                     </span>
                   )}

@@ -9,13 +9,13 @@ export default function ToastProvider() {
       toastOptions={{ 
         duration: 3000, 
         style: { 
-          background: '#2C1810', 
+          background: '#000000', 
           color: '#fff',
           zIndex: 99999 
         },
         success: {
           iconTheme: {
-            primary: '#D2691E',
+            primary: '#000000',
             secondary: '#fff',
           },
         }

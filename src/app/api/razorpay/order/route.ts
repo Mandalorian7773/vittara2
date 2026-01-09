@@ -36,10 +36,15 @@ export async function POST(req: NextRequest) {
       ...razorpayOrder,
       dbOrderId: newOrder._id
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Razorpay/DB Error:", error);
+    // Return detailed error for debugging (remove in production if needed)
     return NextResponse.json(
-      { error: "Error creating order" },
+      {
+        error: "Error creating order",
+        details: error.message || error.toString(),
+        stack: error.stack
+      },
       { status: 500 }
     );
   }

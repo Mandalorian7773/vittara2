@@ -118,12 +118,12 @@ const ProfileIllustration = () => (
       {/* Gradient definitions */}
       <defs>
         <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#2C1810" />
-          <stop offset="50%" stopColor="#D2691E" />
+          <stop offset="0%" stopColor="#000000" />
+          <stop offset="50%" stopColor="#000000" />
           <stop offset="100%" stopColor="#F4A460" />
         </linearGradient>
         <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#D2691E" />
+          <stop offset="0%" stopColor="#000000" />
           <stop offset="100%" stopColor="#F4A460" />
         </linearGradient>
       </defs>
@@ -137,7 +137,7 @@ const FloatingParticles = () => (
     {[...Array(20)].map((_, i) => (
       <motion.div
         key={i}
-        className="absolute w-2 h-2 bg-gradient-to-r from-[#D2691E] to-[#F4A460] rounded-full opacity-20"
+        className="absolute w-2 h-2 bg-gradient-to-r from-[#000000] to-[#F4A460] rounded-full opacity-20"
         style={{
           left: `${Math.random() * 100}%`,
           top: `${Math.random() * 100}%`,
@@ -247,13 +247,13 @@ const AdminDashboard = () => {
                 whileHover={{ scale: 1.2, rotate: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <item.icon className="text-2xl text-[#D2691E]" />
+                <item.icon className="text-2xl text-[#000000]" />
               </motion.div>
-              <h3 className="text-lg font-semibold text-[#2C1810]">
+              <h3 className="text-lg font-semibold text-[#000000]">
                 {item.title}
               </h3>
             </div>
-            <p className="text-[#2C1810]/70 text-sm relative z-10">
+            <p className="text-[#000000]/70 text-sm relative z-10">
               {item.description}
             </p>
           </motion.div>
@@ -279,7 +279,7 @@ const UserDashboard = () => {
         initial={{ x: -50, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="bg-gradient-to-r from-[#2C1810] to-[#D2691E] text-white p-6 rounded-2xl relative overflow-hidden"
+        className="bg-gradient-to-r from-[#000000] to-[#000000] text-white p-6 rounded-2xl relative overflow-hidden"
       >
         <motion.div
           className="absolute top-0 left-0 w-full h-full opacity-10"
@@ -341,7 +341,7 @@ const WelcomeMessage = ({ isAdmin }: { isAdmin: boolean }) => {
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <FaUser className="text-4xl text-[#D2691E]" />
+            <FaUser className="text-4xl text-[#000000]" />
           </motion.div>
         )}
       </motion.div>
@@ -351,7 +351,7 @@ const WelcomeMessage = ({ isAdmin }: { isAdmin: boolean }) => {
         style={{
           background: isAdmin
             ? "linear-gradient(45deg, #8B0000, #DC143C, #FF6347, #8B0000)"
-            : "linear-gradient(45deg, #2C1810, #D2691E, #F4A460, #2C1810)",
+            : "linear-gradient(45deg, #000000, #000000, #F4A460, #000000)",
           backgroundSize: "300% 300%",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -370,7 +370,7 @@ const WelcomeMessage = ({ isAdmin }: { isAdmin: boolean }) => {
         className={`w-24 h-1 mx-auto mb-4 rounded-full ${
           isAdmin
             ? "bg-gradient-to-r from-[#DC143C] to-[#FF6347]"
-            : "bg-gradient-to-r from-[#D2691E] to-[#F4A460]"
+            : "bg-gradient-to-r from-[#000000] to-[#F4A460]"
         }`}
         initial={{ width: 0 }}
         animate={{ width: 96 }}
@@ -378,7 +378,7 @@ const WelcomeMessage = ({ isAdmin }: { isAdmin: boolean }) => {
       />
 
       <motion.p
-        className="text-[#2C1810]/70 text-xl"
+        className="text-[#000000]/70 text-xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
@@ -455,7 +455,7 @@ const AdminVerification = ({
         </motion.h2>
 
         <motion.p
-          className="text-[#2C1810]/80 mb-6 text-lg"
+          className="text-[#000000]/80 mb-6 text-lg"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
@@ -500,7 +500,7 @@ const AdminVerification = ({
 
           <motion.button
             onClick={onBack}
-            className="w-full px-6 py-3 bg-gray-100 text-[#2C1810] rounded-xl font-medium hover:bg-gray-200 transition-colors cursor-pointer"
+            className="w-full px-6 py-3 bg-gray-100 text-[#000000] rounded-xl font-medium hover:bg-gray-200 transition-colors cursor-pointer"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -514,8 +514,8 @@ const AdminVerification = ({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          <p className="text-xs text-[#2C1810]/60 mb-2">Admin Code Required</p>
-          <p className="text-sm text-[#2C1810]/80">
+          <p className="text-xs text-[#000000]/60 mb-2">Admin Code Required</p>
+          <p className="text-sm text-[#000000]/80">
             Only authorized administrators have access to the verification code
           </p>
         </motion.div>
@@ -543,7 +543,7 @@ const LoginTypeSelection = () => {
           className="bg-white/98 backdrop-blur-xl shadow-2xl rounded-3xl p-8 md:p-12 text-center border border-[#E5D3B3]/50 relative overflow-hidden max-w-4xl mx-auto mt-12 md:mt-24"
         >
           <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-[#2C1810] via-[#D2691E] to-[#F4A460] rounded-3xl p-[2px]"
+            className="absolute inset-0 bg-gradient-to-r from-[#000000] via-[#000000] to-[#F4A460] rounded-3xl p-[2px]"
             animate={{ rotate: [0, 360] }}
             transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           >
@@ -558,7 +558,7 @@ const LoginTypeSelection = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <motion.div
-                className="w-24 h-24 bg-gradient-to-br from-[#2C1810] to-[#D2691E] rounded-full flex items-center justify-center"
+                className="w-24 h-24 bg-gradient-to-br from-[#000000] to-[#000000] rounded-full flex items-center justify-center"
                 whileHover={{ scale: 1.1, rotate: 15 }}
               >
                 <FaUser className="text-3xl text-white" />
@@ -566,7 +566,7 @@ const LoginTypeSelection = () => {
             </motion.div>
 
             <motion.h2
-              className="text-4xl mb-4 font-bold bg-gradient-to-r from-[#2C1810] via-[#D2691E] to-[#F4A460] bg-clip-text text-transparent"
+              className="text-4xl mb-4 font-bold bg-gradient-to-r from-[#000000] via-[#000000] to-[#F4A460] bg-clip-text text-transparent"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -575,7 +575,7 @@ const LoginTypeSelection = () => {
             </motion.h2>
 
             <motion.p
-              className="text-[#2C1810]/80 mb-10 text-lg leading-relaxed max-w-md mx-auto"
+              className="text-[#000000]/80 mb-10 text-lg leading-relaxed max-w-md mx-auto"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
@@ -594,7 +594,7 @@ const LoginTypeSelection = () => {
               {/* User Login Button */}
               <motion.div
                 onClick={() => setSelectedType("user")}
-                className="p-8 bg-gradient-to-br from-[#2C1810] to-[#D2691E] text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden group"
+                className="p-8 bg-gradient-to-br from-[#000000] to-[#000000] text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden group"
                 whileHover={{ scale: 1.02, y: -5 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -655,7 +655,7 @@ const LoginTypeSelection = () => {
             </motion.div>
 
             <motion.p
-              className="mt-8 text-[#2C1810]/60 text-sm"
+              className="mt-8 text-[#000000]/60 text-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
@@ -679,13 +679,13 @@ const LoginTypeSelection = () => {
           className="bg-white/98 backdrop-blur-xl shadow-2xl rounded-3xl p-12 text-center border border-[#E5D3B3]/50 relative overflow-hidden max-w-lg mx-auto mt-12 md:mt-24"
         >
           <motion.div
-            className="absolute inset-0 rounded-3xl p-[3px] bg-gradient-to-r from-[#2C1810] via-[#D2691E] to-[#F4A460]"
+            className="absolute inset-0 rounded-3xl p-[3px] bg-gradient-to-r from-[#000000] via-[#000000] to-[#F4A460]"
             animate={{
               background: [
-                "linear-gradient(45deg, #2C1810, #D2691E, #F4A460)",
-                "linear-gradient(90deg, #D2691E, #F4A460, #2C1810)",
-                "linear-gradient(135deg, #F4A460, #2C1810, #D2691E)",
-                "linear-gradient(180deg, #2C1810, #D2691E, #F4A460)",
+                "linear-gradient(45deg, #000000, #000000, #F4A460)",
+                "linear-gradient(90deg, #000000, #F4A460, #000000)",
+                "linear-gradient(135deg, #F4A460, #000000, #000000)",
+                "linear-gradient(180deg, #000000, #000000, #F4A460)",
               ],
             }}
             transition={{ duration: 4, repeat: Infinity }}
@@ -704,7 +704,7 @@ const LoginTypeSelection = () => {
                 whileHover={{ scale: 1.1, rotate: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <FaUser className="text-6xl text-[#D2691E]" />
+                <FaUser className="text-6xl text-[#000000]" />
               </motion.div>
             </motion.div>
 
@@ -714,13 +714,13 @@ const LoginTypeSelection = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#2C1810] via-[#D2691E] to-[#F4A460]">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#000000] via-[#000000] to-[#F4A460]">
                 User Login
               </span>
             </motion.h2>
 
             <motion.p
-              className="text-[#2C1810]/80 mb-8 text-lg"
+              className="text-[#000000]/80 mb-8 text-lg"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
@@ -735,9 +735,9 @@ const LoginTypeSelection = () => {
                   boxShadow: "0 25px 50px -12px rgba(44, 24, 16, 0.4)",
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full px-10 py-5 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-500 transform relative overflow-hidden group bg-gradient-to-r from-[#2C1810] via-[#D2691E] to-[#F4A460]"
+                className="w-full px-10 py-5 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-500 transform relative overflow-hidden group bg-gradient-to-r from-[#000000] via-[#000000] to-[#F4A460]"
               >
-                <motion.span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-[#D2691E] via-[#F4A460] to-[#DEB887]" />
+                <motion.span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-[#000000] via-[#F4A460] to-[#DEB887]" />
                 <span className="relative z-10 flex items-center justify-center space-x-3 cursor-pointer">
                   <span>Sign In to Continue</span>
                   <motion.svg
@@ -765,7 +765,7 @@ const LoginTypeSelection = () => {
 
             <motion.button
               onClick={() => setSelectedType(null)}
-              className="mt-6 text-[#2C1810]/60 hover:text-[#D2691E] text-sm underline cursor-pointer"
+              className="mt-6 text-[#000000]/60 hover:text-[#000000] text-sm underline cursor-pointer"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
@@ -824,7 +824,7 @@ const LoginTypeSelection = () => {
             </motion.h2>
 
             <motion.p
-              className="text-[#2C1810]/80 mb-8 text-lg"
+              className="text-[#000000]/80 mb-8 text-lg"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
@@ -869,7 +869,7 @@ const LoginTypeSelection = () => {
 
             <motion.button
               onClick={() => setSelectedType(null)}
-              className="mt-6 text-[#2C1810]/60 hover:text-[#D2691E] text-sm underline cursor-pointer"
+              className="mt-6 text-[#000000]/60 hover:text-[#000000] text-sm underline cursor-pointer"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
@@ -898,13 +898,13 @@ export default function AccountPage() {
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* Enhanced Gradient Background */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-[#F9F6F1] via-[#FDF8F3] to-[#F5F0E8] mt-20 z-0"
+        className="absolute inset-0 bg-gradient-to-br from-[#F9F6F1] via-[#FDF8F3] to-[#FFFFFF] mt-20 z-0"
         animate={{
           background: [
-            "linear-gradient(to bottom right, #F9F6F1, #FDF8F3, #F5F0E8)",
-            "linear-gradient(to bottom right, #FDF8F3, #F5F0E8, #F9F6F1)",
-            "linear-gradient(to bottom right, #F5F0E8, #F9F6F1, #FDF8F3)",
-            "linear-gradient(to bottom right, #F9F6F1, #FDF8F3, #F5F0E8)",
+            "linear-gradient(to bottom right, #F9F6F1, #FDF8F3, #FFFFFF)",
+            "linear-gradient(to bottom right, #FDF8F3, #FFFFFF, #F9F6F1)",
+            "linear-gradient(to bottom right, #FFFFFF, #F9F6F1, #FDF8F3)",
+            "linear-gradient(to bottom right, #F9F6F1, #FDF8F3, #FFFFFF)",
           ],
         }}
         transition={{ duration: 10, repeat: Infinity }}
@@ -912,7 +912,7 @@ export default function AccountPage() {
 
       {/* Animated geometric shapes */}
       <motion.div
-        className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-[#D2691E]/20 to-[#F4A460]/20 rounded-full blur-xl"
+        className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-[#000000]/20 to-[#F4A460]/20 rounded-full blur-xl"
         animate={{
           y: [0, -20, 0],
           x: [0, 10, 0],
@@ -921,7 +921,7 @@ export default function AccountPage() {
         transition={{ duration: 6, repeat: Infinity }}
       />
       <motion.div
-        className="absolute bottom-32 right-16 w-32 h-32 bg-gradient-to-tr from-[#2C1810]/10 to-[#D2691E]/10 rounded-full blur-2xl"
+        className="absolute bottom-32 right-16 w-32 h-32 bg-gradient-to-tr from-[#000000]/10 to-[#000000]/10 rounded-full blur-2xl"
         animate={{
           y: [0, 30, 0],
           x: [0, -15, 0],
@@ -954,7 +954,7 @@ export default function AccountPage() {
                   className={`absolute top-0 left-0 w-full h-1 ${
                     userIsAdmin
                       ? "bg-gradient-to-r from-[#8B0000] via-[#DC143C] to-[#FF6347]"
-                      : "bg-gradient-to-r from-[#2C1810] via-[#D2691E] to-[#F4A460]"
+                      : "bg-gradient-to-r from-[#000000] via-[#000000] to-[#F4A460]"
                   }`}
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
@@ -966,7 +966,7 @@ export default function AccountPage() {
                   className={`absolute top-0 right-0 w-20 h-20 rounded-bl-3xl ${
                     userIsAdmin
                       ? "bg-gradient-to-bl from-[#DC143C]/20 to-transparent"
-                      : "bg-gradient-to-bl from-[#D2691E]/20 to-transparent"
+                      : "bg-gradient-to-bl from-[#000000]/20 to-transparent"
                   }`}
                   animate={{
                     opacity: [0.3, 0.7, 0.3],
@@ -1004,7 +1004,7 @@ export default function AccountPage() {
                     transition={{ delay: 3, duration: 0.8 }}
                   >
                     <motion.h3
-                      className="text-2xl font-bold text-[#2C1810] mb-6 text-center"
+                      className="text-2xl font-bold text-[#000000] mb-6 text-center"
                       whileHover={{ scale: 1.05 }}
                     >
                       Profile Settings
@@ -1024,24 +1024,24 @@ export default function AccountPage() {
                             scrollBox: "p-0",
                             profileSectionPrimaryButton: userIsAdmin
                               ? "bg-[#8B0000] hover:bg-[#DC143C] transition-all duration-300 shadow-lg hover:shadow-xl"
-                              : "bg-[#2C1810] hover:bg-[#D2691E] transition-all duration-300 shadow-lg hover:shadow-xl",
+                              : "bg-[#000000] hover:bg-[#000000] transition-all duration-300 shadow-lg hover:shadow-xl",
                             formButtonPrimary: userIsAdmin
                               ? "bg-[#8B0000] hover:bg-[#DC143C] transition-all duration-300 shadow-lg hover:shadow-xl"
-                              : "bg-[#2C1810] hover:bg-[#D2691E] transition-all duration-300 shadow-lg hover:shadow-xl",
+                              : "bg-[#000000] hover:bg-[#000000] transition-all duration-300 shadow-lg hover:shadow-xl",
                             headerTitle:
-                              "text-3xl font-bold text-[#2C1810] mb-2",
-                            headerSubtitle: "text-[#2C1810]/70 text-lg",
+                              "text-3xl font-bold text-[#000000] mb-2",
+                            headerSubtitle: "text-[#000000]/70 text-lg",
                             profileSection: "mb-8",
                             profileSectionContent:
                               "bg-gray-50/50 rounded-xl p-6",
                           },
                           variables: {
-                            colorPrimary: userIsAdmin ? "#8B0000" : "#2C1810",
+                            colorPrimary: userIsAdmin ? "#8B0000" : "#000000",
                             colorDanger: "#DC2626",
                             colorSuccess: "#059669",
                             colorWarning: "#D97706",
                             colorTextOnPrimaryBackground: "#ffffff",
-                            colorTextSecondary: "#2C1810",
+                            colorTextSecondary: "#000000",
                             borderRadius: "0.75rem",
                             spacingUnit: "1rem",
                           },
@@ -1069,7 +1069,7 @@ export default function AccountPage() {
                         className={`px-8 py-3 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer relative overflow-hidden group ${
                           userIsAdmin
                             ? "bg-gradient-to-r from-[#DC143C] via-[#FF6347] to-[#FF4500]"
-                            : "bg-gradient-to-r from-[#D2691E] via-[#F4A460] to-[#DEB887]"
+                            : "bg-gradient-to-r from-[#000000] via-[#F4A460] to-[#DEB887]"
                         }`}
                       >
                         <motion.div

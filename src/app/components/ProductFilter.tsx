@@ -67,8 +67,8 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
         <>
           {/* Dropdown Button */}
           <Menu.Button
-            className={`inline-flex justify-between items-center w-full px-3 py-2 bg-gradient-to-r from-white to-[#F5F1EA] text-[#2C1810] text-sm font-medium rounded-lg shadow-md border border-[#E9DCCF] hover:border-[#D2691E] hover:shadow-lg transition-all duration-300 cursor-pointer ${
-              open ? "ring-2 ring-[#D2691E]/30 shadow-lg" : ""
+            className={`inline-flex justify-between items-center w-full px-3 py-2 bg-gradient-to-r from-white to-[#FFFFFF] text-[#000000] text-sm font-medium rounded-lg shadow-md border border-[#F3F4F6] hover:border-[#000000] hover:shadow-lg transition-all duration-300 cursor-pointer ${
+              open ? "ring-2 ring-[#000000]/30 shadow-lg" : ""
             }`}
           >
             <span className="truncate whitespace-nowrap w-full text-left">
@@ -76,7 +76,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
             </span>
             <FaChevronDown
               className={`ml-2 text-xs transition-transform duration-300 ${
-                open ? "rotate-180 text-[#D2691E]" : "text-[#8B4513]"
+                open ? "rotate-180 text-[#000000]" : "text-[#4B5563]"
               }`}
             />
           </Menu.Button>
@@ -100,7 +100,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                   scale: 0.95,
                   transition: { duration: 0.2 },
                 }}
-                className={`absolute w-56 rounded-xl bg-white shadow-2xl ring-1 ring-[#E9DCCF] border border-[#E9DCCF]/50 focus:outline-none z-[9999] overflow-visible
+                className={`absolute w-56 rounded-xl bg-white shadow-2xl ring-1 ring-[#F3F4F6] border border-[#F3F4F6]/50 focus:outline-none z-[9999] overflow-visible
                   ${dropUp ? "bottom-full mb-1 left-0" : "top-full mt-1 left-0"}`}
               >
                 <div className="py-2">
@@ -118,11 +118,11 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                           onClick={() => updateFilter(filterKey, opt.value)}
                           className={`${
                             active
-                              ? "bg-gradient-to-r from-[#F5F1EA] to-[#F5F1EA] text-[#D2691E]"
-                              : "text-[#2C1810] hover:bg-[#F5F1EA]/50"
+                              ? "bg-gradient-to-r from-[#FFFFFF] to-[#FFFFFF] text-[#000000]"
+                              : "text-[#000000] hover:bg-[#FFFFFF]/50"
                           } ${
                             filters[filterKey] === opt.value
-                              ? "bg-[#D2691E]/10 text-[#D2691E] font-semibold border-l-4 border-[#D2691E]"
+                              ? "bg-[#000000]/10 text-[#000000] font-semibold border-l-4 border-[#000000]"
                               : ""
                           } 
                           block px-3 py-2 text-sm w-full text-left cursor-pointer transition-all duration-300 whitespace-nowrap`}
@@ -146,7 +146,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
       {/* Filter Toggle Button */}
       <button
         onClick={() => setShowFilters(!showFilters)}
-        className="flex items-center justify-between w-full px-6 py-3 mb-6 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+        className="flex items-center justify-between w-full px-6 py-3 mb-6 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-xl hover:from-[#000000] hover:to-[#4B5563] transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
       >
         <div className="flex items-center gap-2">
           <FaFilter className="text-sm" />
@@ -168,15 +168,15 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-visible bg-white/95 backdrop-blur-sm rounded-2xl border-2 border-[#E9DCCF] shadow-2xl relative z-40"
+            className="overflow-visible bg-white/95 backdrop-blur-sm rounded-2xl border-2 border-[#F3F4F6] shadow-2xl relative z-40"
           >
             <div className="p-4 space-y-4">
               {/* Filter Header */}
-              <div className="flex items-center justify-between border-b border-[#E9DCCF] pb-3">
-                <h3 className="text-lg font-semibold text-[#2C1810]">Filter Products</h3>
+              <div className="flex items-center justify-between border-b border-[#F3F4F6] pb-3">
+                <h3 className="text-lg font-semibold text-[#000000]">Filter Products</h3>
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs text-[#D2691E] hover:text-[#8B4513] font-medium transition-colors duration-200 cursor-pointer"
+                  className="text-xs text-[#000000] hover:text-[#4B5563] font-medium transition-colors duration-200 cursor-pointer"
                 >
                   Clear All
                 </button>
@@ -185,7 +185,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
               {/* Filter Options */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#8B4513] mb-2">Size</label>
+                  <label className="block text-sm font-medium text-[#4B5563] mb-2">Size</label>
                   <Dropdown
                     label="Select Size"
                     filterKey="size"
@@ -200,7 +200,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#8B4513] mb-2">Price Range</label>
+                  <label className="block text-sm font-medium text-[#4B5563] mb-2">Price Range</label>
                   <Dropdown
                     label="Select Price"
                     filterKey="price"
@@ -215,7 +215,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#8B4513] mb-2">Fabric</label>
+                  <label className="block text-sm font-medium text-[#4B5563] mb-2">Fabric</label>
                   <Dropdown
                     label="Select Fabric"
                     filterKey="fabric"
@@ -228,7 +228,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#8B4513] mb-2">Color</label>
+                  <label className="block text-sm font-medium text-[#4B5563] mb-2">Color</label>
                   {/* 👇 Force dropUp for small screens */}
                   <Dropdown
                     label="Select Color"
@@ -245,16 +245,16 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
 
               {/* Active Filters Summary */}
               {(filters.size || filters.price || filters.fabric || filters.color) && (
-                <div className="pt-3 border-t border-[#E9DCCF]">
-                  <p className="text-xs text-[#8B4513] mb-2">Active Filters:</p>
+                <div className="pt-3 border-t border-[#F3F4F6]">
+                  <p className="text-xs text-[#4B5563] mb-2">Active Filters:</p>
                   <div className="flex flex-wrap gap-1">
                     {filters.size && (
-                      <span className="px-2 py-1 bg-[#D2691E]/10 text-[#D2691E] text-xs rounded-md border border-[#D2691E]/20">
+                      <span className="px-2 py-1 bg-[#000000]/10 text-[#000000] text-xs rounded-md border border-[#000000]/20">
                         Size: {filters.size}
                       </span>
                     )}
                     {filters.price && (
-                      <span className="px-2 py-1 bg-[#D2691E]/10 text-[#D2691E] text-xs rounded-md border border-[#D2691E]/20">
+                      <span className="px-2 py-1 bg-[#000000]/10 text-[#000000] text-xs rounded-md border border-[#000000]/20">
                         Price:{" "}
                         {filters.price.includes("-")
                           ? `₹${filters.price.replace("-", " - ₹")}`
@@ -262,12 +262,12 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                       </span>
                     )}
                     {filters.fabric && (
-                      <span className="px-2 py-1 bg-[#D2691E]/10 text-[#D2691E] text-xs rounded-md border border-[#D2691E]/20">
+                      <span className="px-2 py-1 bg-[#000000]/10 text-[#000000] text-xs rounded-md border border-[#000000]/20">
                         Fabric: {filters.fabric}
                       </span>
                     )}
                     {filters.color && (
-                      <span className="px-2 py-1 bg-[#D2691E]/10 text-[#D2691E] text-xs rounded-md border border-[#D2691E]/20">
+                      <span className="px-2 py-1 bg-[#000000]/10 text-[#000000] text-xs rounded-md border border-[#000000]/20">
                         Color: {filters.color}
                       </span>
                     )}
@@ -276,8 +276,8 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
               )}
 
               {/* Results Count */}
-              <div className="pt-3 border-t border-[#E9DCCF]">
-                <p className="text-sm font-medium text-[#2C1810]">
+              <div className="pt-3 border-t border-[#F3F4F6]">
+                <p className="text-sm font-medium text-[#000000]">
                   {resultsCount} product{resultsCount !== 1 ? "s" : ""} found
                 </p>
               </div>

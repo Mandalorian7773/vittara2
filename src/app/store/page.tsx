@@ -280,7 +280,7 @@ export default function StorePage() {
           address: `${address.street}, ${address.city}, ${address.state} - ${address.zip}`,
         },
         theme: {
-          color: "#D2691E",
+          color: "#000000",
         },
       };
 
@@ -293,6 +293,11 @@ export default function StorePage() {
   };
 
   const handleCheckoutClick = () => {
+    const incompleteItems = cart.filter(item => !item.size || !item.color || !item.fabric);
+    if (incompleteItems.length > 0) {
+      showModal("error", "Incomplete Options", "Please select Size, Fabric, and Color for all items in your cart before checking out.");
+      return;
+    }
     setShowAddressForm(true);
   };
 
@@ -355,7 +360,7 @@ export default function StorePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8]">
+    <div className="min-h-screen bg-[#FFFFFF]">
       <Navbar />
 
       {/* Modal */}
@@ -376,9 +381,9 @@ export default function StorePage() {
             onClick={() => setShowAddressForm(false)}
           ></div>
           <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden animate-scale-in flex flex-col max-h-[90vh]">
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-[#F5F0E8]">
-              <h3 className="text-2xl font-bold text-[#2C1810] flex items-center gap-2">
-                 <Truck className="w-6 h-6 text-[#D2691E]" />
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-[#FFFFFF]">
+              <h3 className="text-2xl font-bold text-[#000000] flex items-center gap-2">
+                 <Truck className="w-6 h-6 text-[#000000]" />
                  Shipping Details
               </h3>
               <button 
@@ -393,32 +398,32 @@ export default function StorePage() {
                 <form id="address-form" onSubmit={(e) => { e.preventDefault(); processPayment(); }}>
                     <div className="space-y-6">
                         <div>
-                            <label className="block text-sm font-semibold text-[#2C1810] mb-2">Full Name</label>
+                            <label className="block text-sm font-semibold text-[#000000] mb-2">Full Name</label>
                             <input 
                                 type="text" 
                                 required
                                 value={address.name}
                                 onChange={(e) => setAddress({...address, name: e.target.value})}
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#D2691E] focus:ring-4 focus:ring-[#D2691E]/10 transition-all"
+                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#000000] focus:ring-4 focus:ring-[#000000]/10 transition-all"
                                 placeholder="Enter your full name"
                             />
                         </div>
                         
                         <div>
-                            <label className="block text-sm font-semibold text-[#2C1810] mb-2">Address</label>
+                            <label className="block text-sm font-semibold text-[#000000] mb-2">Address</label>
                             <input 
                                 type="text" 
                                 required
                                 value={address.street}
                                 onChange={(e) => setAddress({...address, street: e.target.value})}
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#D2691E] focus:ring-4 focus:ring-[#D2691E]/10 transition-all"
+                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#000000] focus:ring-4 focus:ring-[#000000]/10 transition-all"
                                 placeholder="Street address, House No., Apartment"
                             />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-[#2C1810] mb-2">ZIP Code</label>
+                                <label className="block text-sm font-semibold text-[#000000] mb-2">ZIP Code</label>
                                 <input 
                                     type="text" 
                                     required
@@ -429,18 +434,18 @@ export default function StorePage() {
                                       setAddress({...address, zip: val});
                                       if (val.length === 6) lookupPincode(val);
                                     }}
-                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#D2691E] focus:ring-4 focus:ring-[#D2691E]/10 transition-all"
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#000000] focus:ring-4 focus:ring-[#000000]/10 transition-all"
                                     placeholder="ZIP Code"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-[#2C1810] mb-2">City</label>
+                                <label className="block text-sm font-semibold text-[#000000] mb-2">City</label>
                                 <input 
                                     type="text" 
                                     required
                                     value={address.city}
                                     onChange={(e) => setAddress({...address, city: e.target.value})}
-                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#D2691E] focus:ring-4 focus:ring-[#D2691E]/10 transition-all"
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#000000] focus:ring-4 focus:ring-[#000000]/10 transition-all"
                                     placeholder="City"
                                 />
                             </div>
@@ -448,24 +453,24 @@ export default function StorePage() {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-[#2C1810] mb-2">State</label>
+                                <label className="block text-sm font-semibold text-[#000000] mb-2">State</label>
                                 <input 
                                     type="text" 
                                     required
                                     value={address.state}
                                     onChange={(e) => setAddress({...address, state: e.target.value})}
-                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#D2691E] focus:ring-4 focus:ring-[#D2691E]/10 transition-all"
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#000000] focus:ring-4 focus:ring-[#000000]/10 transition-all"
                                     placeholder="State"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-[#2C1810] mb-2">Phone Number</label>
+                                <label className="block text-sm font-semibold text-[#000000] mb-2">Phone Number</label>
                                 <input 
                                     type="tel" 
                                     required
                                     value={address.phone}
                                     onChange={(e) => setAddress({...address, phone: e.target.value})}
-                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#D2691E] focus:ring-4 focus:ring-[#D2691E]/10 transition-all"
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#000000] focus:ring-4 focus:ring-[#000000]/10 transition-all"
                                     placeholder="Phone"
                                 />
                             </div>
@@ -485,7 +490,7 @@ export default function StorePage() {
                 <button 
                     form="address-form"
                     type="submit" 
-                    className="px-8 py-3 bg-[#D2691E] text-white rounded-lg font-semibold hover:bg-[#B8541A] transition shadow-lg hover:shadow-xl active:scale-95 flex items-center gap-2 cursor-pointer"
+                    className="px-8 py-3 bg-[#000000] text-white rounded-lg font-semibold hover:bg-[#333333] transition shadow-lg hover:shadow-xl active:scale-95 flex items-center gap-2 cursor-pointer"
                 >
                     Confirm & Pay
                     <ArrowRight className="w-5 h-5" />
@@ -499,11 +504,11 @@ export default function StorePage() {
       <div className="bg-white border-b border-gray-200 mt-20 lg:mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Link href="/" className="hover:text-[#D2691E] transition">
+            <Link href="/" className="hover:text-[#000000] transition">
               Home
             </Link>
             <span>/</span>
-            <span className="text-[#2C1810] font-medium">Shopping Cart</span>
+            <span className="text-[#000000] font-medium">Shopping Cart</span>
           </div>
         </div>
       </div>
@@ -512,10 +517,10 @@ export default function StorePage() {
         {cart.length === 0 ? (
           /* Empty Cart State */
           <div className="text-center py-16 lg:py-24">
-            <div className="inline-flex items-center justify-center w-24 h-24 lg:w-32 lg:h-32 rounded-full bg-[#E9DCCF] border-4 border-[#d2c4b5] mb-6">
-              <ShoppingBag className="w-12 h-12 lg:w-16 lg:h-16 text-[#2C1810]" />
+            <div className="inline-flex items-center justify-center w-24 h-24 lg:w-32 lg:h-32 rounded-full bg-[#F3F4F6] border-4 border-[#E5E7EB] mb-6">
+              <ShoppingBag className="w-12 h-12 lg:w-16 lg:h-16 text-[#000000]" />
             </div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-[#2C1810] mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-[#000000] mb-4">
               Your Cart is Empty
             </h2>
             <p className="text-gray-600 mb-8 text-lg max-w-md mx-auto">
@@ -524,7 +529,7 @@ export default function StorePage() {
             </p>
             <a
               href="/products"
-              className="inline-flex items-center gap-3 bg-[#D2691E] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#B8541A] transition-all shadow-md hover:shadow-lg"
+              className="inline-flex items-center gap-3 bg-[#000000] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#333333] transition-all shadow-md hover:shadow-lg"
             >
               <ShoppingBag className="w-5 h-5" />
               Continue Shopping
@@ -538,11 +543,11 @@ export default function StorePage() {
               {/* Header */}
               <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl lg:text-3xl font-bold text-[#2C1810] flex items-center gap-3">
-                    <ShoppingBag className="w-7 h-7 text-[#D2691E]" />
+                  <h2 className="text-2xl lg:text-3xl font-bold text-[#000000] flex items-center gap-3">
+                    <ShoppingBag className="w-7 h-7 text-[#000000]" />
                     Shopping Cart
                   </h2>
-                  <span className="px-4 py-2 bg-[#E9DCCF] text-[#2C1810] rounded-full font-bold">
+                  <span className="px-4 py-2 bg-[#F3F4F6] text-[#000000] rounded-full font-bold">
                     {cart.length} {cart.length === 1 ? "Item" : "Items"}
                   </span>
                 </div>
@@ -553,7 +558,7 @@ export default function StorePage() {
                 {cart.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-white rounded-xl shadow-sm p-4 lg:p-6 border border-gray-200 hover:border-[#D2691E] transition-all"
+                    className="bg-white rounded-xl shadow-sm p-4 lg:p-6 border border-gray-200 hover:border-[#000000] transition-all"
                   >
                     <div className="flex gap-4 lg:gap-6">
                       {/* Product Image */}
@@ -575,7 +580,7 @@ export default function StorePage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex-1 pr-4">
-                            <h3 className="font-bold text-[#2C1810] text-lg lg:text-xl mb-2 line-clamp-2">
+                            <h3 className="font-bold text-[#000000] text-lg lg:text-xl mb-2 line-clamp-2">
                               {item.title}
                             </h3>
                             <div className="flex flex-col gap-2 mb-2">
@@ -618,7 +623,7 @@ export default function StorePage() {
                                       key={c}
                                       onClick={() => updateCartItem(item, item.size as string, c, item.fabric || "")}
                                       className={`w-6 h-6 rounded-full border-2 transition-all ${
-                                        item.color === c ? "border-[#D2691E] scale-110 ring-1 ring-[#D2691E]" : "border-gray-200"
+                                        item.color === c ? "border-[#000000] scale-110 ring-1 ring-[#000000]" : "border-gray-200"
                                       }`}
                                       style={{ 
                                         backgroundColor: {
@@ -657,17 +662,17 @@ export default function StorePage() {
                             <div className="flex items-center border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
                               <button
                                 onClick={() => handleQuantityChange(item, -1)}
-                                className="w-10 h-10 flex items-center justify-center hover:bg-[#E9DCCF] text-[#2C1810] font-bold transition active:scale-95"
+                                className="w-10 h-10 flex items-center justify-center hover:bg-[#F3F4F6] text-[#000000] font-bold transition active:scale-95"
                                 aria-label="Decrease quantity"
                               >
                                 −
                               </button>
-                              <span className="w-12 h-10 flex items-center justify-center font-bold text-[#2C1810] border-x-2 border-gray-300 bg-gray-50">
+                              <span className="w-12 h-10 flex items-center justify-center font-bold text-[#000000] border-x-2 border-gray-300 bg-gray-50">
                                 {item.quantity}
                               </span>
                               <button
                                 onClick={() => handleQuantityChange(item, 1)}
-                                className="w-10 h-10 flex items-center justify-center hover:bg-[#E9DCCF] text-[#2C1810] font-bold transition active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+                                className="w-10 h-10 flex items-center justify-center hover:bg-[#F3F4F6] text-[#000000] font-bold transition active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
                                 disabled={item.quantity >= 10}
                                 aria-label="Increase quantity"
                               >
@@ -683,7 +688,7 @@ export default function StorePage() {
 
                           {/* Price */}
                           <div className="text-left sm:text-right">
-                            <p className="text-2xl lg:text-3xl font-bold text-[#D2691E]">
+                            <p className="text-2xl lg:text-3xl font-bold text-[#000000]">
                               ₹
                               {(item.price * item.quantity).toLocaleString(
                                 "en-IN"
@@ -702,15 +707,15 @@ export default function StorePage() {
                         <div className="flex gap-4 mt-4 pt-4 border-t border-gray-100">
                           <button
                             onClick={() => handleSaveForLater(item)}
-                            className="text-sm text-[#2C1810] hover:text-[#D2691E] font-medium flex items-center gap-2 transition group"
+                            className="text-sm text-[#000000] hover:text-[#000000] font-medium flex items-center gap-2 transition group"
                           >
-                            <Heart className="w-4 h-4 group-hover:fill-[#D2691E]" />
+                            <Heart className="w-4 h-4 group-hover:fill-[#000000]" />
                             Save for Later
                           </button>
                           <div className="w-px h-4 bg-gray-300 self-center"></div>
                           <button
                             onClick={() => handleShare(item)}
-                            className="text-sm text-[#2C1810] hover:text-[#D2691E] font-medium flex items-center gap-2 transition group"
+                            className="text-sm text-[#000000] hover:text-[#000000] font-medium flex items-center gap-2 transition group"
                           >
                             <Share2 className="w-4 h-4" />
                             Share
@@ -734,7 +739,7 @@ export default function StorePage() {
 
                 <a
                   href="/products"
-                  className="block w-full text-center bg-[#E9DCCF] hover:bg-[#d2c4b5] text-[#2C1810] py-3 px-6 rounded-lg font-semibold transition active:scale-[0.98]"
+                  className="block w-full text-center bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#000000] py-3 px-6 rounded-lg font-semibold transition active:scale-[0.98]"
                 >
                   Continue Shopping
                 </a>
@@ -744,13 +749,13 @@ export default function StorePage() {
             {/* Order Summary Section */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 lg:sticky lg:top-28">
-                <h2 className="text-2xl font-bold text-[#2C1810] mb-6 pb-4 border-b-2 border-gray-200">
+                <h2 className="text-2xl font-bold text-[#000000] mb-6 pb-4 border-b-2 border-gray-200">
                   Order Summary
                 </h2>
 
                 {/* Promo Code */}
                 <div className="mb-6">
-                  <label className="text-sm font-semibold text-[#2C1810] mb-2 block">
+                  <label className="text-sm font-semibold text-[#000000] mb-2 block">
                     Have a Promo Code?
                   </label>
                   {appliedPromo ? (
@@ -787,12 +792,12 @@ export default function StorePage() {
                           e.key === "Enter" && applyPromoCode()
                         }
                         placeholder="Enter code"
-                        className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#D2691E] text-sm font-medium"
+                        className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#000000] text-sm font-medium"
                       />
                       <button
                         onClick={applyPromoCode}
                         disabled={!promoCode.trim()}
-                        className="px-6 py-3 bg-[#2C1810] text-white rounded-lg font-semibold hover:bg-[#1a0f08] transition disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+                        className="px-6 py-3 bg-[#000000] text-white rounded-lg font-semibold hover:bg-[#1a0f08] transition disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
                       >
                         Apply
                       </button>
@@ -846,11 +851,11 @@ export default function StorePage() {
 
                 {/* Total */}
                 <div className="mb-6">
-                  <div className="flex justify-between items-center bg-[#E9DCCF] -mx-6 px-6 py-4 rounded-lg">
-                    <span className="text-xl font-bold text-[#2C1810]">
+                  <div className="flex justify-between items-center bg-[#F3F4F6] -mx-6 px-6 py-4 rounded-lg">
+                    <span className="text-xl font-bold text-[#000000]">
                       Total Amount
                     </span>
-                    <span className="text-3xl font-bold text-[#D2691E]">
+                    <span className="text-3xl font-bold text-[#000000]">
                       ₹{total.toLocaleString("en-IN")}
                     </span>
                   </div>
@@ -862,7 +867,7 @@ export default function StorePage() {
                 {/* Checkout Button */}
                 <button
                   onClick={handleCheckoutClick}
-                  className="w-full bg-gradient-to-r from-[#D2691E] to-[#B8541A] hover:from-[#B8541A] hover:to-[#A04815] text-white py-4 px-6 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group mb-4 active:scale-[0.98] cursor-pointer"
+                  className="w-full bg-gradient-to-r from-[#000000] to-[#333333] hover:from-[#333333] hover:to-[#1F2937] text-white py-4 px-6 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group mb-4 active:scale-[0.98] cursor-pointer"
                 >
                   <CreditCard className="w-5 h-5" />
                   Proceed to Checkout

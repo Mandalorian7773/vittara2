@@ -31,23 +31,23 @@ export default function WishlistPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#F5F1EA] via-[#E9DCCF] to-[#DDD0BF]">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB]">
       <Navbar />
 
       {/* Main content area grows to fill space */}
       <main className="flex-1 py-16 px-4 max-w-7xl mx-auto w-full">
-        <h1 className="text-4xl md:text-5xl font-bold text-[#2C1810] mb-12 text-center mt-36">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#000000] mb-12 text-center mt-36">
           Your Wishlist
         </h1>
 
         {wishlistCount === 0 ? (
           <div className="flex flex-col items-center justify-center px-4">
-            <p className="text-2xl md:text-3xl text-[#8B4513] mb-6 font-semibold">
+            <p className="text-2xl md:text-3xl text-[#4B5563] mb-6 font-semibold">
               Your wishlist is empty
             </p>
             <Link
               href="/products"
-              className="inline-block px-8 py-4 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#D2691E]/70 transition-all duration-300 shadow-lg"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-xl hover:from-[#000000] hover:to-[#000000]/70 transition-all duration-300 shadow-lg"
             >
               Go Shopping
             </Link>
@@ -57,7 +57,7 @@ export default function WishlistPage() {
             {wishlist.map((product) => (
               <div
                 key={product.id}
-                className="relative bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-[#E9DCCF] flex flex-col transition-all duration-500 hover:shadow-2xl"
+                className="relative bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-[#F3F4F6] flex flex-col transition-all duration-500 hover:shadow-2xl"
               >
                 <div className="relative h-80 w-full rounded-t-2xl overflow-hidden">
                   <Image
@@ -69,15 +69,15 @@ export default function WishlistPage() {
                   />
                 </div>
 
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4 bg-gradient-to-b from-white to-[#F5F1EA]/50">
-                  <h3 className="text-[#2C1810] font-semibold line-clamp-2">
+                <div className="p-6 flex-1 flex flex-col justify-between space-y-4 bg-gradient-to-b from-white to-[#FFFFFF]/50">
+                  <h3 className="text-[#000000] font-semibold line-clamp-2">
                     {product.title}
                   </h3>
 
                   <div className="space-y-3">
                     <button
                       onClick={() => handleMoveToCart(product)}
-                      className="w-full py-3 flex items-center justify-center gap-2 bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white font-semibold rounded-xl hover:from-[#D2691E] hover:to-[#8B4513] transition-all duration-300 shadow-md cursor-pointer"
+                      className="w-full py-3 flex items-center justify-center gap-2 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-xl hover:from-[#000000] hover:to-[#4B5563] transition-all duration-300 shadow-md cursor-pointer"
                     >
                       <FaShoppingCart className="text-white" />
                       Add to Cart
@@ -85,7 +85,7 @@ export default function WishlistPage() {
 
                     <button
                       onClick={() => handleRemoveFromWishlist(product.id)}
-                      className="w-full py-3 flex items-center justify-center gap-2 bg-gradient-to-r from-[#D2691E] to-[#CD853F] text-white font-semibold rounded-xl hover:from-[#CD853F] hover:to-[#D2691E] transition-all duration-300 shadow-md cursor-pointer"
+                      className="w-full py-3 flex items-center justify-center gap-2 bg-gradient-to-r from-[#000000] to-[#CD853F] text-white font-semibold rounded-xl hover:from-[#CD853F] hover:to-[#000000] transition-all duration-300 shadow-md cursor-pointer"
                     >
                       <FaHeart className="text-white" />
                       Remove from Wishlist

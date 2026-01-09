@@ -38,7 +38,7 @@ export default function Footer() {
             <input
               type="email"
               placeholder="Email Address"
-              className="px-4 py-2 w-full md:w-72 rounded-l-md text-white bg-[#2C1810] placeholder:text-gray-300 focus:outline-none"
+              className="px-4 py-2 w-full md:w-72 rounded-l-md text-white bg-[#000000] placeholder:text-gray-300 focus:outline-none"
               required
             />
             <button
@@ -100,7 +100,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="bg-[#2C1810] py-6 border-t border-[#543322] text-sm relative z-10">
+      <div className="bg-[#000000] py-6 border-t border-[#543322] text-sm relative z-10">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Social Icons */}
           <div className="flex items-center gap-4">

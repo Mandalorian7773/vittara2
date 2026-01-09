@@ -15,7 +15,7 @@ const products: Product[] = [
     id: 1,
     title: "Modern Ivory Gurkha Pant",
     description: "A masterpiece of modern tailoring, this Ivory Gurkha pant features a high-waisted design with signature side buckles. Crafted from premium cotton blend for breathability and comfort, it offers a refined silhouette perfect for smart casual or semi-formal occasions.",
-    price: 11999,
+    price: 1999,
     size: "32",
     fabric: "cotton-blend",
     color: "ivory",
