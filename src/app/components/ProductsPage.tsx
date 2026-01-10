@@ -165,6 +165,56 @@ const StarRating = ({
   );
 };
 
+// Image Modal Component
+const ImageModal = ({
+  imageUrl,
+  onClose,
+}: {
+  imageUrl: string;
+  onClose: () => void;
+}) => {
+  useEffect(() => {
+    // Prevent scrolling when modal is open
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
+  return (
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn"
+      onClick={onClose}
+    >
+      <div 
+        // Orientation-based sizing strategy with strict safety caps:
+        // Landscape: Target 70vh height.
+        // Portrait: Target 90vw width.
+        // GLOBAL SAFETY: max-h-[75vh]. This forces the container to shrink if it ever tries to exceed 75% of screen height,
+        // preventing top/bottom cutoff on any device.
+        className="relative aspect-[3/4] 
+          w-auto h-auto
+          landscape:h-[70vh] landscape:w-auto
+          portrait:w-[90vw] portrait:max-w-md portrait:h-auto
+          max-h-[75vh]
+          flex items-center justify-center animate-scaleIn cursor-pointer bg-transparent"
+      >
+
+        <div className="relative w-full h-full">
+           <Image
+            src={imageUrl}
+            alt="Product detail"
+            fill
+            className="object-contain drop-shadow-2xl"
+            quality={100}
+            priority
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ProductRow = ({
   product,
   index,
@@ -175,6 +225,7 @@ const ProductRow = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [userRating, setUserRating] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); // State for popup
   const { addToCart } = useCart();
   const {
     addToWishlist,
@@ -220,242 +271,253 @@ const ProductRow = ({
   };
 
   return (
-    <div
-      className={`transform transition-all duration-1000 ${
-        isLoaded ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
-      }`}
-    >
-      <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border-2 border-[#F3F4F6] hover:border-[#000000]/30 overflow-hidden transition-all duration-500 hover:shadow-2xl">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
-          {/* Image Gallery Section */}
-          <div className="relative bg-gradient-to-br from-[#FFFFFF] to-[#F3F4F6] p-6">
-            <div className="grid grid-cols-2 grid-rows-2 gap-3 h-80">
-              {product.images.slice(0, 4).map((image: string, idx: number) => (
-                <div
-                  key={idx}
-                  className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ${
-                    currentImageIndex === idx ? "ring-4 ring-[#000000]" : ""
-                  }`}
-                  onClick={() => setCurrentImageIndex(idx)}
-                >
-                  <Image
-                    src={image}
-                    alt={`${product.title} pose ${idx + 1}`}
-                    fill
-                    className="object-contain transition-transform duration-300"
-                    sizes="(max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                </div>
-              ))}
-            </div>
+    <>
+      {selectedImage && (
+        <ImageModal 
+          imageUrl={selectedImage} 
+          onClose={() => setSelectedImage(null)} 
+        />
+      )}
+      <div
+        className={`transform transition-all duration-1000 ${
+          isLoaded ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
+        }`}
+      >
+        <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border-2 border-[#F3F4F6] hover:border-[#000000]/30 overflow-hidden transition-all duration-500 hover:shadow-2xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
+            {/* Image Gallery Section */}
+            <div className="relative bg-gradient-to-br from-[#FFFFFF] to-[#F3F4F6] p-6">
+              <div className="grid grid-cols-2 grid-rows-2 gap-3 h-80">
+                {product.images.slice(0, 4).map((image: string, idx: number) => (
+                  <div
+                    key={idx}
+                    className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ${
+                      currentImageIndex === idx ? "ring-4 ring-[#000000]" : ""
+                    }`}
+                    onClick={() => {
+                      setCurrentImageIndex(idx);
+                      setSelectedImage(image); // Open popup
+                    }}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${product.title} pose ${idx + 1}`}
+                      fill
+                      className="object-contain transition-transform duration-300"
+                      sizes="(max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                ))}
+              </div>
 
-            {/* Action Buttons */}
-            <div className="mt-6 space-y-3">
-              {/* Add to Cart Button - Redirects if not signed in */}
-              <button
-                onClick={() => {
-                  if (!isSignedIn) {
-                    router.push("/sign-in");
-                    return;
-                  }
-                  // Allow adding to cart without options selected
-                  addToCart({
-                    id: product.id,
-                    title: product.title,
-                    price: product.price,
-                    image: product.images[0],
-                    color: selectedColor || "",
-                    size: selectedSize || "",
-                    fabric: selectedFabric || ""
-                  });
-                  toast.success("Added to Cart!");
-                }}
-                className={`w-full py-3 text-white font-semibold rounded-xl transform transition-all duration-300 shadow-lg cursor-pointer bg-gradient-to-r from-[#4B5563] to-[#000000] hover:from-[#000000] hover:to-[#4B5563] hover:scale-105 hover:shadow-xl`}
-              >
-                {isSignedIn
-                  ? `Add to Cart - ₹${product.price.toLocaleString("en-IN")}`
-                  : "Sign in to Add to Cart"}
-              </button>
-
-              <button
-                onClick={() => {
-                  if (!isSignedIn) {
-                    router.push("/sign-in");
-                    return;
-                  }
-                  if (inWishlist) {
-                    removeFromWishlist(product.id);
-                    toast.success("Removed from Wishlist");
-                  } else {
-                    addToWishlist({
+              {/* Action Buttons */}
+              <div className="mt-6 space-y-3">
+                {/* Add to Cart Button - Redirects if not signed in */}
+                <button
+                  onClick={() => {
+                    if (!isSignedIn) {
+                      router.push("/sign-in");
+                      return;
+                    }
+                    // Allow adding to cart without options selected
+                    addToCart({
                       id: product.id,
                       title: product.title,
-                      image: product.images[0],
                       price: product.price,
-                      size: selectedSize || product.size,
-                      color: selectedColor || product.color,
-                      // fabric: selectedFabric // Wishlist context might need update if we want to store fabric there too, omitting for now to avoid breaking type
+                      image: product.images[0],
+                      color: selectedColor || "",
+                      size: selectedSize || "",
+                      fabric: selectedFabric || ""
                     });
-                    toast.success("Added to Wishlist");
-                  }
-                }}
-                className="w-full py-3 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-xl hover:from-[#000000] hover:to-[#4B5563] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
-              >
-                <FaHeart className="text-white" />
-                {isSignedIn
-                  ? inWishlist
-                    ? "Remove from Wishlist"
-                    : "Add to Wishlist"
-                  : "Sign in to use Wishlist"}
-              </button>
+                    toast.success("Added to Cart!");
+                  }}
+                  className={`w-full py-3 text-white font-semibold rounded-xl transform transition-all duration-300 shadow-lg cursor-pointer bg-gradient-to-r from-[#4B5563] to-[#000000] hover:from-[#000000] hover:to-[#4B5563] hover:scale-105 hover:shadow-xl`}
+                >
+                  {isSignedIn
+                    ? `Add to Cart - ₹${product.price.toLocaleString("en-IN")}`
+                    : "Sign in to Add to Cart"}
+                </button>
 
-              <button
-                onClick={() => {
-                  window.open("https://docs.google.com/forms/d/e/1FAIpQLSdXkEPO-4NSrIbXnjF_p2iKBHBYua4EIzYAW-EK3xb1x8lOUg/viewform", "_blank");
-                }}
-                className="w-full py-3 bg-white text-[#000000] border-2 border-[#000000] font-semibold rounded-xl hover:bg-[#000000] hover:text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
-              >
-                Need Customization
-              </button>
-            </div>
-          </div>
+                <button
+                  onClick={() => {
+                    if (!isSignedIn) {
+                      router.push("/sign-in");
+                      return;
+                    }
+                    if (inWishlist) {
+                      removeFromWishlist(product.id);
+                      toast.success("Removed from Wishlist");
+                    } else {
+                      addToWishlist({
+                        id: product.id,
+                        title: product.title,
+                        image: product.images[0],
+                        price: product.price,
+                        size: selectedSize || product.size,
+                        color: selectedColor || product.color,
+                        // fabric: selectedFabric // Wishlist context might need update if we want to store fabric there too, omitting for now to avoid breaking type
+                      });
+                      toast.success("Added to Wishlist");
+                    }
+                  }}
+                  className="w-full py-3 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-xl hover:from-[#000000] hover:to-[#4B5563] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <FaHeart className="text-white" />
+                  {isSignedIn
+                    ? inWishlist
+                      ? "Remove from Wishlist"
+                      : "Add to Wishlist"
+                    : "Sign in to use Wishlist"}
+                </button>
 
-          {/* Video Section - Only render if videoUrl exists */}
-          {product.videoUrl && (
-            <div className="relative bg-black/5 p-6 flex items-center justify-center">
-              <div className="relative w-full h-[450px] rounded-2xl overflow-hidden bg-black shadow-2xl">
-                <video
-                  src={product.videoUrl}
-                  className="w-full h-full object-cover"
-                  poster={product.images[0]}
-                  muted
-                  autoPlay
-                  loop
-                />
+                <button
+                  onClick={() => {
+                    window.open("https://docs.google.com/forms/d/e/1FAIpQLSdXkEPO-4NSrIbXnjF_p2iKBHBYua4EIzYAW-EK3xb1x8lOUg/viewform", "_blank");
+                  }}
+                  className="w-full py-3 bg-white text-[#000000] border-2 border-[#000000] font-semibold rounded-xl hover:bg-[#000000] hover:text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
+                >
+                  Need Customization
+                </button>
               </div>
             </div>
-          )}
 
-          {/* Description Section */}
-          <div className="p-8 flex flex-col justify-between bg-gradient-to-br from-white to-[#FFFFFF]/30">
-            <div>
-              <h3 className="text-2xl font-bold text-[#000000] mb-4 leading-tight">
-                {product.title}
-              </h3>
+            {/* Video Section - Only render if videoUrl exists */}
+            {product.videoUrl && (
+              <div className="relative bg-black/5 p-6 flex items-center justify-center">
+                <div className="relative w-full h-[450px] rounded-2xl overflow-hidden bg-black shadow-2xl">
+                  <video
+                    src={product.videoUrl}
+                    className="w-full h-full object-cover"
+                    poster={product.images[0]}
+                    muted
+                    autoPlay
+                    loop
+                  />
+                </div>
+              </div>
+            )}
 
-              <div className="flex items-center gap-4 mb-4">
-                <span className="text-3xl font-bold text-[#000000]">
-                  ₹{product.price.toLocaleString("en-IN")}
-                </span>
+            {/* Description Section */}
+            <div className="p-8 flex flex-col justify-between bg-gradient-to-br from-white to-[#FFFFFF]/30">
+              <div>
+                <h3 className="text-2xl font-bold text-[#000000] mb-4 leading-tight">
+                  {product.title}
+                </h3>
+
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-3xl font-bold text-[#000000]">
+                    ₹{product.price.toLocaleString("en-IN")}
+                  </span>
+                </div>
+
+                {/* Star Rating Removed */}
+
+                <div className="space-y-4 mb-6">
+                  {/* Size Selector */}
+                  <div>
+                    <div className="flex justify-between items-center mb-2 px-1">
+                      <span className="text-sm font-medium text-[#4B5563]">Select Size</span>
+                      <span className="text-xs text-[#000000] cursor-pointer hover:underline">Size Guide</span>
+                    </div>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
+                      {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(prev => prev === size ? "" : size)}
+                          className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-200 border snap-center ${
+                            selectedSize === size
+                              ? "bg-[#000000] text-white border-[#000000] shadow-md scale-105"
+                              : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Fabric Selector */}
+                  <div>
+                    <span className="text-sm font-medium text-[#4B5563] block mb-2 px-1">Select Fabric</span>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
+                      {["Cotton", "Linen", "Silk", "Wool", "Blend"].map((fabric) => (
+                        <button
+                          key={fabric}
+                          onClick={() => setSelectedFabric(prev => prev === fabric ? "" : fabric)}
+                          className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${
+                            selectedFabric === fabric
+                              ? "bg-[#000000] text-white border-[#000000] shadow-md"
+                              : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
+                          }`}
+                        >
+                          {fabric}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Color Selector */}
+                  <div>
+                    <span className="text-sm font-medium text-[#4B5563] block mb-2 px-1">Select Color</span>
+                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
+                      {[
+                        { name: "Ivory", hex: "#FFFFF0" },
+                        { name: "Navy", hex: "#000080" },
+                        { name: "Olive", hex: "#808000" },
+                        { name: "Crimson", hex: "#DC143C" },
+                        { name: "Grey", hex: "#808080" },
+                        { name: "Black", hex: "#000000" },
+                      ].map((color) => (
+                        <button
+                          key={color.name}
+                          onClick={() => setSelectedColor(prev => prev === color.name ? "" : color.name)}
+                          className={`flex-shrink-0 w-10 h-10 rounded-full border-2 transition-all duration-200 relative snap-center ${
+                            selectedColor === color.name
+                              ? "border-[#000000] scale-110 ring-2 ring-[#000000]/30 shadow-md"
+                              : "border-gray-200 hover:scale-110"
+                          }`}
+                          style={{ backgroundColor: color.hex }}
+                          title={color.name}
+                        >
+                          {selectedColor === color.name && (
+                            <span className="absolute inset-0 flex items-center justify-center">
+                              <div className={`w-3 h-3 rounded-full ${["Ivory", "White"].includes(color.name) ? "bg-black" : "bg-white"}`} />
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Scrollbar Hide Styles */}
+                  <style jsx>{`
+                    .scrollbar-hide::-webkit-scrollbar {
+                        display: none;
+                    }
+                    .scrollbar-hide {
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
+                    }
+                  `}</style>
+                </div>
+
+                <p className="text-[#4B5563] leading-relaxed text-sm">
+                  {product.description}
+                </p>
               </div>
 
-              {/* Star Rating Removed */}
-
-              <div className="space-y-4 mb-6">
-                {/* Size Selector */}
-                <div>
-                  <div className="flex justify-between items-center mb-2 px-1">
-                    <span className="text-sm font-medium text-[#4B5563]">Select Size</span>
-                    <span className="text-xs text-[#000000] cursor-pointer hover:underline">Size Guide</span>
-                  </div>
-                  <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
-                    {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(prev => prev === size ? "" : size)}
-                        className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-200 border snap-center ${
-                          selectedSize === size
-                            ? "bg-[#000000] text-white border-[#000000] shadow-md scale-105"
-                            : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
+              <div className="mt-6 pt-4 border-t border-[#F3F4F6]">
+                <div className="flex items-center justify-between text-xs text-[#4B5563]">
+                  <span>Handcrafted with Care</span>
+                  <span>Premium Quality</span>
                 </div>
-
-                {/* Fabric Selector */}
-                <div>
-                  <span className="text-sm font-medium text-[#4B5563] block mb-2 px-1">Select Fabric</span>
-                  <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
-                    {["Cotton", "Linen", "Silk", "Wool", "Blend"].map((fabric) => (
-                      <button
-                        key={fabric}
-                        onClick={() => setSelectedFabric(prev => prev === fabric ? "" : fabric)}
-                        className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${
-                          selectedFabric === fabric
-                            ? "bg-[#000000] text-white border-[#000000] shadow-md"
-                            : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
-                        }`}
-                      >
-                        {fabric}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Color Selector */}
-                <div>
-                  <span className="text-sm font-medium text-[#4B5563] block mb-2 px-1">Select Color</span>
-                  <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
-                    {[
-                      { name: "Ivory", hex: "#FFFFF0" },
-                      { name: "Navy", hex: "#000080" },
-                      { name: "Olive", hex: "#808000" },
-                      { name: "Crimson", hex: "#DC143C" },
-                      { name: "Grey", hex: "#808080" },
-                      { name: "Black", hex: "#000000" },
-                    ].map((color) => (
-                      <button
-                        key={color.name}
-                        onClick={() => setSelectedColor(prev => prev === color.name ? "" : color.name)}
-                        className={`flex-shrink-0 w-10 h-10 rounded-full border-2 transition-all duration-200 relative snap-center ${
-                          selectedColor === color.name
-                            ? "border-[#000000] scale-110 ring-2 ring-[#000000]/30 shadow-md"
-                            : "border-gray-200 hover:scale-110"
-                        }`}
-                        style={{ backgroundColor: color.hex }}
-                        title={color.name}
-                      >
-                        {selectedColor === color.name && (
-                          <span className="absolute inset-0 flex items-center justify-center">
-                            <div className={`w-3 h-3 rounded-full ${["Ivory", "White"].includes(color.name) ? "bg-black" : "bg-white"}`} />
-                          </span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Scrollbar Hide Styles */}
-                <style jsx>{`
-                  .scrollbar-hide::-webkit-scrollbar {
-                      display: none;
-                  }
-                  .scrollbar-hide {
-                      -ms-overflow-style: none;
-                      scrollbar-width: none;
-                  }
-                `}</style>
-              </div>
-
-              <p className="text-[#4B5563] leading-relaxed text-sm">
-                {product.description}
-              </p>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-[#F3F4F6]">
-              <div className="flex items-center justify-between text-xs text-[#4B5563]">
-                <span>Handcrafted with Care</span>
-                <span>Premium Quality</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

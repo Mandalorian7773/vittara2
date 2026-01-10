@@ -107,6 +107,56 @@ const FloatingElements = () => {
   );
 };
 
+// Image Modal Component
+const ImageModal = ({
+  imageUrl,
+  onClose,
+}: {
+  imageUrl: string;
+  onClose: () => void;
+}) => {
+  useEffect(() => {
+    // Prevent scrolling when modal is open
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
+  return (
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn"
+      onClick={onClose}
+    >
+      <div 
+        // Orientation-based sizing strategy with strict safety caps:
+        // Landscape: Target 70vh height.
+        // Portrait: Target 90vw width.
+        // GLOBAL SAFETY: max-h-[75vh]. This forces the container to shrink if it ever tries to exceed 75% of screen height,
+        // preventing top/bottom cutoff on any device.
+        className="relative aspect-[3/4] 
+          w-auto h-auto
+          landscape:h-[70vh] landscape:w-auto
+          portrait:w-[90vw] portrait:max-w-md portrait:h-auto
+          max-h-[75vh]
+          flex items-center justify-center animate-scaleIn cursor-pointer bg-transparent"
+      >
+
+        <div className="relative w-full h-full">
+           <Image
+            src={imageUrl}
+            alt="Product detail"
+            fill
+            className="object-contain drop-shadow-2xl"
+            quality={100}
+            priority
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function ProductsPageInner() {
   const { addToCart } = useCart();
   const { addReview } = useReview();
@@ -118,6 +168,7 @@ function ProductsPageInner() {
   const [highlightedProduct, setHighlightedProduct] = useState<number | null>(null);
   const [localReviews, setLocalReviews] = useState<Review[]>([]);
   const [showThankYou, setShowThankYou] = useState<Record<number, boolean>>({});
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); // State for popup
   
   const [filters, setFilters] = useState<Filters>({
     size: "",
@@ -210,6 +261,12 @@ function ProductsPageInner() {
     <main className="relative min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] pt-24 font-sans">
       <Navbar />
       <FloatingElements />
+      {selectedImage && (
+        <ImageModal 
+          imageUrl={selectedImage} 
+          onClose={() => setSelectedImage(null)} 
+        />
+      )}
 
       {/* Hero Header */}
       <section className="relative z-10 text-center py-16 px-4">
@@ -321,7 +378,10 @@ function ProductsPageInner() {
                       <div className="relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden border border-[#F3F4F6] hover:border-[#000000]/30 h-full flex flex-col">
                         
                         {/* Image Container */}
-                        <div className="relative h-96 w-full overflow-hidden bg-gray-100">
+                        <div 
+                            className="relative h-96 w-full overflow-hidden bg-gray-100 cursor-pointer"
+                            onClick={() => setSelectedImage(product.image)}
+                        >
                           {/* Image */}
                           <Image
                             src={product.image}
@@ -462,6 +522,7 @@ function ProductsPageInner() {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+          
         }
       `}</style>
     </main>
