@@ -95,6 +95,11 @@ export default function Footer() {
             </li>
             <li>+91 70467 89748</li>
             <li>10 am - 7 pm, Monday - Saturday</li>
+            <li>
+              <Link href="/admin/orders" className="hover:text-gray-300 transition text-xs opacity-50">
+                Admin Access
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
