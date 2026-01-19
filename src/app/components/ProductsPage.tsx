@@ -23,6 +23,7 @@ interface Product {
   color: string;
   images: string[];
   videoUrl?: string;
+  category?: 'pant' | 'shirt';
 }
 
 interface Filters {
@@ -239,7 +240,7 @@ const ProductRow = ({
 
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedFabric, setSelectedFabric] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedFit, setSelectedFit] = useState("");
 
   const inWishlist = wishlistLoaded ? isInWishlist(product.id) : false;
 
@@ -268,6 +269,15 @@ const ProductRow = ({
 
   const handleRating = (rating: number) => {
     setUserRating(rating);
+  };
+
+  const getFitOptions = () => {
+    if (product.category === 'shirt') {
+      return ["Tailored fit", "Classic Regular fit", "Slim fit"];
+    }
+    // Default to Pants fits for 'pant' or undefined (assumed pant if not shirt, or check specific logic)
+    // Considering the user request, pants have: Tailored, Tapered, Straight, Relaxed Tapered, Regular.
+    return ["Tailored fit", "Tapered fit", "Straight fit", "Relaxed Tapered fit", "Regular fit"];
   };
 
   return (
@@ -326,7 +336,8 @@ const ProductRow = ({
                       title: product.title,
                       price: product.price,
                       image: product.images[0],
-                      color: selectedColor || "",
+                      color: "", // Color removed from selection, passing empty or product default color if needed
+                      fit: selectedFit || "",
                       size: selectedSize || "",
                       fabric: selectedFabric || ""
                     });
@@ -355,8 +366,7 @@ const ProductRow = ({
                         image: product.images[0],
                         price: product.price,
                         size: selectedSize || product.size,
-                        color: selectedColor || product.color,
-                        // fabric: selectedFabric // Wishlist context might need update if we want to store fabric there too, omitting for now to avoid breaking type
+                        color: product.color, // Keep product color for wishlist reference
                       });
                       toast.success("Added to Wishlist");
                     }
@@ -457,34 +467,21 @@ const ProductRow = ({
                     </div>
                   </div>
 
-                  {/* Color Selector */}
+                  {/* Fit Selector - Replaces Color Selector */}
                   <div>
-                    <span className="text-sm font-medium text-[#4B5563] block mb-2 px-1">Select Color</span>
-                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
-                      {[
-                        { name: "Ivory", hex: "#FFFFF0" },
-                        { name: "Navy", hex: "#000080" },
-                        { name: "Olive", hex: "#808000" },
-                        { name: "Crimson", hex: "#DC143C" },
-                        { name: "Grey", hex: "#808080" },
-                        { name: "Black", hex: "#000000" },
-                      ].map((color) => (
+                    <span className="text-sm font-medium text-[#4B5563] block mb-2 px-1">Select Fit</span>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
+                      {getFitOptions().map((fit) => (
                         <button
-                          key={color.name}
-                          onClick={() => setSelectedColor(prev => prev === color.name ? "" : color.name)}
-                          className={`flex-shrink-0 w-10 h-10 rounded-full border-2 transition-all duration-200 relative snap-center ${
-                            selectedColor === color.name
-                              ? "border-[#000000] scale-110 ring-2 ring-[#000000]/30 shadow-md"
-                              : "border-gray-200 hover:scale-110"
+                          key={fit}
+                          onClick={() => setSelectedFit(prev => prev === fit ? "" : fit)}
+                          className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${
+                            selectedFit === fit
+                              ? "bg-[#000000] text-white border-[#000000] shadow-md"
+                              : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
                           }`}
-                          style={{ backgroundColor: color.hex }}
-                          title={color.name}
                         >
-                          {selectedColor === color.name && (
-                            <span className="absolute inset-0 flex items-center justify-center">
-                              <div className={`w-3 h-3 rounded-full ${["Ivory", "White"].includes(color.name) ? "bg-black" : "bg-white"}`} />
-                            </span>
-                          )}
+                          {fit}
                         </button>
                       ))}
                     </div>

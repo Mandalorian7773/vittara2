@@ -94,7 +94,7 @@ export default function StorePage() {
         "confirm",
         "Remove Item?",
         `Are you sure you want to remove "${item.title}" from your cart?`,
-        () => removeFromCart(item.id, item.size, item.color, item.fabric)
+        () => removeFromCart(item.id, item.size, item.color, item.fabric, item.fit)
       );
       return;
     }
@@ -112,14 +112,14 @@ export default function StorePage() {
     if (change > 0) {
       addToCart(item);
     } else {
-      decrementQuantity(item.id, item.size, item.color, item.fabric);
+      decrementQuantity(item.id, item.size, item.color, item.fabric, item.fit);
     }
   };
 
   // Save for Later - Add to Wishlist
   const handleSaveForLater = (item: CartItem) => {
     addToWishlist(item);
-    removeFromCart(item.id, item.size, item.color, item.fabric);
+    removeFromCart(item.id, item.size, item.color, item.fabric, item.fit);
     toast.success("Saved to Wishlist!");
   };
 
@@ -170,7 +170,7 @@ export default function StorePage() {
       "Remove Item?",
       `Are you sure you want to remove "${item.title}" from your cart?`,
       () => {
-        removeFromCart(item.id, item.size, item.color, item.fabric);
+        removeFromCart(item.id, item.size, item.color, item.fabric, item.fit);
         toast.success("Item removed from cart");
       }
     );
@@ -192,9 +192,9 @@ export default function StorePage() {
 
   const processPayment = async () => {
     // Validate Cart Items
-    const incompleteItems = cart.filter(item => !item.size || !item.color || !item.fabric);
+    const incompleteItems = cart.filter(item => !item.size || !item.fit || !item.fabric);
     if (incompleteItems.length > 0) {
-      showModal("error", "Incomplete Options", "Please select Size, Fabric, and Color for all items in your cart before checking out.");
+      showModal("error", "Incomplete Options", "Please select Size, Fabric, and Fit for all items in your cart before checking out.");
       return;
     }
 
@@ -292,9 +292,9 @@ export default function StorePage() {
   };
 
   const handleCheckoutClick = () => {
-    const incompleteItems = cart.filter(item => !item.size || !item.color || !item.fabric);
+    const incompleteItems = cart.filter(item => !item.size || !item.fit || !item.fabric);
     if (incompleteItems.length > 0) {
-      showModal("error", "Incomplete Options", "Please select Size, Fabric, and Color for all items in your cart before checking out.");
+      showModal("error", "Incomplete Options", "Please select Size, Fabric, and Fit for all items in your cart before checking out.");
       return;
     }
     setShowAddressForm(true);
@@ -588,7 +588,7 @@ export default function StorePage() {
                                 <span className={`text-sm ${!item.size ? "text-red-500 font-bold" : "text-gray-600"}`}>Size:</span>
                                 <select
                                   value={item.size}
-                                  onChange={(e) => updateCartItem(item, e.target.value, item.color, item.fabric || "")}
+                                  onChange={(e) => updateCartItem(item, e.target.value, item.color, item.fabric || "", item.fit || "")}
                                   className={`text-sm border rounded px-2 py-1 ${!item.size ? "border-red-500 bg-red-50" : "border-gray-300"}`}
                                 >
                                   <option value="">Select Size</option>
@@ -603,7 +603,7 @@ export default function StorePage() {
                                 <span className={`text-sm ${!item.fabric ? "text-red-500 font-bold" : "text-gray-600"}`}>Fabric:</span>
                                 <select
                                   value={item.fabric || ""}
-                                  onChange={(e) => updateCartItem(item, item.size as string, item.color, e.target.value)}
+                                  onChange={(e) => updateCartItem(item, item.size as string, item.color, e.target.value, item.fit || "")}
                                   className={`text-sm border rounded px-2 py-1 ${!item.fabric ? "border-red-500 bg-red-50" : "border-gray-300"}`}
                                 >
                                   <option value="">Select Fabric</option>
@@ -613,32 +613,28 @@ export default function StorePage() {
                                 </select>
                               </div>
 
-                              {/* Color Selector */}
+                              {/* Fit Selector - Replaces Color Selector */}
                               <div className="flex items-center gap-2">
-                                <span className={`text-sm ${!item.color ? "text-red-500 font-bold" : "text-gray-600"}`}>Color:</span>
-                                <div className="flex gap-1 flex-wrap">
-                                  {["Ivory", "Navy", "Olive", "Crimson", "Grey", "Black"].map(c => (
-                                    <button
-                                      key={c}
-                                      onClick={() => updateCartItem(item, item.size as string, c, item.fabric || "")}
-                                      className={`w-6 h-6 rounded-full border-2 transition-all ${
-                                        item.color === c ? "border-[#000000] scale-110 ring-1 ring-[#000000]" : "border-gray-200"
-                                      }`}
-                                      style={{ 
-                                        backgroundColor: {
-                                          "Ivory": "#FFFFF0",
-                                          "Navy": "#000080",
-                                          "Olive": "#808000",
-                                          "Crimson": "#DC143C",
-                                          "Grey": "#808080",
-                                          "Black": "#000000"
-                                        }[c] 
-                                      }}
-                                      title={c}
-                                    />
+                                <span className={`text-sm ${!item.fit ? "text-red-500 font-bold" : "text-gray-600"}`}>Fit:</span>
+                                <select
+                                  value={item.fit || ""}
+                                  onChange={(e) => updateCartItem(item, item.size as string, item.color, item.fabric || "", e.target.value)}
+                                  className={`text-sm border rounded px-2 py-1 ${!item.fit ? "border-red-500 bg-red-50" : "border-gray-300"}`}
+                                >
+                                  <option value="">Select Fit</option>
+                                  {/* Showing all fits as we don't know category easily here without prop, or we assume all are valid options. 
+                                      Alternatively could check item.category if available, but CartItem might not have it unless we added it.
+                                      We added category to Product, not strictly CartItem? 
+                                      Wait, we added 'category' to CartItem type in Plan? Yes. 
+                                      Let's check if item.category is available.
+                                  */}
+                                  {(item.category === 'shirt' 
+                                    ? ["Tailored fit", "Classic Regular fit", "Slim fit"] 
+                                    : ["Tailored fit", "Tapered fit", "Straight fit", "Relaxed Tapered fit", "Regular fit"]
+                                  ).map(f => (
+                                    <option key={f} value={f}>{f}</option>
                                   ))}
-                                </div>
-                                {!item.color && <span className="text-xs text-red-500 font-medium">Required</span>}
+                                </select>
                               </div>
                             </div>
 

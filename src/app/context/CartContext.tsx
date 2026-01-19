@@ -14,6 +14,7 @@ export type CartItem = {
   color: string;
   size: string | number;
   fabric?: string;
+  fit?: string; // Added fit property
   id: number;
   title: string;
   price: number;
@@ -24,9 +25,9 @@ export type CartItem = {
 type CartContextType = {
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
-  updateCartItem: (oldItem: CartItem, newSize: string, newColor: string, newFabric: string) => void;
-  decrementQuantity: (id: number, size: string | number, color: string, fabric?: string) => void;
-  removeFromCart: (id: number, size: string | number, color: string, fabric?: string) => void;
+  updateCartItem: (oldItem: CartItem, newSize: string, newColor: string, newFabric: string, newFit: string) => void;
+  decrementQuantity: (id: number, size: string | number, color: string, fabric?: string, fit?: string) => void;
+  removeFromCart: (id: number, size: string | number, color: string, fabric?: string, fit?: string) => void;
   clearCart: () => void;
   cartCount: number;
 };
@@ -52,12 +53,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     id: number,
     size: string | number,
     color: string,
-    fabric?: string
+    fabric?: string,
+    fit?: string
   ) => {
     setCart((prev) =>
       prev
         .map((item) =>
-          item.id === id && item.size === size && item.color === color && item.fabric === fabric
+          item.id === id && item.size === size && item.color === color && item.fabric === fabric && item.fit === fit
             ? { ...item, quantity: item.quantity - 1 }
             : item
         )
@@ -80,16 +82,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCart((prev) => {
-      // Logic: If we are adding an item that ALREADY exists exactly (same id, size, color, fabric), increment it.
+      // Logic: If we are adding an item that ALREADY exists exactly (same id, size, color, fabric, fit), increment it.
       // If we are adding an item with DIFFERENT options, it's a new line item.
-      // If we are adding an "incomplete" item (options empty), and there's already an incomplete one?
-      // Yes, group them.
       const existing = prev.find(
-        (p) => p.id === item.id && p.size === item.size && p.color === item.color && p.fabric === item.fabric
+        (p) => p.id === item.id && p.size === item.size && p.color === item.color && p.fabric === item.fabric && p.fit === item.fit
       );
       if (existing) {
         return prev.map((p) =>
-          p.id === item.id && p.size === item.size && p.color === item.color && p.fabric === item.fabric
+          p.id === item.id && p.size === item.size && p.color === item.color && p.fabric === item.fabric && p.fit === item.fit
             ? { ...p, quantity: p.quantity + 1 }
             : p
         );
@@ -102,13 +102,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     oldItem: CartItem,
     newSize: string,
     newColor: string,
-    newFabric: string
+    newFabric: string,
+    newFit: string
   ) => {
     setCart((prev) => {
-      // 1. Remove the old item (effectively decrementing or removing to re-add)
-      // Actually, we want to CHANGE the properties.
-      // But if the NEW properties match ANOTHER existing item, we should merge them.
-
       // First, filter out the item we are modifying
       const otherItems = prev.filter(
         (p) =>
@@ -116,7 +113,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             p.id === oldItem.id &&
             p.size === oldItem.size &&
             p.color === oldItem.color &&
-            p.fabric === oldItem.fabric
+            p.fabric === oldItem.fabric &&
+            p.fit === oldItem.fit
           )
       );
 
@@ -126,7 +124,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           p.id === oldItem.id &&
           p.size === newSize &&
           p.color === newColor &&
-          p.fabric === newFabric
+          p.fabric === newFabric &&
+          p.fit === newFit
       );
 
       if (existingTargetIndex !== -1) {
@@ -146,6 +145,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             size: newSize,
             color: newColor,
             fabric: newFabric,
+            fit: newFit,
           },
         ];
       }
@@ -156,12 +156,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     id: number,
     size: string | number,
     color: string,
-    fabric?: string
+    fabric?: string,
+    fit?: string
   ) => {
     setCart((prev) =>
       prev.filter(
         (item) =>
-          !(item.id === id && item.size === size && item.color === color && item.fabric === fabric)
+          !(item.id === id && item.size === size && item.color === color && item.fabric === fabric && item.fit === fit)
       )
     );
   };

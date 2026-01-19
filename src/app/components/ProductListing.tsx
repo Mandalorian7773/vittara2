@@ -342,7 +342,7 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
                                 <div className="flex flex-col gap-2">
                                     <SignedIn>
                                         <button
-                                        onClick={() => addToCart({ ...product, color: "", size: 0 })}
+                                        onClick={() => addToCart({ ...product, color: "", size: 0, fit: "" })}
                                         className="w-full py-2.5 cursor-pointer bg-[#000000] text-white text-sm font-semibold rounded-lg hover:bg-[#000000] transition-all duration-300 shadow-md transform hover:-translate-y-0.5"
                                         >
                                         Add to Cart

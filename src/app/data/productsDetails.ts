@@ -8,6 +8,7 @@ export interface Product {
   color: string;
   images: string[]; // Array of 4 different pose images
   videoUrl?: string; // Made optional
+  category?: 'pant' | 'shirt'; // Added for fit selection
 }
 
 const products: Product[] = [
