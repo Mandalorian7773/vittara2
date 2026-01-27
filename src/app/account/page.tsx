@@ -76,102 +76,17 @@ declare global {
 const CheckoutDashboard = () => {
   const { user } = useUser();
   const { cart, removeFromCart, clearCart } = useCart();
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const firstName = user?.firstName || user?.username || "there";
 
   // Calculate cart total
   const getCartTotal = () => cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
-  // Load Razorpay script
-  const loadRazorpayScript = (): Promise<boolean> => {
-    return new Promise((resolve) => {
-      if (window.Razorpay) {
-        resolve(true);
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
-
-  const handleCheckout = async () => {
+  // Redirect to store page for full checkout with address collection
+  const handleCheckout = () => {
     if (cart.length === 0) return;
-
-    setIsProcessing(true);
-
-    try {
-      // Load Razorpay SDK
-      const res = await loadRazorpayScript();
-      if (!res) {
-        alert("Razorpay SDK failed to load. Please check your internet connection.");
-        setIsProcessing(false);
-        return;
-      }
-
-      // Create order via API
-      const orderRes = await fetch("/api/razorpay/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: getCartTotal(),
-          currency: "INR",
-          customerDetails: {
-            name: user?.firstName || "Customer",
-            email: user?.emailAddresses?.[0]?.emailAddress || "",
-          },
-          items: cart,
-        }),
-      });
-
-      if (!orderRes.ok) {
-        alert("Failed to create order. Please try again.");
-        setIsProcessing(false);
-        return;
-      }
-
-      const orderData = await orderRes.json();
-
-      // Razorpay checkout options
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_1234567890",
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: "FITTARA",
-        description: "Premium Clothing Order",
-        image: "/images/logo2.png",
-        order_id: orderData.id,
-        handler: async function (response: any) {
-          // Payment successful
-          alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
-          clearCart();
-        },
-        prefill: {
-          name: user?.firstName || "",
-          email: user?.emailAddresses?.[0]?.emailAddress || "",
-        },
-        theme: {
-          color: "#F59E0B", // Amber color to match the theme
-        },
-        modal: {
-          ondismiss: function () {
-            setIsProcessing(false);
-          },
-        },
-      };
-
-      // Open Razorpay checkout
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-      setIsProcessing(false);
-    } catch (error) {
-      console.error("Payment error:", error);
-      alert("Something went wrong during payment. Please try again.");
-      setIsProcessing(false);
-    }
+    // Redirect to the store page which has the complete checkout flow
+    window.location.href = "/store";
   };
 
   return (
@@ -381,7 +296,7 @@ const CheckoutDashboard = () => {
               {/* Checkout Button */}
               <motion.button
                 onClick={handleCheckout}
-                disabled={cart.length === 0 || isProcessing}
+                disabled={cart.length === 0}
                 className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all duration-300 ${cart.length === 0
                   ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                   : "bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 hover:from-amber-400 hover:to-amber-500 shadow-lg shadow-amber-500/20"
@@ -389,18 +304,8 @@ const CheckoutDashboard = () => {
                 whileHover={cart.length > 0 ? { scale: 1.02 } : {}}
                 whileTap={cart.length > 0 ? { scale: 0.98 } : {}}
               >
-                {isProcessing ? (
-                  <motion.div
-                    className="w-6 h-6 border-2 border-gray-900 border-t-transparent rounded-full"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  />
-                ) : (
-                  <>
-                    Proceed to Pay
-                    <FaArrowRight />
-                  </>
-                )}
+                Proceed to Pay
+                <FaArrowRight />
               </motion.button>
 
               {/* Security Note */}
