@@ -135,11 +135,10 @@ const StarRating = ({
               onClick={() => handleStarClick(star)}
             >
               <FaStar
-                className={`text-lg ${
-                  star <= (hoveredRating || selectedRating)
-                    ? "text-[#000000]"
-                    : "text-gray-300"
-                } hover:text-[#000000] transition-colors duration-200 cursor-pointer`}
+                className={`text-lg ${star <= (hoveredRating || selectedRating)
+                  ? "text-[#000000]"
+                  : "text-gray-300"
+                  } hover:text-[#000000] transition-colors duration-200 cursor-pointer`}
               />
             </button>
           ))}
@@ -183,11 +182,11 @@ const ImageModal = ({
   }, []);
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn"
       onClick={onClose}
     >
-      <div 
+      <div
         // Orientation-based sizing strategy with strict safety caps:
         // Landscape: Target 70vh height.
         // Portrait: Target 90vw width.
@@ -202,7 +201,7 @@ const ImageModal = ({
       >
 
         <div className="relative w-full h-full">
-           <Image
+          <Image
             src={imageUrl}
             alt="Product detail"
             fill
@@ -283,15 +282,14 @@ const ProductRow = ({
   return (
     <>
       {selectedImage && (
-        <ImageModal 
-          imageUrl={selectedImage} 
-          onClose={() => setSelectedImage(null)} 
+        <ImageModal
+          imageUrl={selectedImage}
+          onClose={() => setSelectedImage(null)}
         />
       )}
       <div
-        className={`transform transition-all duration-1000 ${
-          isLoaded ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
-        }`}
+        className={`transform transition-all duration-1000 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
+          }`}
       >
         <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border-2 border-[#F3F4F6] hover:border-[#000000]/30 overflow-hidden transition-all duration-500 hover:shadow-2xl">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
@@ -301,9 +299,8 @@ const ProductRow = ({
                 {product.images.slice(0, 4).map((image: string, idx: number) => (
                   <div
                     key={idx}
-                    className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ${
-                      currentImageIndex === idx ? "ring-4 ring-[#000000]" : ""
-                    }`}
+                    className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ${currentImageIndex === idx ? "ring-4 ring-[#000000]" : ""
+                      }`}
                     onClick={() => {
                       setCurrentImageIndex(idx);
                       setSelectedImage(image); // Open popup
@@ -435,11 +432,10 @@ const ProductRow = ({
                         <button
                           key={size}
                           onClick={() => setSelectedSize(prev => prev === size ? "" : size)}
-                          className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-200 border snap-center ${
-                            selectedSize === size
-                              ? "bg-[#000000] text-white border-[#000000] shadow-md scale-105"
-                              : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
-                          }`}
+                          className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-200 border snap-center ${selectedSize === size
+                            ? "bg-[#000000] text-white border-[#000000] shadow-md scale-105"
+                            : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
+                            }`}
                         >
                           {size}
                         </button>
@@ -455,11 +451,10 @@ const ProductRow = ({
                         <button
                           key={fabric}
                           onClick={() => setSelectedFabric(prev => prev === fabric ? "" : fabric)}
-                          className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${
-                            selectedFabric === fabric
-                              ? "bg-[#000000] text-white border-[#000000] shadow-md"
-                              : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
-                          }`}
+                          className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${selectedFabric === fabric
+                            ? "bg-[#000000] text-white border-[#000000] shadow-md"
+                            : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
+                            }`}
                         >
                           {fabric}
                         </button>
@@ -475,11 +470,10 @@ const ProductRow = ({
                         <button
                           key={fit}
                           onClick={() => setSelectedFit(prev => prev === fit ? "" : fit)}
-                          className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${
-                            selectedFit === fit
-                              ? "bg-[#000000] text-white border-[#000000] shadow-md"
-                              : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
-                          }`}
+                          className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${selectedFit === fit
+                            ? "bg-[#000000] text-white border-[#000000] shadow-md"
+                            : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
+                            }`}
                         >
                           {fit}
                         </button>
@@ -533,9 +527,9 @@ export default function ProductsPage() {
     const matchesSize = filters.size ? product.size === filters.size : true;
     const matchesPrice = filters.price
       ? (() => {
-          const [min, max] = filters.price.split("-").map(Number);
-          return product.price >= min && product.price <= (max || Infinity);
-        })()
+        const [min, max] = filters.price.split("-").map(Number);
+        return product.price >= min && product.price <= (max || Infinity);
+      })()
       : true;
     const matchesFabric = filters.fabric
       ? product.fabric === filters.fabric
@@ -550,19 +544,19 @@ export default function ProductsPage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] pt-20 overflow-x-hidden">
+    <main className="relative min-h-screen bg-black pt-20 overflow-x-hidden">
       <FloatingElements />
 
       {/* Hero Section */}
       <div className="relative z-10 text-center py-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold text-[#000000] mb-4 tracking-wide">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-wide">
             Exquisite
-            <span className="block text-[#000000] italic font-serif">
-               Premium Collection
+            <span className="block text-white italic font-serif">
+              Premium Collection
             </span>
           </h1>
-          <p className="text-xl text-[#4B5563] mb-8 font-light">
+          <p className="text-xl text-gray-400 mb-8 font-light">
             Tailored perfection, designed for the modern connoisseur
           </p>
 
@@ -570,7 +564,7 @@ export default function ProductsPage() {
             {[...Array(5)].map((_, i) => (
               <FaStar
                 key={i}
-                className="text-[#000000] text-2xl animate-pulse"
+                className="text-white text-2xl"
                 style={{ animationDelay: `${i * 0.1}s` }}
               />
             ))}
@@ -584,9 +578,15 @@ export default function ProductsPage() {
           filters={filters}
           onFiltersChange={handleFiltersChange}
           resultsCount={filteredProducts.length}
+          onApplyFilters={() => {
+            const productsSection = document.getElementById('products-section');
+            if (productsSection) {
+              productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }}
         />
       </div>
-      <div className="relative z-auto px-4 pb-16 max-w-7xl mx-auto">
+      <div id="products-section" className="relative z-auto px-4 pb-16 max-w-7xl mx-auto">
         <div className="flex gap-6">
           {/* Products */}
           <div className="flex-1 space-y-8">
@@ -627,9 +627,8 @@ export default function ProductsPage() {
                   <p className="text-[#4B5563] text-lg font-medium">
                     {wishlistCount === 0
                       ? "Your wishlist is empty"
-                      : `You have ${wishlistCount} item${
-                          wishlistCount === 1 ? "" : "s"
-                        } in your wishlist`}
+                      : `You have ${wishlistCount} item${wishlistCount === 1 ? "" : "s"
+                      } in your wishlist`}
                   </p>
                 )}
               </div>

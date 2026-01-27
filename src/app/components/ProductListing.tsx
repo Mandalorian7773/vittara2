@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { FaStar, FaEye, FaHeart } from "react-icons/fa";
+import { HiSparkles } from "react-icons/hi2";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
@@ -46,20 +47,23 @@ interface ProductListingProps {
 const FloatingElements = () => {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {[...Array(15)].map((_, i) => (
+      {[...Array(20)].map((_, i) => (
         <div
           key={i}
-          className="absolute animate-pulse opacity-20"
+          className="absolute animate-pulse"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 2}s`,
-            animationDuration: `${2 + Math.random() * 3}s`,
+            animationDelay: `${Math.random() * 3}s`,
+            animationDuration: `${3 + Math.random() * 4}s`,
           }}
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" className="text-amber-200/20 fill-current">
-            <path d="M10 2c-3 0-5 2-5 5 0 2 1 3 2 4 1 1 2 2 2 3s1 2 3 2 3-1 3-2s-1-2-2-3-2-2-2-4c0-3-2-5-3-5z" />
-          </svg>
+          <div
+            className="w-1 h-1 rounded-full bg-amber-400/20"
+            style={{
+              boxShadow: '0 0 10px rgba(245, 158, 11, 0.3)',
+            }}
+          />
         </div>
       ))}
     </div>
@@ -81,11 +85,11 @@ const ImageModal = ({
   }, []);
 
   return (
-    <div 
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn"
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-fadeIn"
       onClick={onClose}
     >
-      <div 
+      <div
         className="relative aspect-[3/4] 
           w-auto h-auto
           landscape:h-[70vh] landscape:w-auto
@@ -94,11 +98,11 @@ const ImageModal = ({
           flex items-center justify-center animate-scaleIn cursor-pointer bg-transparent"
       >
         <div className="relative w-full h-full">
-           <Image
+          <Image
             src={imageUrl}
             alt="Product detail"
             fill
-            className="object-contain drop-shadow-2xl"
+            className="object-contain drop-shadow-2xl rounded-lg"
             quality={100}
             priority
           />
@@ -120,7 +124,7 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
   const [localReviews, setLocalReviews] = useState<Review[]>([]);
   const [showThankYou, setShowThankYou] = useState<Record<number, boolean>>({});
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  
+
   const [filters, setFilters] = useState<Filters>({
     size: "",
     price: "",
@@ -169,41 +173,59 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
     return review ? review.rating : 0;
   };
 
-  // Determine total products to show for filters count
   const allSectionProducts = products.filter(p => sections.some(s => s.category === p.category));
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] pt-24 font-sans">
+    <main className="relative min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 pt-24 font-sans">
       <Navbar />
       <FloatingElements />
+
+      {/* Decorative gradient orbs */}
+      <div className="fixed top-0 left-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed bottom-0 right-0 w-96 h-96 bg-amber-600/5 rounded-full blur-3xl pointer-events-none" />
+
       {selectedImage && (
-        <ImageModal 
-          imageUrl={selectedImage} 
-          onClose={() => setSelectedImage(null)} 
+        <ImageModal
+          imageUrl={selectedImage}
+          onClose={() => setSelectedImage(null)}
         />
       )}
 
       {/* Hero Header */}
       <section className="relative z-10 text-center py-16 px-4">
         <div className="max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full mb-6">
+            <HiSparkles className="text-amber-400" />
+            <span className="text-amber-400 text-sm font-medium tracking-wide">Exquisite</span>
+          </div>
+
           {pageTitle ? (
-             <h1 className="text-4xl md:text-6xl font-bold text-[#000000] mb-4 tracking-wide">
-                {pageTitle}
-             </h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-wide">
+              <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-clip-text text-transparent italic font-serif">
+                Premium Collection
+              </span>
+            </h1>
           ) : (
-             <h1 className="text-4xl md:text-6xl font-bold text-[#000000] mb-4 tracking-wide">
-                The <span className="text-[#000000] italic font-serif">FITTARA</span> Collection
-             </h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-wide">
+              The <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-clip-text text-transparent italic font-serif">FITTARA</span> Collection
+            </h1>
           )}
-          
-          <p className="text-xl text-[#4B5563] mb-8 font-light">
-            {subTitle || "Discover the perfect blend of comfort, style, and tradition."}
+
+          <p className="text-lg text-gray-400 mb-4 font-light">
+            {subTitle || "Tailored perfection, designed for the modern connoisseur"}
           </p>
+
+          {/* Rating Stars */}
+          <div className="flex items-center justify-center gap-1 mb-8">
+            {[...Array(5)].map((_, i) => (
+              <FaStar key={i} className="text-amber-400 text-lg" />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Filters (Global) */}
-      <div className="relative max-w-7xl mx-auto px-4 mb-16">
+      {/* Filters */}
+      <div className="relative max-w-7xl mx-auto px-4 mb-12">
         <ProductFilter
           filters={filters}
           onFiltersChange={setFilters}
@@ -219,43 +241,43 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
         if (displayedProducts.length === 0) return null;
 
         return (
-          <section key={section.id} className="relative z-10 px-4 pb-24 border-b border-[#000000]/20 last:border-0 mb-16">
+          <section key={section.id} className="relative z-10 px-4 pb-20 mb-12">
             <div className="max-w-7xl mx-auto">
-              
+
               {/* Section Header */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12 items-start">
                 <div>
-                  <h2 className="text-3xl md:text-5xl font-bold text-[#000000] mb-6 font-serif leading-tight">
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-serif leading-tight">
                     {section.title}
                   </h2>
-                  <p className="text-lg text-[#5A4033] leading-relaxed mb-8">
+                  <p className="text-base text-gray-400 leading-relaxed mb-8">
                     {section.description}
                   </p>
-                  
-                  {/* Details & Care Grid - Only show if details exist */}
+
+                  {/* Details & Care Grid */}
                   {(section.details || section.care) && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {section.details && (
-                        <div className="bg-white/60 p-6 rounded-xl border border-[#F3F4F6]">
-                          <h3 className="font-semibold text-[#000000] mb-3 uppercase tracking-wider text-sm">Details</h3>
+                        <div className="bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl border border-gray-700/50">
+                          <h3 className="font-semibold text-amber-400 mb-3 uppercase tracking-wider text-xs">Details</h3>
                           <ul className="space-y-2">
                             {section.details.map((detail, idx) => (
-                              <li key={idx} className="flex items-start text-[#5A4033] text-sm">
-                                <span className="mr-2 text-[#000000]">•</span>
+                              <li key={idx} className="flex items-start text-gray-300 text-sm">
+                                <span className="mr-2 text-amber-500">•</span>
                                 {detail}
                               </li>
                             ))}
                           </ul>
                         </div>
                       )}
-                      
+
                       {section.care && (
-                        <div className="bg-white/60 p-6 rounded-xl border border-[#F3F4F6]">
-                          <h3 className="font-semibold text-[#000000] mb-3 uppercase tracking-wider text-sm">Care Instructions</h3>
+                        <div className="bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl border border-gray-700/50">
+                          <h3 className="font-semibold text-amber-400 mb-3 uppercase tracking-wider text-xs">Care Instructions</h3>
                           <ul className="space-y-2">
                             {section.care.map((item, idx) => (
-                              <li key={idx} className="flex items-start text-[#5A4033] text-sm">
-                                <span className="mr-2 text-[#000000]">•</span>
+                              <li key={idx} className="flex items-start text-gray-300 text-sm">
+                                <span className="mr-2 text-amber-500">•</span>
                                 {item}
                               </li>
                             ))}
@@ -266,20 +288,20 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
                   )}
                 </div>
 
-                 <div className="hidden lg:block relative h-full min-h-[400px]">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#000000]/10 to-transparent rounded-3xl p-8 flex items-center justify-center border border-[#000000]/20">
-                         <div className="text-center">
-                            <div className="text-6xl font-serif text-[#000000]/20 mb-4 uppercase">
-                                {section.id.split("-").pop()}
-                            </div>
-                            <span className="text-[#4B5563]/60 uppercase tracking-[0.5em] text-sm">Series</span>
-                         </div>
+                <div className="hidden lg:block relative h-full min-h-[350px]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent rounded-3xl p-8 flex items-center justify-center border border-amber-500/10">
+                    <div className="text-center">
+                      <div className="text-7xl font-serif text-amber-500/20 mb-4 uppercase">
+                        {section.id.split("-").pop()}
+                      </div>
+                      <span className="text-gray-500 uppercase tracking-[0.5em] text-xs">Series</span>
                     </div>
-                 </div>
+                  </div>
+                </div>
               </div>
 
               {/* Products Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {displayedProducts.map((product: any, index: number) => {
                   const isHighlighted = highlightedProduct === product.id;
                   const productRating = getProductRating(product.id);
@@ -291,18 +313,18 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
                     <div
                       key={product.id}
                       id={`product-${product.id}`}
-                      className={`group relative transform transition-all duration-700 hover:scale-[1.02] ${
-                        isLoaded ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
-                      } ${isHighlighted ? "ring-4 ring-[#000000] ring-offset-2 animate-pulse" : ""}`}
+                      className={`group relative transform transition-all duration-500 hover:scale-[1.02] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+                        } ${isHighlighted ? "ring-2 ring-amber-400 ring-offset-2 ring-offset-gray-900" : ""}`}
                       style={{ transitionDelay: `${index * 50}ms` }}
                       onMouseEnter={() => setHoveredProduct(product.id)}
                       onMouseLeave={() => setHoveredProduct(null)}
                     >
-                      <div className="relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden border border-[#F3F4F6] hover:border-[#000000]/30 h-full flex flex-col">
-                        
-                        <div 
-                            className="relative h-96 w-full overflow-hidden bg-gray-100 cursor-pointer"
-                            onClick={() => setSelectedImage(product.image)}
+                      <div className="relative bg-gradient-to-b from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700/50 hover:border-amber-500/30 transition-all duration-500 h-full flex flex-col shadow-xl hover:shadow-2xl hover:shadow-amber-500/5">
+
+                        {/* Product Image */}
+                        <div
+                          className="relative h-80 w-full overflow-hidden bg-gray-800 cursor-pointer"
+                          onClick={() => setSelectedImage(product.image)}
                         >
                           <Image
                             src={product.image}
@@ -311,9 +333,19 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           />
-                          
+
+                          {/* Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                          {/* Quick View Icon */}
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div className="bg-white/10 backdrop-blur-sm p-3 rounded-full border border-white/20">
+                              <FaEye className="text-white text-lg" />
+                            </div>
+                          </div>
+
                           {hasThankYou && (
-                            <div className="absolute inset-0 bg-[#000000]/90 flex items-center justify-center transition-all duration-500 z-30">
+                            <div className="absolute inset-0 bg-amber-500/90 flex items-center justify-center transition-all duration-500 z-30">
                               <div className="text-center text-white">
                                 <FaStar className="text-4xl mx-auto mb-2 animate-bounce" />
                                 <p className="text-lg font-semibold">Thank you for rating!</p>
@@ -322,67 +354,69 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
                           )}
                         </div>
 
-                        <div className="p-5 flex-grow flex flex-col bg-white">
-                            <h3 className="font-semibold text-[#000000] line-clamp-2 group-hover:text-[#000000] transition-colors duration-300 leading-snug mb-2 text-lg">
-                              {product.title}
-                            </h3>
+                        {/* Product Info */}
+                        <div className="p-5 flex-grow flex flex-col">
+                          <h3 className="font-semibold text-white line-clamp-2 group-hover:text-amber-400 transition-colors duration-300 leading-snug mb-2 text-base">
+                            {product.title}
+                          </h3>
 
-                            <div className="flex items-center justify-between mb-4">
-                              <p className="text-xl font-bold text-[#000000]">₹{product.price.toLocaleString("en-IN")}</p>
-                              
-                              {productRating > 0 && (
-                                <div className="flex items-center gap-1 text-sm text-[#4B5563] bg-[#FFFFFF] px-2 py-1 rounded-full">
-                                  <FaStar className="text-[#000000] w-3 h-3" />
-                                  <span className="font-medium">{productRating}</span>
-                                </div>
-                              )}
-                            </div>
+                          <div className="flex items-center justify-between mb-4">
+                            <p className="text-xl font-bold text-amber-400">₹{product.price.toLocaleString("en-IN")}</p>
 
-                            <div className="mt-auto space-y-4 pt-4 border-t border-gray-100">
-                                <div className="flex flex-col gap-2">
-                                    <SignedIn>
-                                        <button
-                                        onClick={() => addToCart({ ...product, color: "", size: 0, fit: "" })}
-                                        className="w-full py-2.5 cursor-pointer bg-[#000000] text-white text-sm font-semibold rounded-lg hover:bg-[#000000] transition-all duration-300 shadow-md transform hover:-translate-y-0.5"
-                                        >
-                                        Add to Cart
-                                        </button>
-                                        <button
-                                        onClick={() =>
-                                            inWishlist
-                                            ? removeFromWishlist(product.id)
-                                            : addToWishlist({
-                                                id: product.id,
-                                                title: product.title,
-                                                image: product.image,
-                                                price: product.price,
-                                                color: "",
-                                                size: 0
-                                                })
-                                        }
-                                        className={`w-full py-2.5 cursor-pointer text-sm font-semibold rounded-lg transition-all duration-300 shadow-md flex items-center justify-center gap-1.5 transform hover:-translate-y-0.5 ${
-                                            inWishlist ? "bg-red-50 text-red-500 border border-red-200" : "bg-white text-[#4B5563] border border-[#4B5563]/20 hover:border-[#000000]"
-                                        }`}
-                                        >
-                                        <FaHeart className={inWishlist ? "text-red-500" : ""} />
-                                        {inWishlist ? "In Wishlist" : "Add to Wishlist"}
-                                        </button>
-                                        <button
-                                          onClick={() => {
-                                              window.open("https://docs.google.com/forms/d/e/1FAIpQLSdXkEPO-4NSrIbXnjF_p2iKBHBYua4EIzYAW-EK3xb1x8lOUg/viewform", "_blank");
-                                          }}
-                                          className="w-full py-2.5 cursor-pointer bg-white text-[#000000] border border-[#000000] hover:bg-[#000000] hover:text-white text-sm font-semibold rounded-lg transition-all duration-300 shadow-md flex items-center justify-center gap-1.5 transform hover:-translate-y-0.5"
-                                        >
-                                          Need Customization
-                                        </button>
-                                    </SignedIn>
-                                    <SignedOut>
-                                        <button disabled className="w-full py-2 bg-gray-200 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed">
-                                            Sign in to Shop
-                                        </button>
-                                    </SignedOut>
-                                </div>
+                            {productRating > 0 && (
+                              <div className="flex items-center gap-1 text-sm text-gray-400 bg-gray-800 px-2 py-1 rounded-full">
+                                <FaStar className="text-amber-400 w-3 h-3" />
+                                <span className="font-medium">{productRating}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="mt-auto space-y-3 pt-4 border-t border-gray-700/50">
+                            <div className="flex flex-col gap-2">
+                              <SignedIn>
+                                <button
+                                  onClick={() => addToCart({ ...product, color: "", size: 0, fit: "" })}
+                                  className="w-full py-2.5 cursor-pointer bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 text-sm font-semibold rounded-lg hover:from-amber-400 hover:to-amber-500 transition-all duration-300 shadow-lg shadow-amber-500/20 transform hover:-translate-y-0.5"
+                                >
+                                  Add to Cart
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    inWishlist
+                                      ? removeFromWishlist(product.id)
+                                      : addToWishlist({
+                                        id: product.id,
+                                        title: product.title,
+                                        image: product.image,
+                                        price: product.price,
+                                        color: "",
+                                        size: 0
+                                      })
+                                  }
+                                  className={`w-full py-2.5 cursor-pointer text-sm font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-1.5 transform hover:-translate-y-0.5 ${inWishlist
+                                      ? "bg-red-500/20 text-red-400 border border-red-500/30"
+                                      : "bg-gray-800 text-gray-300 border border-gray-600 hover:border-amber-500/50 hover:text-amber-400"
+                                    }`}
+                                >
+                                  <FaHeart className={inWishlist ? "text-red-400" : ""} />
+                                  {inWishlist ? "In Wishlist" : "Add to Wishlist"}
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    window.open("https://docs.google.com/forms/d/e/1FAIpQLSdXkEPO-4NSrIbXnjF_p2iKBHBYua4EIzYAW-EK3xb1x8lOUg/viewform", "_blank");
+                                  }}
+                                  className="w-full py-2.5 cursor-pointer bg-transparent text-amber-400 border border-amber-500/50 hover:bg-amber-500/10 text-sm font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-1.5 transform hover:-translate-y-0.5"
+                                >
+                                  Need Customization
+                                </button>
+                              </SignedIn>
+                              <SignedOut>
+                                <button className="w-full py-2.5 bg-gray-800 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed border border-gray-700">
+                                  Sign in to Add to Cart
+                                </button>
+                              </SignedOut>
                             </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -394,32 +428,33 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
         );
       })}
 
+      {/* Activity Section */}
       {(wishlistLoaded && (wishlistCount > 0 || localReviews.length > 0)) && (
         <section className="relative z-10 px-4 pb-16">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-[#F3F4F6] text-center shadow-xl">
-              <h2 className="text-2xl font-bold text-[#000000] mb-6">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 text-center">
+              <h2 className="text-2xl font-bold text-white mb-6">
                 Your Activity
               </h2>
               <div className="flex flex-wrap justify-center gap-4">
-                  {wishlistCount > 0 && (
-                    <Link
+                {wishlistCount > 0 && (
+                  <Link
                     href="/wishlist"
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-white border-2 border-[#000000] text-[#000000] font-semibold rounded-xl hover:bg-[#000000] hover:text-white transition-all duration-300 shadow-lg"
-                    >
-                    <FaHeart />
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-gray-700/50 border border-gray-600 text-white font-semibold rounded-xl hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-400 transition-all duration-300"
+                  >
+                    <FaHeart className="text-red-400" />
                     View Wishlist ({wishlistCount})
-                    </Link>
-                  )}
-                  {localReviews.length > 0 && (
-                    <Link
+                  </Link>
+                )}
+                {localReviews.length > 0 && (
+                  <Link
                     href="/reviews"
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-[#000000] text-white font-semibold rounded-xl hover:bg-[#3E2319] transition-all duration-300 shadow-lg"
-                    >
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 font-semibold rounded-xl hover:from-amber-400 hover:to-amber-500 transition-all duration-300 shadow-lg"
+                  >
                     <FaEye />
                     Your Reviews ({localReviews.length})
-                    </Link>
-                  )}
+                  </Link>
+                )}
               </div>
             </div>
           </div>

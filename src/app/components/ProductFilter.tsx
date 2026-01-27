@@ -17,13 +17,13 @@ interface ProductFilterProps {
   filters: Filters;
   onFiltersChange: (filters: Filters) => void;
   resultsCount: number;
+  onApplyFilters?: () => void;
 }
 
-const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilterProps) => {
+const ProductFilter = ({ filters, onFiltersChange, resultsCount, onApplyFilters }: ProductFilterProps) => {
   const [showFilters, setShowFilters] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Close filter panel when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
@@ -55,7 +55,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
     label,
     options,
     filterKey,
-    dropUp = false, // 👈 added flag to control drop direction
+    dropUp = false,
   }: {
     label: string;
     options: { label: string; value: string }[];
@@ -65,23 +65,19 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
     <Menu as="div" className="relative inline-block text-left w-full">
       {({ open }: { open: boolean }) => (
         <>
-          {/* Dropdown Button */}
           <Menu.Button
-            className={`inline-flex justify-between items-center w-full px-3 py-2 bg-gradient-to-r from-white to-[#FFFFFF] text-[#000000] text-sm font-medium rounded-lg shadow-md border border-[#F3F4F6] hover:border-[#000000] hover:shadow-lg transition-all duration-300 cursor-pointer ${
-              open ? "ring-2 ring-[#000000]/30 shadow-lg" : ""
-            }`}
+            className={`inline-flex justify-between items-center w-full px-3 py-2.5 bg-gray-800/80 text-gray-300 text-sm font-medium rounded-lg border border-gray-700 hover:border-amber-500/50 hover:text-white transition-all duration-300 cursor-pointer ${open ? "ring-2 ring-amber-500/30 border-amber-500/50" : ""
+              }`}
           >
             <span className="truncate whitespace-nowrap w-full text-left">
               {filters[filterKey] || label}
             </span>
             <FaChevronDown
-              className={`ml-2 text-xs transition-transform duration-300 ${
-                open ? "rotate-180 text-[#000000]" : "text-[#4B5563]"
-              }`}
+              className={`ml-2 text-xs transition-transform duration-300 ${open ? "rotate-180 text-amber-400" : "text-gray-500"
+                }`}
             />
           </Menu.Button>
 
-          {/* Dropdown Items */}
           <AnimatePresence>
             {open && (
               <Menu.Items
@@ -100,7 +96,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                   scale: 0.95,
                   transition: { duration: 0.2 },
                 }}
-                className={`absolute w-56 rounded-xl bg-white shadow-2xl ring-1 ring-[#F3F4F6] border border-[#F3F4F6]/50 focus:outline-none z-[9999] overflow-visible
+                className={`absolute w-56 rounded-xl bg-gray-800 shadow-2xl ring-1 ring-gray-700 border border-gray-700 focus:outline-none z-[9999] overflow-visible
                   ${dropUp ? "bottom-full mb-1 left-0" : "top-full mt-1 left-0"}`}
               >
                 <div className="py-2">
@@ -116,15 +112,13 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                             transition: { delay: index * 0.05 },
                           }}
                           onClick={() => updateFilter(filterKey, opt.value)}
-                          className={`${
-                            active
-                              ? "bg-gradient-to-r from-[#FFFFFF] to-[#FFFFFF] text-[#000000]"
-                              : "text-[#000000] hover:bg-[#FFFFFF]/50"
-                          } ${
-                            filters[filterKey] === opt.value
-                              ? "bg-[#000000]/10 text-[#000000] font-semibold border-l-4 border-[#000000]"
+                          className={`${active
+                            ? "bg-amber-500/10 text-amber-400"
+                            : "text-gray-300 hover:bg-gray-700/50"
+                            } ${filters[filterKey] === opt.value
+                              ? "bg-amber-500/20 text-amber-400 font-semibold border-l-2 border-amber-500"
                               : ""
-                          } 
+                            } 
                           block px-3 py-2 text-sm w-full text-left cursor-pointer transition-all duration-300 whitespace-nowrap`}
                         >
                           {opt.label}
@@ -146,10 +140,10 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
       {/* Filter Toggle Button */}
       <button
         onClick={() => setShowFilters(!showFilters)}
-        className="flex items-center justify-between w-full px-6 py-3 mb-6 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-xl hover:from-[#000000] hover:to-[#4B5563] transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+        className="flex items-center justify-between w-full px-6 py-3 mb-6 bg-gradient-to-r from-gray-800 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-600 border border-gray-600 hover:border-amber-500/50 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
       >
         <div className="flex items-center gap-2">
-          <FaFilter className="text-sm" />
+          <FaFilter className="text-sm text-amber-400" />
           <span>Filters</span>
         </div>
         <motion.div
@@ -168,15 +162,15 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-visible bg-white/95 backdrop-blur-sm rounded-2xl border-2 border-[#F3F4F6] shadow-2xl relative z-40"
+            className="overflow-visible bg-gray-900/95 backdrop-blur-sm rounded-2xl border border-gray-700 shadow-2xl relative z-40"
           >
             <div className="p-4 space-y-4">
               {/* Filter Header */}
-              <div className="flex items-center justify-between border-b border-[#F3F4F6] pb-3">
-                <h3 className="text-lg font-semibold text-[#000000]">Filter Products</h3>
+              <div className="flex items-center justify-between border-b border-gray-700 pb-3">
+                <h3 className="text-lg font-semibold text-white">Filter Products</h3>
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs text-[#000000] hover:text-[#4B5563] font-medium transition-colors duration-200 cursor-pointer"
+                  className="text-xs text-amber-400 hover:text-amber-300 font-medium transition-colors duration-200 cursor-pointer"
                 >
                   Clear All
                 </button>
@@ -185,7 +179,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
               {/* Filter Options */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#4B5563] mb-2">Size</label>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Size</label>
                   <Dropdown
                     label="Select Size"
                     filterKey="size"
@@ -200,7 +194,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#4B5563] mb-2">Price Range</label>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Price Range</label>
                   <Dropdown
                     label="Select Price"
                     filterKey="price"
@@ -215,7 +209,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#4B5563] mb-2">Fabric</label>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Fabric</label>
                   <Dropdown
                     label="Select Fabric"
                     filterKey="fabric"
@@ -228,8 +222,7 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#4B5563] mb-2">Color</label>
-                  {/* 👇 Force dropUp for small screens */}
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Color</label>
                   <Dropdown
                     label="Select Color"
                     filterKey="color"
@@ -245,16 +238,16 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
 
               {/* Active Filters Summary */}
               {(filters.size || filters.price || filters.fabric || filters.color) && (
-                <div className="pt-3 border-t border-[#F3F4F6]">
-                  <p className="text-xs text-[#4B5563] mb-2">Active Filters:</p>
+                <div className="pt-3 border-t border-gray-700">
+                  <p className="text-xs text-gray-500 mb-2">Active Filters:</p>
                   <div className="flex flex-wrap gap-1">
                     {filters.size && (
-                      <span className="px-2 py-1 bg-[#000000]/10 text-[#000000] text-xs rounded-md border border-[#000000]/20">
+                      <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-md border border-amber-500/30">
                         Size: {filters.size}
                       </span>
                     )}
                     {filters.price && (
-                      <span className="px-2 py-1 bg-[#000000]/10 text-[#000000] text-xs rounded-md border border-[#000000]/20">
+                      <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-md border border-amber-500/30">
                         Price:{" "}
                         {filters.price.includes("-")
                           ? `₹${filters.price.replace("-", " - ₹")}`
@@ -262,12 +255,12 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
                       </span>
                     )}
                     {filters.fabric && (
-                      <span className="px-2 py-1 bg-[#000000]/10 text-[#000000] text-xs rounded-md border border-[#000000]/20">
+                      <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-md border border-amber-500/30">
                         Fabric: {filters.fabric}
                       </span>
                     )}
                     {filters.color && (
-                      <span className="px-2 py-1 bg-[#000000]/10 text-[#000000] text-xs rounded-md border border-[#000000]/20">
+                      <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-md border border-amber-500/30">
                         Color: {filters.color}
                       </span>
                     )}
@@ -276,11 +269,24 @@ const ProductFilter = ({ filters, onFiltersChange, resultsCount }: ProductFilter
               )}
 
               {/* Results Count */}
-              <div className="pt-3 border-t border-[#F3F4F6]">
-                <p className="text-sm font-medium text-[#000000]">
+              <div className="pt-3 border-t border-gray-700">
+                <p className="text-sm font-medium text-white">
                   {resultsCount} product{resultsCount !== 1 ? "s" : ""} found
                 </p>
               </div>
+
+              {/* Apply Filters Button */}
+              <button
+                onClick={() => {
+                  setShowFilters(false);
+                  if (onApplyFilters) {
+                    onApplyFilters();
+                  }
+                }}
+                className="w-full py-3 mt-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+              >
+                Apply Filters
+              </button>
             </div>
           </motion.div>
         )}
