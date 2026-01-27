@@ -22,25 +22,38 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
 
-// Floating particles background
+// Floating particles background - using fixed positions to avoid hydration errors
+const particlePositions = [
+  { left: 10, top: 20, xMove: 15, duration: 3.5, delay: 0.5 },
+  { left: 25, top: 45, xMove: -10, duration: 4, delay: 1 },
+  { left: 40, top: 15, xMove: 20, duration: 3, delay: 2 },
+  { left: 55, top: 70, xMove: -15, duration: 4.5, delay: 0 },
+  { left: 70, top: 30, xMove: 10, duration: 3.2, delay: 1.5 },
+  { left: 85, top: 55, xMove: -20, duration: 4.2, delay: 2.5 },
+  { left: 15, top: 80, xMove: 12, duration: 3.8, delay: 3 },
+  { left: 60, top: 10, xMove: -8, duration: 4.8, delay: 0.8 },
+  { left: 90, top: 40, xMove: 18, duration: 3.6, delay: 1.8 },
+  { left: 35, top: 90, xMove: -12, duration: 4.4, delay: 2.2 },
+];
+
 const FloatingParticles = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(15)].map((_, i) => (
+    {particlePositions.map((particle, i) => (
       <motion.div
         key={i}
         className="absolute w-2 h-2 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full opacity-20"
         style={{
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
+          left: `${particle.left}%`,
+          top: `${particle.top}%`,
         }}
         animate={{
           y: [-20, -100],
-          x: [0, Math.random() * 50 - 25],
+          x: [0, particle.xMove],
           opacity: [0, 0.4, 0],
         }}
         transition={{
-          duration: Math.random() * 3 + 2,
-          delay: Math.random() * 5,
+          duration: particle.duration,
+          delay: particle.delay,
           repeat: Infinity,
           ease: "easeOut",
         }}
@@ -49,16 +62,22 @@ const FloatingParticles = () => (
   </div>
 );
 
+// Import CartItem type
+import { CartItem } from "@/app/context/CartContext";
+
 // Checkout Dashboard Component
 const CheckoutDashboard = () => {
   const { user } = useUser();
-  const { cartItems, removeFromCart, getCartTotal, clearCart } = useCart();
+  const { cart, removeFromCart, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const firstName = user?.firstName || user?.username || "there";
 
+  // Calculate cart total
+  const getCartTotal = () => cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+
   const handleCheckout = async () => {
-    if (cartItems.length === 0) return;
+    if (cart.length === 0) return;
 
     setIsProcessing(true);
     // Simulate processing - in real app, integrate with Razorpay
@@ -109,7 +128,7 @@ const CheckoutDashboard = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          {cartItems.length > 0
+          {cart.length > 0
             ? "Ready to complete your purchase? Review your items below."
             : "Your cart is empty. Start shopping to add items!"}
         </motion.p>
@@ -134,10 +153,10 @@ const CheckoutDashboard = () => {
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-white">Your Cart</h2>
-                    <p className="text-gray-400 text-sm">{cartItems.length} item(s)</p>
+                    <p className="text-gray-400 text-sm">{cart.length} item(s)</p>
                   </div>
                 </div>
-                {cartItems.length > 0 && (
+                {cart.length > 0 && (
                   <motion.button
                     onClick={() => clearCart()}
                     className="text-red-400 text-sm hover:text-red-300 transition-colors"
@@ -153,7 +172,7 @@ const CheckoutDashboard = () => {
             {/* Cart Items */}
             <div className="p-6 space-y-4 max-h-[500px] overflow-y-auto">
               <AnimatePresence mode="popLayout">
-                {cartItems.length === 0 ? (
+                {cart.length === 0 ? (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -172,7 +191,7 @@ const CheckoutDashboard = () => {
                     </Link>
                   </motion.div>
                 ) : (
-                  cartItems.map((item, index) => (
+                  cart.map((item, index) => (
                     <motion.div
                       key={`${item.id}-${index}`}
                       layout
@@ -214,7 +233,7 @@ const CheckoutDashboard = () => {
 
                       {/* Remove Button */}
                       <motion.button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(item.id, item.size, item.color, item.fabric, item.fit)}
                         className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
@@ -250,7 +269,7 @@ const CheckoutDashboard = () => {
               {/* Price Breakdown */}
               <div className="space-y-3">
                 <div className="flex justify-between text-gray-400">
-                  <span>Subtotal ({cartItems.length} items)</span>
+                  <span>Subtotal ({cart.length} items)</span>
                   <span>₹{getCartTotal().toLocaleString("en-IN")}</span>
                 </div>
                 <div className="flex justify-between text-gray-400">
@@ -276,13 +295,13 @@ const CheckoutDashboard = () => {
               {/* Checkout Button */}
               <motion.button
                 onClick={handleCheckout}
-                disabled={cartItems.length === 0 || isProcessing}
-                className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all duration-300 ${cartItems.length === 0
-                    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                    : "bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 hover:from-amber-400 hover:to-amber-500 shadow-lg shadow-amber-500/20"
+                disabled={cart.length === 0 || isProcessing}
+                className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all duration-300 ${cart.length === 0
+                  ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                  : "bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 hover:from-amber-400 hover:to-amber-500 shadow-lg shadow-amber-500/20"
                   }`}
-                whileHover={cartItems.length > 0 ? { scale: 1.02 } : {}}
-                whileTap={cartItems.length > 0 ? { scale: 0.98 } : {}}
+                whileHover={cart.length > 0 ? { scale: 1.02 } : {}}
+                whileTap={cart.length > 0 ? { scale: 0.98 } : {}}
               >
                 {isProcessing ? (
                   <motion.div
