@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig = {
   turbopack: {
-    root: '.',
+    root: __dirname,
   },
   env: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "pk_test_Y2xlcmsuZXhhbXBsZS5jb20k",
