@@ -8,7 +8,7 @@ async function seedDatabase() {
     connectionString: process.env.DATABASE_URL,
   });
 
-  // Create adapter
+  
   const adapter = new PrismaPg(pool);
 
   // Create a direct prisma client with adapter
