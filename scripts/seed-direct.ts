@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 async function seedDatabase() {
-  // Create a connection pool
+  
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
   });
