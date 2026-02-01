@@ -1,13 +1,11 @@
-"use client";
-
-import ProductListing from "../components/ProductListing";
+import ProductListingServer from "../components/server/ProductListingServer";
 
 const PANT_SECTIONS = [
   {
     id: "pant-11",
     category: "modern" as const,
     title: "FITTARA Modern Pleated Gurkha Pants",
-    description: "Designed for comfort with a refined edge, the FITTARA Modern Pleated Gurkha Pants feature a high-waist Gurkha construction with front pleats that provide extra ease and natural movement. The pleated design adds comfort around the thigh area while maintaining a clean, modern silhouette. Made using customized fabric, these pants offer breathability, smooth drape, and everyday versatility — making them ideal for workwear and smart casual styling.",
+    description: "Designed for comfort with a refined edge, the FITTARA Modern Pleated Gurkha Pants feature a high-waist Gurkha construction with front pleats that provide extra ease and natural movement. The pleated design adds comfort around the thigh area while maintaining a clean, modern silhouette. Made using customized fabric, these pants offer breathability, smooth drape, and everyday versatility — making them ideal for workware and smart casual styling.",
     details: [
       "High-waist Gurkha fit",
       "Side buckle waist",
@@ -45,7 +43,7 @@ const PANT_SECTIONS = [
 
 export default function PantPage() {
   return (
-    <ProductListing 
+    <ProductListingServer 
       sections={PANT_SECTIONS} 
       pageTitle="The FITTARA Pant Collection"
       subTitle="Premium Gurkha pants designed for modern elegance and classic style."

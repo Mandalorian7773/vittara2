@@ -36,7 +36,7 @@ export default function WishlistPage() {
 
       {/* Main content area grows to fill space */}
       <main className="flex-1 py-16 px-4 max-w-7xl mx-auto w-full">
-        <h1 className="text-4xl md:text-5xl font-bold text-[#000000] mb-12 text-center mt-36">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#000000] mb-12 text-center">
           Your Wishlist
         </h1>
 

@@ -1,6 +1,4 @@
-"use client";
-
-import ProductListing from "../components/ProductListing";
+import ProductListingServer from "../components/server/ProductListingServer";
 
 const SHIRT_SECTIONS = [
   {
@@ -25,7 +23,7 @@ const SHIRT_SECTIONS = [
 
 export default function ShirtPage() {
   return (
-    <ProductListing 
+    <ProductListingServer 
       sections={SHIRT_SECTIONS} 
       pageTitle="The FITTARA Shirt Collection"
       subTitle="Refined shirts for every occasion."

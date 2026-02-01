@@ -9,9 +9,9 @@ import { useCart } from "@/app/context/CartContext";
 import { ReviewProvider, useReview } from "@/app/context/ReviewContext";
 import { useWishlist } from "@/app/context/WishlistContext";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import products from "@/app/data/products";
 import Navbar from "./Navbar";
 import ProductFilter from "./ProductFilter";
+import { getAllProducts } from "@/app/actions/productActions";
 
 // Interfaces
 interface Review {
@@ -124,6 +124,7 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
   const [localReviews, setLocalReviews] = useState<Review[]>([]);
   const [showThankYou, setShowThankYou] = useState<Record<number, boolean>>({});
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [products, setProducts] = useState<any[]>([]);
 
   const [filters, setFilters] = useState<Filters>({
     size: "",
@@ -141,15 +142,35 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
           if (!max && product.price < min) return false;
         }
       }
-      if (filters.size && filters.size !== "") return true;
-      if (filters.fabric && filters.fabric !== "") return true;
-      if (filters.color && filters.color !== "") return true;
+      if (filters.size && filters.size !== "") {
+        // Filter by size if applicable
+        if (product.size && !product.size.toLowerCase().includes(filters.size.toLowerCase())) return false;
+      }
+      if (filters.fabric && filters.fabric !== "") {
+        // Filter by fabric if applicable
+        if (product.fabric && !product.fabric.toLowerCase().includes(filters.fabric.toLowerCase())) return false;
+      }
+      if (filters.color && filters.color !== "") {
+        // Filter by color if applicable
+        if (product.color && !product.color.toLowerCase().includes(filters.color.toLowerCase())) return false;
+      }
 
       return true;
     });
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedProducts = await getAllProducts();
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    
+    fetchData();
+    
     const storedReviews = JSON.parse(localStorage.getItem('reviews') || '[]');
     setLocalReviews(storedReviews);
     setIsLoaded(true);
@@ -176,7 +197,7 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
   const allSectionProducts = products.filter(p => sections.some(s => s.category === p.category));
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 pt-24 font-sans">
+    <main className="relative min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 font-sans">
       <Navbar />
       <FloatingElements />
 
@@ -321,10 +342,10 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
                     >
                       <div className="relative bg-gradient-to-b from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700/50 hover:border-amber-500/30 transition-all duration-500 h-full flex flex-col shadow-xl hover:shadow-2xl hover:shadow-amber-500/5">
 
-                        {/* Product Image */}
-                        <div
-                          className="relative h-80 w-full overflow-hidden bg-gray-800 cursor-pointer"
-                          onClick={() => setSelectedImage(product.image)}
+                        {/* Product Image - Now links to product page */}
+                        <Link
+                          href={`/products/${product.originalId}`}
+                          className="relative h-80 w-full overflow-hidden bg-gray-800 cursor-pointer block"
                         >
                           <Image
                             src={product.image}
@@ -337,10 +358,10 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
                           {/* Gradient Overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                          {/* Quick View Icon */}
+                          {/* Product Link Indicator */}
                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <div className="bg-white/10 backdrop-blur-sm p-3 rounded-full border border-white/20">
-                              <FaEye className="text-white text-lg" />
+                            <div className="bg-amber-500/20 backdrop-blur-sm p-3 rounded-full border border-amber-500/30">
+                              <FaEye className="text-amber-400 text-lg" />
                             </div>
                           </div>
 
@@ -352,12 +373,14 @@ function ProductListingInner({ sections, pageTitle, subTitle }: ProductListingPr
                               </div>
                             </div>
                           )}
-                        </div>
+                        </Link>
 
                         {/* Product Info */}
                         <div className="p-5 flex-grow flex flex-col">
                           <h3 className="font-semibold text-white line-clamp-2 group-hover:text-amber-400 transition-colors duration-300 leading-snug mb-2 text-base">
-                            {product.title}
+                            <Link href={`/products/${product.originalId}`} className="hover:text-amber-400 transition-colors duration-300">
+                              {product.title}
+                            </Link>
                           </h3>
 
                           <div className="flex items-center justify-between mb-4">

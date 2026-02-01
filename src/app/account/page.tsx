@@ -404,7 +404,7 @@ export default function AccountPage() {
       </div>
 
       {/* Main Content */}
-      <main className="relative z-10 px-4 py-8 pt-24 md:pt-32">
+      <main className="relative z-10 px-4 py-8">
         <SignedIn>
           <CheckoutDashboard />
         </SignedIn>

@@ -321,7 +321,7 @@ export default function ReviewsPage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] flex items-center justify-center pt-24">
+      <div className="min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-20 w-20 border-4 border-[#000000]/30 border-t-[#000000] mx-auto mb-4"></div>
           <p className="text-[#4B5563] text-lg font-medium">
@@ -333,7 +333,7 @@ export default function ReviewsPage() {
   }
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB] pt-24">
+    <main className="relative min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#E5E7EB]">
       <Navbar />
       <FloatingElements />
 

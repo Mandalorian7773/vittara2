@@ -1,6 +1,4 @@
-"use client";
-
-import ProductListing from "../components/ProductListing";
+import ProductListingServer from "../components/server/ProductListingServer";
 
 const ALL_SECTIONS = [
   {
@@ -63,7 +61,7 @@ const ALL_SECTIONS = [
 
 export default function ProductsPage() {
   return (
-    <ProductListing 
+    <ProductListingServer 
       sections={ALL_SECTIONS} 
       pageTitle="The FITTARA Collection"
       subTitle="Discover our complete range of premium apparel."

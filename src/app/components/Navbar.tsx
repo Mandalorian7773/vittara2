@@ -24,7 +24,7 @@ const getProductUrl = (product: Product): string => {
 const navLinks = [
   { name: "PANT", href: "/pant" },
   { name: "SHIRT", href: "/shirt" },
-  { name: "WEDDING CLOSET", href: "/" },
+  { name: "Combos", href: "/" },
   { name: "FEEDBACKS", href: "/review" },
   { name: "PRODUCTS", href: "/products" },
 ];
@@ -168,7 +168,11 @@ const Navbar = () => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-[999]">
+    <>
+      {/* Spacer to prevent content overlap - equivalent to pt-40 */}
+      <div className="h-50"></div>
+      
+      <header className="fixed top-0 left-0 w-full z-[999]">
       {/* Announcement Bar */}
       <div
         className={`overflow-hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-black text-sm font-semibold hidden lg:flex items-center justify-center transition-all duration-300 ${scrolled ? "opacity-0 h-0" : "opacity-100 h-8"
@@ -557,6 +561,7 @@ const Navbar = () => {
         </div>
       </div>
     </header>
+    </>
   );
 };
 
