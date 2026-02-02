@@ -111,17 +111,31 @@ const ImageGallery = ({
   );
 };
 
-const SizeSelector = ({ sizes, selectedSize, onSelect }: {
+const SizeSelector = ({ sizes, selectedSize, onSelect, sizeGuideLink }: {
   sizes: string[];
   selectedSize: string;
   onSelect: (size: string) => void;
+  sizeGuideLink?: string;
 }) => {
   return (
     <div className="space-y-3">
-      <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-        <FaRulerCombined className="text-amber-400" />
-        Select Size
-      </h3>
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+          <FaRulerCombined className="text-amber-400" />
+          Select Size
+        </h3>
+        {sizeGuideLink && (
+          <a
+            href={sizeGuideLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-amber-400 text-sm hover:text-amber-300 underline underline-offset-4 flex items-center gap-1"
+          >
+            <FaRulerCombined className="w-3 h-3" />
+            Size Guide
+          </a>
+        )}
+      </div>
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
           <button
@@ -599,6 +613,10 @@ export default function ProductPage({ product, relatedProducts = [] }: ProductPa
                 }
                 selectedSize={selectedSize}
                 onSelect={setSelectedSize}
+                sizeGuideLink={product.category === 'shirt'
+                  ? '/Shirt_Fit_Size_System_Printable_260127_155104.pdf'
+                  : '/Trouser_Size_Charts_and_Ease_Table_260127_155049.pdf'
+                }
               />
             )}
 
