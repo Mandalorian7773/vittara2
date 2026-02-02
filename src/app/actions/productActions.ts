@@ -1,42 +1,50 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import products from '@/app/data/products';
 
 // Fetch all products
 export async function getAllProducts() {
+  // First try database
   try {
-    const products = await prisma.product.findMany({
+    const dbProducts = await prisma.product.findMany({
       include: {
         variants: true,
         reviews: true,
       },
     });
 
-    // Transform the data to match the expected format
-    return products.map(product => ({
-      id: parseInt(product.id) || 0, // Convert to number for frontend compatibility
-      originalId: product.id, // Keep original string ID for URL routing
-      title: product.name,
-      price: Math.round(product.price), // Convert to integer for consistency
-      image: product.image,
-      slug: product.name.toLowerCase().replace(/\s+/g, '-'),
-      tag: 'READY TO WEAR', // Default tag
-      colors: Array.from(new Set(product.variants.map(v => v.color))), // Get unique colors from variants
-      size: product.variants[0]?.size || '', // Get first size from variants
-      fabric: product.description.includes('cotton') ? 'cotton' : product.description.includes('silk') ? 'silk' : 'cotton', // Default fabric
-      color: product.variants[0]?.color || 'multicolor', // Default color
-      category: (product.name.toLowerCase().includes('shirt') ? 'shirt' : product.name.toLowerCase().includes('pant') || product.name.toLowerCase().includes('gurkha') ? (product.name.toLowerCase().includes('classic') ? 'classic' : 'modern') : 'shirt') as 'modern' | 'classic' | 'shirt',
-    }));
+    if (dbProducts.length > 0) {
+      console.log(`Loaded ${dbProducts.length} products from database`);
+      // Transform the data to match the expected format
+      return dbProducts.map(product => ({
+        id: parseInt(product.id) || 0, // Convert to number for frontend compatibility
+        originalId: product.id, // Keep original string ID for URL routing
+        title: product.name,
+        price: Math.round(product.price), // Convert to integer for consistency
+        image: product.image,
+        slug: product.name.toLowerCase().replace(/\s+/g, '-'),
+        tag: 'READY TO WEAR', // Default tag
+        colors: Array.from(new Set(product.variants.map(v => v.color))), // Get unique colors from variants
+        size: product.variants[0]?.size || '', // Get first size from variants
+        fabric: product.description.includes('cotton') ? 'cotton' : product.description.includes('silk') ? 'silk' : 'cotton', // Default fabric
+        color: product.variants[0]?.color || 'multicolor', // Default color
+        category: (product.name.toLowerCase().includes('shirt') ? 'shirt' : product.name.toLowerCase().includes('pant') || product.name.toLowerCase().includes('gurkha') ? (product.name.toLowerCase().includes('classic') ? 'classic' : 'modern') : 'shirt') as 'modern' | 'classic' | 'shirt',
+      }));
+    }
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
+    console.error('Database connection failed, using static products:', error instanceof Error ? error.message : String(error));
   }
+
+  // Fallback to static products data
+  console.log(`Using static products data (${products.length} products)`);
+  return products;
 }
 
 // Fetch products by category
 export async function getProductsByCategory(category: string) {
   try {
-    const products = await prisma.product.findMany({
+    const dbProducts = await prisma.product.findMany({
       where: {
         name: {
           contains: category,
@@ -49,24 +57,35 @@ export async function getProductsByCategory(category: string) {
       },
     });
 
-    return products.map(product => ({
-      id: parseInt(product.id) || 0,
-      originalId: product.id, // Keep original string ID for URL routing
-      title: product.name,
-      price: Math.round(product.price),
-      image: product.image,
-      slug: product.name.toLowerCase().replace(/\s+/g, '-'),
-      tag: 'READY TO WEAR',
-      colors: Array.from(new Set(product.variants.map(v => v.color))), // Get unique colors from variants
-      size: product.variants[0]?.size || '', // Get first size from variants
-      fabric: product.description.includes('cotton') ? 'cotton' : product.description.includes('silk') ? 'silk' : 'cotton',
-      color: product.variants[0]?.color || 'multicolor',
-      category: (category === 'pant' ? (product.name.toLowerCase().includes('classic') ? 'classic' : 'modern') : category === 'shirt' ? 'shirt' : 'shirt') as 'modern' | 'classic' | 'shirt',
-    }));
+    if (dbProducts.length > 0) {
+      return dbProducts.map(product => ({
+        id: parseInt(product.id) || 0,
+        originalId: product.id, // Keep original string ID for URL routing
+        title: product.name,
+        price: Math.round(product.price),
+        image: product.image,
+        slug: product.name.toLowerCase().replace(/\s+/g, '-'),
+        tag: 'READY TO WEAR',
+        colors: Array.from(new Set(product.variants.map(v => v.color))), // Get unique colors from variants
+        size: product.variants[0]?.size || '', // Get first size from variants
+        fabric: product.description.includes('cotton') ? 'cotton' : product.description.includes('silk') ? 'silk' : 'cotton',
+        color: product.variants[0]?.color || 'multicolor',
+        category: (category === 'pant' ? (product.name.toLowerCase().includes('classic') ? 'classic' : 'modern') : category === 'shirt' ? 'shirt' : 'shirt') as 'modern' | 'classic' | 'shirt',
+      }));
+    }
   } catch (error) {
-    console.error(`Error fetching ${category} products:`, error);
-    return [];
+    console.error(`Error fetching ${category} products from database:`, error);
   }
+
+  // Fallback to static products data
+  console.log(`Using static products data for category: ${category}`);
+  return products.filter(product => {
+    if (category === 'shirt') return product.category === 'shirt';
+    if (category === 'pant') return product.category === 'modern' || product.category === 'classic';
+    if (category === 'modern') return product.category === 'modern';
+    if (category === 'classic') return product.category === 'classic';
+    return false;
+  });
 }
 
 // Fetch a single product by ID
@@ -90,34 +109,53 @@ export async function getProductById(id: string | number) {
       },
     });
 
-    if (!product) {
-      return null;
+    if (product) {
+      // Get unique sizes and colors from variants
+      const sizes = Array.from(new Set(product.variants.map(v => v.size)));
+      const colors = Array.from(new Set(product.variants.map(v => v.color)));
+
+      return {
+        id: parseInt(product.id) || 0, // Keep as number for frontend compatibility
+        title: product.name,
+        description: product.description,
+        price: Math.round(product.price),
+        image: product.image,
+        slug: product.name.toLowerCase().replace(/\s+/g, '-'),
+        tag: 'READY TO WEAR',
+        colors: colors,
+        size: sizes[0] || '',
+        fabric: 'cotton',
+        color: colors[0] || 'multicolor',
+        category: (product.name.toLowerCase().includes('shirt') ? 'shirt' : product.name.toLowerCase().includes('pant') || product.name.toLowerCase().includes('gurkha') ? (product.name.toLowerCase().includes('classic') ? 'classic' : 'modern') : 'shirt') as 'modern' | 'classic' | 'shirt',
+        variants: product.variants,
+        reviews: product.reviews,
+      };
     }
-
-    // Get unique sizes and colors from variants
-    const sizes = Array.from(new Set(product.variants.map(v => v.size)));
-    const colors = Array.from(new Set(product.variants.map(v => v.color)));
-
-    return {
-      id: parseInt(product.id) || 0, // Keep as number for frontend compatibility
-      title: product.name,
-      description: product.description,
-      price: Math.round(product.price),
-      image: product.image,
-      slug: product.name.toLowerCase().replace(/\s+/g, '-'),
-      tag: 'READY TO WEAR',
-      colors: colors,
-      size: sizes[0] || '',
-      fabric: 'cotton',
-      color: colors[0] || 'multicolor',
-      category: (product.name.toLowerCase().includes('shirt') ? 'shirt' : product.name.toLowerCase().includes('pant') || product.name.toLowerCase().includes('gurkha') ? (product.name.toLowerCase().includes('classic') ? 'classic' : 'modern') : 'shirt') as 'modern' | 'classic' | 'shirt',
-      variants: product.variants,
-      reviews: product.reviews,
-    };
   } catch (error) {
-    console.error('Error fetching product by ID:', error);
-    return null;
+    console.error('Error fetching product by ID from database:', error);
   }
+
+  // Fallback to static products data
+  console.log(`Using static products data for product ID: ${id}`);
+  const numericId = typeof id === 'string' ? parseInt(id) : id;
+  const staticProduct = products.find(p => p.id === numericId);
+  
+  if (staticProduct) {
+    return {
+      ...staticProduct,
+      description: `Premium ${staticProduct.fabric} ${staticProduct.category} in ${staticProduct.color} color. Perfect for any occasion.`,
+      variants: [
+        {
+          size: staticProduct.size,
+          color: staticProduct.color,
+          stock: 10
+        }
+      ],
+      reviews: []
+    };
+  }
+
+  return null;
 }
 
 // Fetch all reviews for a product
