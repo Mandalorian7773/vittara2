@@ -33,7 +33,7 @@ export async function getAllProducts() {
       }));
     }
   } catch (error) {
-    console.error('Database connection failed, using static products:', error.message);
+    console.error('Database connection failed, using static products:', error instanceof Error ? error.message : String(error));
   }
 
   // Fallback to static products data
