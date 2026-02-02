@@ -12,19 +12,35 @@ export default async function ComboPage() {
   return (
     <div className="min-h-screen bg-black antialiased">
       <Navbar />
-      <main className="pt-20">
-        <div className="relative w-full h-[70vh]">
+      <main>
+        {/* Mobile Banner - Natural Aspect Ratio */}
+        <div className="relative w-full md:hidden">
+          <img
+            src="/s4.jpg"
+            alt="Combo Collection"
+            className="w-full h-auto display-block"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end justify-center pb-6">
+            <h1 className="text-3xl font-bold text-white tracking-widest text-center drop-shadow-2xl">
+              <span className="block mb-1 font-serif italic text-amber-400 text-lg">The Perfect</span>
+              MATCH
+            </h1>
+          </div>
+        </div>
+
+        {/* Desktop Banner - Fixed Height */}
+        <div className="hidden md:block relative w-full h-[70vh]">
           <Image
-            src="/images/s4.jpg"
+            src="/s4.jpg"
             alt="Combo Collection"
             fill
             className="object-cover"
             priority
             quality={90}
           />
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <h1 className="text-4xl md:text-7xl font-bold text-white tracking-widest text-center shadow-lg">
-              <span className="block mb-2 font-serif italic">The Perfect</span>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end justify-center pb-20">
+            <h1 className="text-7xl font-bold text-white tracking-widest text-center drop-shadow-2xl">
+              <span className="block mb-2 font-serif italic text-amber-400">The Perfect</span>
               MATCH
             </h1>
           </div>
