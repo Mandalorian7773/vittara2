@@ -7,51 +7,51 @@ export const runtime = "nodejs";
 
 // Disable body parser to get raw body for signature verification
 export const config = {
-    api: {
-        bodyParser: false,
-    },
+  api: {
+    bodyParser: false,
+  },
 };
 
 // Hardcoded for deployment (move to env vars in production dashboard)
 const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET || "your_webhook_secret_here";
 const MAIL_USER = process.env.MAIL_USER || "";
 const MAIL_PASS = process.env.MAIL_PASS || "";
-const STORE_OWNER_EMAIL = process.env.MAIL_USER || ""; // Send to same email
+const STORE_OWNER_EMAIL = "adityajagrani8@gmail.com";
 
 // Verify Razorpay signature
 function verifySignature(body: string, signature: string, secret: string): boolean {
-    const expectedSignature = crypto
-        .createHmac("sha256", secret)
-        .update(body)
-        .digest("hex");
-    return expectedSignature === signature;
+  const expectedSignature = crypto
+    .createHmac("sha256", secret)
+    .update(body)
+    .digest("hex");
+  return expectedSignature === signature;
 }
 
 // Send email notification
 async function sendEmailNotification(paymentData: {
-    paymentId: string;
-    amount: number;
-    email: string;
-    contact: string;
-    method: string;
+  paymentId: string;
+  amount: number;
+  email: string;
+  contact: string;
+  method: string;
 }) {
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: MAIL_USER,
-            pass: MAIL_PASS,
-        },
-    });
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: MAIL_USER,
+      pass: MAIL_PASS,
+    },
+  });
 
-    const timestamp = new Date().toLocaleString("en-IN", {
-        timeZone: "Asia/Kolkata",
-    });
+  const timestamp = new Date().toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
 
-    const mailOptions = {
-        from: `"Fittara Store" <${MAIL_USER}>`,
-        to: STORE_OWNER_EMAIL,
-        subject: "🛒 New Order Received - Fittara",
-        html: `
+  const mailOptions = {
+    from: `"Fittara Store" <${MAIL_USER}>`,
+    to: STORE_OWNER_EMAIL,
+    subject: "🛒 New Order Received - Fittara",
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9;">
         <div style="background: #000; color: #fff; padding: 20px; text-align: center;">
           <h1 style="margin: 0;">🛒 New Order Received!</h1>
@@ -90,63 +90,63 @@ async function sendEmailNotification(paymentData: {
         </div>
       </div>
     `,
-    };
+  };
 
-    await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions);
 }
 
 export async function POST(req: NextRequest) {
-    try {
-        // Get raw body for signature verification
-        const rawBody = await req.text();
-        const signature = req.headers.get("x-razorpay-signature");
+  try {
+    // Get raw body for signature verification
+    const rawBody = await req.text();
+    const signature = req.headers.get("x-razorpay-signature");
 
-        if (!signature) {
-            console.error("Webhook Error: Missing signature");
-            return NextResponse.json({ error: "Missing signature" }, { status: 400 });
-        }
-
-        // Verify signature
-        if (!verifySignature(rawBody, signature, RAZORPAY_WEBHOOK_SECRET)) {
-            console.error("Webhook Error: Invalid signature");
-            return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
-        }
-
-        // Parse the payload
-        const payload = JSON.parse(rawBody);
-        const event = payload.event;
-
-        console.log(`Webhook received: ${event}`);
-
-        // Only process payment.captured events
-        if (event === "payment.captured") {
-            const payment = payload.payload.payment.entity;
-
-            const paymentData = {
-                paymentId: payment.id,
-                amount: payment.amount,
-                email: payment.email || "",
-                contact: payment.contact || "",
-                method: payment.method || "unknown",
-            };
-
-            console.log("Payment captured:", paymentData);
-
-            // Send email notification
-            if (MAIL_USER && MAIL_PASS) {
-                await sendEmailNotification(paymentData);
-                console.log("Email notification sent successfully");
-            } else {
-                console.warn("Email credentials not configured, skipping notification");
-            }
-        }
-
-        return NextResponse.json({ status: "ok" });
-    } catch (error: any) {
-        console.error("Webhook Error:", error.message || error);
-        return NextResponse.json(
-            { error: "Webhook processing failed", details: error.message },
-            { status: 500 }
-        );
+    if (!signature) {
+      console.error("Webhook Error: Missing signature");
+      return NextResponse.json({ error: "Missing signature" }, { status: 400 });
     }
+
+    // Verify signature
+    if (!verifySignature(rawBody, signature, RAZORPAY_WEBHOOK_SECRET)) {
+      console.error("Webhook Error: Invalid signature");
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+    }
+
+    // Parse the payload
+    const payload = JSON.parse(rawBody);
+    const event = payload.event;
+
+    console.log(`Webhook received: ${event}`);
+
+    // Only process payment.captured events
+    if (event === "payment.captured") {
+      const payment = payload.payload.payment.entity;
+
+      const paymentData = {
+        paymentId: payment.id,
+        amount: payment.amount,
+        email: payment.email || "",
+        contact: payment.contact || "",
+        method: payment.method || "unknown",
+      };
+
+      console.log("Payment captured:", paymentData);
+
+      // Send email notification
+      if (MAIL_USER && MAIL_PASS) {
+        await sendEmailNotification(paymentData);
+        console.log("Email notification sent successfully");
+      } else {
+        console.warn("Email credentials not configured, skipping notification");
+      }
+    }
+
+    return NextResponse.json({ status: "ok" });
+  } catch (error: any) {
+    console.error("Webhook Error:", error.message || error);
+    return NextResponse.json(
+      { error: "Webhook processing failed", details: error.message },
+      { status: 500 }
+    );
+  }
 }
