@@ -258,7 +258,19 @@ const ColorSwatches = ({ colors, selectedColor, onSelect }: {
   );
 };
 
-const ProductDetails = ({ product }: { product: Product }) => {
+const ProductDetails = ({
+  product,
+  price,
+  selectedFabric,
+  availableFabrics,
+  onFabricSelect
+}: {
+  product: Product;
+  price: number;
+  selectedFabric: string;
+  availableFabrics: Record<string, number>;
+  onFabricSelect: (fabric: string) => void;
+}) => {
   return (
     <div className="space-y-6">
       <div>
@@ -270,7 +282,7 @@ const ProductDetails = ({ product }: { product: Product }) => {
         </h1>
         <div className="flex items-center gap-4 mb-6">
           <div className="text-3xl font-bold text-amber-400">
-            ₹{product.price.toLocaleString("en-IN")}
+            ₹{price.toLocaleString("en-IN")}
           </div>
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
@@ -283,9 +295,23 @@ const ProductDetails = ({ product }: { product: Product }) => {
 
       {/* Product Specifications */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl border border-gray-700/50">
-          <h3 className="font-semibold text-amber-400 mb-3 uppercase tracking-wider text-xs">Fabric</h3>
-          <p className="text-gray-300 capitalize">{product.fabric}</p>
+        <div className="bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl border border-gray-700/50 col-span-1 md:col-span-2">
+          <h3 className="font-semibold text-amber-400 mb-3 uppercase tracking-wider text-xs">Select Fabric</h3>
+          <div className="flex flex-wrap gap-3">
+            {Object.entries(availableFabrics).map(([fabric, cost]) => (
+              <button
+                key={fabric}
+                onClick={() => onFabricSelect(fabric)}
+                className={`px-4 py-2 rounded-lg border-2 transition-all duration-300 text-sm flex flex-col items-start gap-1 ${selectedFabric === fabric
+                  ? 'bg-amber-500 text-gray-900 border-amber-500 shadow-lg shadow-amber-500/30'
+                  : 'bg-gray-800 text-gray-300 border-gray-600 hover:border-amber-500/50 hover:text-amber-400'
+                  }`}
+              >
+                <span className="font-bold">{fabric}</span>
+                <span className="text-xs opacity-80">₹{cost}</span>
+              </button>
+            ))}
+          </div>
         </div>
         <div className="bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl border border-gray-700/50">
           <h3 className="font-semibold text-amber-400 mb-3 uppercase tracking-wider text-xs">Color</h3>
@@ -599,11 +625,33 @@ export default function ProductPage({ product, relatedProducts = [] }: ProductPa
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
+  // Fabric options with pricing
+  const fabricOptions: Record<string, Record<string, number>> = {
+    shirt: {
+      "Wrinkle free Korean fabric": 899
+    },
+    pant: {
+      "Regular stretch fabric": 999,
+      "Korean premium twill": 1299
+    }
+  };
+
+  // Determine available fabrics for this product category
+  // If category is not explicitly 'shirt' or 'pant', default to 'pant' logic or handle gracefully
+  // The logic below assumes product.category is either 'shirt' or 'pant' (or mapped to it)
+  // For safety, let's normalize the category check:
+  const categoryKey = product.category.toLowerCase().includes('shirt') ? 'shirt' : 'pant';
+  const availableFabrics = fabricOptions[categoryKey] || fabricOptions['pant'];
+
   const [selectedSize, setSelectedSize] = useState(product.size || "M");
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || "#000000");
+  const [selectedFabric, setSelectedFabric] = useState(Object.keys(availableFabrics)[0]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [mainImage, setMainImage] = useState(product.image);
   const [sizeCharts, setSizeCharts] = useState<any[]>([]);
+
+  // Calculate dynamic price based on fabric
+  const currentPrice = availableFabrics[selectedFabric] || product.price;
 
   useEffect(() => {
     getSizeCharts(product.category).then(setSizeCharts);
@@ -617,8 +665,10 @@ export default function ProductPage({ product, relatedProducts = [] }: ProductPa
   const handleAddToCart = () => {
     addToCart({
       ...product,
+      price: currentPrice, // Use dynamic price
       color: selectedColor,
       size: selectedSize,
+      fabric: selectedFabric, // Pass selected fabric
       fit: ""
     });
   };
@@ -641,8 +691,10 @@ export default function ProductPage({ product, relatedProducts = [] }: ProductPa
   const handleBuyNow = () => {
     addToCart({
       ...product,
+      price: currentPrice,
       color: selectedColor,
       size: selectedSize,
+      fabric: selectedFabric,
       fit: ""
     });
     window.location.href = "/account";
@@ -691,7 +743,13 @@ export default function ProductPage({ product, relatedProducts = [] }: ProductPa
 
           {/* Right Column - Product Details */}
           <div className="space-y-8">
-            <ProductDetails product={product} />
+            <ProductDetails
+              product={product}
+              price={currentPrice}
+              selectedFabric={selectedFabric}
+              availableFabrics={availableFabrics}
+              onFabricSelect={setSelectedFabric}
+            />
 
             {/* Size Selector */}
             {(product.size || ((product as any).variants && (product as any).variants?.length > 0)) && (

@@ -37,16 +37,23 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const { isSignedIn } = useAuth();
 
-  // 🔹 Hydrate cart from localStorage (lazy init to avoid hydration mismatch)
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const storedCart = localStorage.getItem("cart");
-      return storedCart ? JSON.parse(storedCart) : [];
-    } catch {
-      return [];
+  // 🔹 Hydrate cart from localStorage
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const storedCart = localStorage.getItem("cart");
+        if (storedCart) {
+          setCart(JSON.parse(storedCart));
+        }
+      } catch (error) {
+        console.error("Failed to load cart", error);
+      }
+      setIsDataLoaded(true);
     }
-  });
+  }, []);
 
   // decrement the product quantity
   const decrementQuantity = (
@@ -69,8 +76,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   // 🔹 Persist cart changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    if (isDataLoaded) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart, isDataLoaded]);
 
   // 🔹 Clear cart automatically on sign-out
   useEffect(() => {
