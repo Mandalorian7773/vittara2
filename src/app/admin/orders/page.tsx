@@ -4,14 +4,14 @@ import { useState, useMemo } from 'react';
 import { useUser, RedirectToSignIn } from '@clerk/nextjs';
 import { getOrders, verifyPasscode } from '@/app/actions/orderActions';
 import toast from 'react-hot-toast';
-import { 
-  Loader2, 
-  Search, 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
-  Package, 
-  TrendingUp, 
+import {
+  Loader2,
+  Search,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Package,
+  TrendingUp,
   AlertCircle,
   Filter,
   ChevronDown,
@@ -30,7 +30,7 @@ interface OrderItem {
 }
 
 interface Order {
-  _id: string;
+  id: string;
   customerName: string;
   address: {
     street: string;
@@ -53,7 +53,7 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
   const [checkingPasscode, setCheckingPasscode] = useState(false);
-  
+
   // Search State
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
@@ -64,7 +64,7 @@ export default function AdminOrdersPage() {
 
     try {
       const isValid = await verifyPasscode(passcode);
-      if (isValid) { 
+      if (isValid) {
         setIsAuthorized(true);
         fetchOrders();
         toast.success('Access Granted');
@@ -105,18 +105,18 @@ export default function AdminOrdersPage() {
     const totalRevenue = orders.reduce((sum, order) => sum + (order.status !== 'failed' ? order.amount : 0), 0);
     const pendingOrders = orders.filter(o => o.status === 'pending').length;
     const paidOrders = orders.filter(o => o.status === 'paid').length;
-    
+
     return { totalOrders, totalRevenue, pendingOrders, paidOrders };
   }, [orders]);
 
   // Filtered Orders
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
-      const matchesSearch = 
+      const matchesSearch =
         order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.razorpayOrderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.address.phone.includes(searchQuery);
-        
+
       return matchesSearch;
     });
   }, [orders, searchQuery]);
@@ -139,12 +139,12 @@ export default function AdminOrdersPage() {
         <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-black text-white rounded-full mb-4">
-               <Package className="w-8 h-8" />
+              <Package className="w-8 h-8" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900">Admin Portal</h1>
             <p className="text-gray-500 mt-2">Enter your secure passcode to access orders</p>
           </div>
-          
+
           <form onSubmit={handlePasscodeSubmit} className="space-y-6">
             <div>
               <input
@@ -174,14 +174,14 @@ export default function AdminOrdersPage() {
     <div className="min-h-screen bg-gray-50 pb-12">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 lg:pt-48">
-        
+
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Dashboard Overview</h1>
             <p className="text-gray-500 mt-1">Manage orders and track revenue</p>
           </div>
-          <button 
+          <button
             onClick={fetchOrders}
             className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all shadow-sm font-medium"
           >
@@ -197,7 +197,7 @@ export default function AdminOrdersPage() {
           </div>
         ) : (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            
+
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
@@ -212,7 +212,7 @@ export default function AdminOrdersPage() {
               </div>
 
               <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                 <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4">
                   <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
                     <Package className="w-6 h-6" />
                   </div>
@@ -221,8 +221,8 @@ export default function AdminOrdersPage() {
                 <h3 className="text-2xl font-bold text-gray-900 mt-1">{stats.totalOrders}</h3>
               </div>
 
-               <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                 <div className="flex items-center justify-between mb-4">
+              <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-4">
                   <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
                     <CheckCircle className="w-6 h-6" />
                   </div>
@@ -231,8 +231,8 @@ export default function AdminOrdersPage() {
                 <h3 className="text-2xl font-bold text-gray-900 mt-1">{stats.paidOrders}</h3>
               </div>
 
-               <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                 <div className="flex items-center justify-between mb-4">
+              <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-4">
                   <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
                     <Hourglass className="w-6 h-6" />
                   </div>
@@ -268,21 +268,20 @@ export default function AdminOrdersPage() {
                 </div>
               ) : (
                 filteredOrders.map((order) => (
-                  <div key={order._id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+                  <div key={order.id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
                     {/* Order Header Summary */}
-                    <div 
+                    <div
                       className="p-6 cursor-pointer flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-gray-50/50 transition-colors"
-                      onClick={() => toggleOrderExpand(order._id)}
+                      onClick={() => toggleOrderExpand(order.id)}
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-full ${
-                          order.status === 'paid' ? 'bg-green-100 text-green-600' :
-                          order.status === 'pending' ? 'bg-amber-100 text-amber-600' :
-                          'bg-red-100 text-red-600'
-                        }`}>
+                        <div className={`p-3 rounded-full ${order.status === 'paid' ? 'bg-green-100 text-green-600' :
+                            order.status === 'pending' ? 'bg-amber-100 text-amber-600' :
+                              'bg-red-100 text-red-600'
+                          }`}>
                           {order.status === 'paid' ? <CheckCircle className="w-5 h-5" /> :
-                           order.status === 'pending' ? <Hourglass className="w-5 h-5" /> :
-                           <XCircle className="w-5 h-5" />}
+                            order.status === 'pending' ? <Hourglass className="w-5 h-5" /> :
+                              <XCircle className="w-5 h-5" />}
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900">{order.customerName}</h4>
@@ -301,15 +300,15 @@ export default function AdminOrdersPage() {
                       </div>
 
                       <div className="hidden md:block text-gray-400">
-                        {expandedOrders.has(order._id) ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                        {expandedOrders.has(order.id) ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                       </div>
                     </div>
 
                     {/* Expandable Details */}
-                    {expandedOrders.has(order._id) && (
+                    {expandedOrders.has(order.id) && (
                       <div className="border-t border-gray-100 bg-gray-50/30 p-6 animate-in slide-in-from-top-2 duration-200">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                          
+
                           {/* Shipping Info */}
                           <div>
                             <h5 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Shipping Information</h5>
@@ -325,7 +324,7 @@ export default function AdminOrdersPage() {
                               <div>
                                 <span className="block text-xs text-gray-400 mb-1">Shipping Address</span>
                                 <span className="text-sm text-gray-700 leading-relaxed">
-                                  {order.address.street}<br/>
+                                  {order.address.street}<br />
                                   {order.address.city}, {order.address.state} - {order.address.zip}
                                 </span>
                               </div>
@@ -335,7 +334,7 @@ export default function AdminOrdersPage() {
                           {/* Items List */}
                           <div>
                             <div className="flex justify-between items-center mb-4">
-                               <h5 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Order Items ({order.items.length})</h5>
+                              <h5 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Order Items ({order.items.length})</h5>
                             </div>
                             <div className="bg-white rounded-lg border border-gray-100 shadow-sm divide-y divide-gray-100">
                               {order.items.map((item, idx) => (
@@ -343,7 +342,7 @@ export default function AdminOrdersPage() {
                                   <div>
                                     <p className="font-medium text-gray-900">{item.title}</p>
                                     <p className="text-xs text-gray-500 mt-1">
-                                      Size: {item.size} 
+                                      Size: {item.size}
                                       {item.fabric && ` • ${item.fabric}`}
                                       {item.color && ` • ${item.color}`}
                                     </p>

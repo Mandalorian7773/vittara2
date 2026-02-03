@@ -1,14 +1,13 @@
 'use server';
 
-import dbConnect from '@/lib/db';
-import Order from '@/models/Order';
+import prisma from '@/lib/prisma';
 
 export async function getOrders() {
     try {
-        await dbConnect();
-        const orders = await Order.find({}).sort({ createdAt: -1 });
+        const orders = await prisma.order.findMany({
+            orderBy: { createdAt: 'desc' }
+        });
 
-        // Serialize the Mongoose documents to plain objects
         return JSON.parse(JSON.stringify(orders));
     } catch (error) {
         console.error('Error fetching orders:', error);
