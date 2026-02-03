@@ -14,8 +14,8 @@ export const config = {
 
 // Hardcoded for deployment (move to env vars in production dashboard)
 const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET || "your_webhook_secret_here";
-const MAIL_USER = process.env.MAIL_USER || "";
-const MAIL_PASS = process.env.MAIL_PASS || "";
+const MAIL_USER = "adityajagrani8@gmail.com";
+const MAIL_PASS = "hkck gafw almv szwn";
 const STORE_OWNER_EMAIL = "adityajagrani8@gmail.com";
 
 // Verify Razorpay signature
