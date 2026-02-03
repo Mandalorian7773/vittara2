@@ -249,7 +249,7 @@ export default function StorePage() {
       const orderData = await orderRes.json();
 
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_1234567890", // Enter the Key ID generated from the Dashboard
+        key: "rzp_live_S1quK4azG4S7YH", // Hardcoded for deployment
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Manyavar Mohey",

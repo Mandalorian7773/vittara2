@@ -3,8 +3,8 @@ import Razorpay from "razorpay";
 import prisma from "@/lib/prisma";
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || "rzp_test_1234567890", // Fallback for dev/build
-  key_secret: process.env.RAZORPAY_KEY_SECRET || "fallback_secret",
+  key_id: "rzp_live_S1quK4azG4S7YH",
+  key_secret: "sZCa0mVbq5eC0bJdkdriR780",
 });
 
 export async function POST(req: NextRequest) {
