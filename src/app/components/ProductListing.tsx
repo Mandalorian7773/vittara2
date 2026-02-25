@@ -366,7 +366,7 @@ function ProductListingInner({ sections, pageTitle, subTitle, initialProducts }:
                             src={product.images && product.images.length > 0 ? product.images[0] : product.image}
                             alt={product.title}
                             fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                            className="object-contain group-hover:scale-110 transition-transform duration-700"
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           />
 
