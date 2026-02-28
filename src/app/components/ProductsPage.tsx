@@ -41,6 +41,14 @@ interface Review {
 
 const FloatingElements = () => {
   const [mounted, setMounted] = useState(false);
+  const [positions] = useState(() =>
+    Array.from({ length: 15 }, () => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 3,
+      duration: 2 + Math.random() * 3,
+    }))
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -50,15 +58,15 @@ const FloatingElements = () => {
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {[...Array(15)].map((_, i) => (
+      {positions.map((pos, i) => (
         <div
           key={i}
           className="absolute animate-pulse"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 3}s`,
-            animationDuration: `${2 + Math.random() * 3}s`,
+            left: `${pos.left}%`,
+            top: `${pos.top}%`,
+            animationDelay: `${pos.delay}s`,
+            animationDuration: `${pos.duration}s`,
           }}
         >
           <svg
