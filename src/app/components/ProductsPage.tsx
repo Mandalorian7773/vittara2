@@ -3,14 +3,12 @@
 import { useState, useEffect } from "react";
 import { FaStar, FaHeart, FaFilter } from "react-icons/fa";
 import Image from "next/image";
-import { useCart } from "@/app/context/CartContext";
+
 import products from "../data/productsDetails";
 import Link from "next/link";
 import { useWishlist } from "@/app/context/WishlistContext";
 import ProductFilter from "./ProductFilter";
-import { SignedIn, SignedOut, useUser } from "@clerk/nextjs"; // ✅ Added Clerk imports
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 // Product and Filter types
 interface Product {
@@ -226,22 +224,9 @@ const ProductRow = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [userRating, setUserRating] = useState(0);
   const [selectedImage, setSelectedImage] = useState<string | null>(null); // State for popup
-  const { addToCart } = useCart();
-  const {
-    addToWishlist,
-    removeFromWishlist,
-    isInWishlist,
-    isLoaded: wishlistLoaded,
-  } = useWishlist();
-
-  const { isSignedIn } = useUser();
-  const router = useRouter();
-
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedFabric, setSelectedFabric] = useState("");
   const [selectedFit, setSelectedFit] = useState("");
-
-  const inWishlist = wishlistLoaded ? isInWishlist(product.id) : false;
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), index * 200);
@@ -318,74 +303,14 @@ const ProductRow = ({
                 ))}
               </div>
 
-              {/* Action Buttons */}
-              <div className="mt-6 space-y-3">
-                {/* Add to Cart Button - Redirects if not signed in */}
-                <button
-                  onClick={() => {
-                    if (!isSignedIn) {
-                      router.push("/sign-in");
-                      return;
-                    }
-                    // Allow adding to cart without options selected
-                    addToCart({
-                      id: product.id,
-                      title: product.title,
-                      price: product.price,
-                      image: product.images[0],
-                      color: "", // Color removed from selection, passing empty or product default color if needed
-                      fit: selectedFit || "",
-                      size: selectedSize || "",
-                      fabric: selectedFabric || ""
-                    });
-                    toast.success("Added to Cart!");
-                  }}
-                  className={`w-full py-3 text-white font-semibold rounded-xl transform transition-all duration-300 shadow-lg cursor-pointer bg-gradient-to-r from-[#4B5563] to-[#000000] hover:from-[#000000] hover:to-[#4B5563] hover:scale-105 hover:shadow-xl`}
+              {/* Explore More Button */}
+              <div className="mt-6">
+                <Link
+                  href={index < 2 ? "/pant" : "/shirt"}
+                  className="block w-full py-3 text-center text-white font-semibold rounded-xl bg-gradient-to-r from-[#4B5563] to-[#000000] hover:from-[#000000] hover:to-[#4B5563] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
-                  {isSignedIn
-                    ? `Add to Cart - ₹${product.price.toLocaleString("en-IN")}`
-                    : "Sign in to Add to Cart"}
-                </button>
-
-                <button
-                  onClick={() => {
-                    if (!isSignedIn) {
-                      router.push("/sign-in");
-                      return;
-                    }
-                    if (inWishlist) {
-                      removeFromWishlist(product.id);
-                      toast.success("Removed from Wishlist");
-                    } else {
-                      addToWishlist({
-                        id: product.id,
-                        title: product.title,
-                        image: product.images[0],
-                        price: product.price,
-                        size: selectedSize || product.size,
-                        color: product.color, // Keep product color for wishlist reference
-                      });
-                      toast.success("Added to Wishlist");
-                    }
-                  }}
-                  className="w-full py-3 bg-gradient-to-r from-[#4B5563] to-[#000000] text-white font-semibold rounded-xl hover:from-[#000000] hover:to-[#4B5563] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <FaHeart className="text-white" />
-                  {isSignedIn
-                    ? inWishlist
-                      ? "Remove from Wishlist"
-                      : "Add to Wishlist"
-                    : "Sign in to use Wishlist"}
-                </button>
-
-                <button
-                  onClick={() => {
-                    window.open("https://docs.google.com/forms/d/e/1FAIpQLSdXkEPO-4NSrIbXnjF_p2iKBHBYua4EIzYAW-EK3xb1x8lOUg/viewform", "_blank");
-                  }}
-                  className="w-full py-3 bg-white text-[#000000] border-2 border-[#000000] font-semibold rounded-xl hover:bg-[#000000] hover:text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
-                >
-                  Need Customization
-                </button>
+                  Explore More
+                </Link>
               </div>
             </div>
 
@@ -408,9 +333,11 @@ const ProductRow = ({
             {/* Description Section */}
             <div className="p-8 flex flex-col justify-between bg-gradient-to-br from-white to-[#FFFFFF]/30">
               <div>
-                <h3 className="text-2xl font-bold text-[#000000] mb-4 leading-tight">
-                  {product.title}
-                </h3>
+                <Link href="/products" className="hover:underline">
+                  <h3 className="text-2xl font-bold text-[#000000] mb-4 leading-tight cursor-pointer">
+                    {product.title}
+                  </h3>
+                </Link>
 
                 <div className="flex items-center gap-4 mb-4">
                   <span className="text-3xl font-bold text-[#000000]">
@@ -421,46 +348,6 @@ const ProductRow = ({
                 {/* Star Rating Removed */}
 
                 <div className="space-y-4 mb-6">
-                  {/* Size Selector */}
-                  <div>
-                    <div className="flex justify-between items-center mb-2 px-1">
-                      <span className="text-sm font-medium text-[#4B5563]">Select Size</span>
-                      <span className="text-xs text-[#000000] cursor-pointer hover:underline">Size Guide</span>
-                    </div>
-                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
-                      {["XS", "S", "M", "L", "XL", "XXL", "3XL"].map((size) => (
-                        <button
-                          key={size}
-                          onClick={() => setSelectedSize(prev => prev === size ? "" : size)}
-                          className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-200 border snap-center ${selectedSize === size
-                            ? "bg-[#000000] text-white border-[#000000] shadow-md scale-105"
-                            : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
-                            }`}
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Fabric Selector */}
-                  <div>
-                    <span className="text-sm font-medium text-[#4B5563] block mb-2 px-1">Select Fabric</span>
-                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2 snap-x">
-                      {["Cotton", "Linen", "Silk", "Wool", "Blend"].map((fabric) => (
-                        <button
-                          key={fabric}
-                          onClick={() => setSelectedFabric(prev => prev === fabric ? "" : fabric)}
-                          className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 border snap-center whitespace-nowrap ${selectedFabric === fabric
-                            ? "bg-[#000000] text-white border-[#000000] shadow-md"
-                            : "bg-white text-[#000000] border-[#F3F4F6] hover:border-[#000000]"
-                            }`}
-                        >
-                          {fabric}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
 
                   {/* Fit Selector - Replaces Color Selector */}
                   <div>
